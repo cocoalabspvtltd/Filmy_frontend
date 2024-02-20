@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:film/screens/homescreens/home_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/string_formatter_and_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_picker/image_picker.dart';
 
 
@@ -249,24 +252,65 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
     var project_duration = durationControl.text;
     var project_director = directorControl.text;
     var project_description = descriptionControl.text;
+    var image =_image;
+      if (formatAndValidate.validateName(project_name) != null) {
+        return toastMessage(formatAndValidate.validateName(project_name));
+      }  else if (formatAndValidate.validateName(project_type) != null) {
+        return toastMessage("Enter valid type");
+      }
+      else if (formatAndValidate.validateAddress(project_description) != null) {
+        return toastMessage("Please enter description");
+      }
 
-    //   if (formatAndValidate.validateName(project_name) != null) {
-    //     return toastMessage(formatAndValidate.validateName(project_name));
-    //   }  else if (formatAndValidate.validateName(project_type) != null) {
-    //     return toastMessage("Enter valid type");
-    //   } else if (formatAndValidate.validateName(college_city) != null) {
-    //     return toastMessage(formatAndValidate.validateName(college_city));
-    //   }else if (_selectedState == null) {
-    //     return toastMessage("Please select State");
-    //   } else if (formatAndValidate.validateName(name) != null) {
-    //     return toastMessage(formatAndValidate.validateName(name));
-    //   }else if (formatAndValidate.validateEmailID(email) != null) {
-    //     return toastMessage(formatAndValidate.validateEmailID(email));
-    //   }else if (formatAndValidate.validatePhoneNo(phone) != null) {
-    //     return toastMessage(formatAndValidate.validatePhoneNo(phone));
+    if (project_duration.isNotEmpty && formatAndValidate.validateName(project_duration) != null) {
+      return toastMessage("Please enter duration");
+    }
+    if (project_director.isNotEmpty && formatAndValidate.validateName(project_director) != null) {
+      return toastMessage("Please provide director");
+    }
+      return
+        await _createProject(project_name,project_type,project_director,project_description,image);
+    }
+
+
+  Future _createProject(
+      String name,
+      String type,
+      String director,
+      String description,
+      File? image,
+      ) async {
+    var formData = FormData();
+    if (image != null) {
+      String fileName = image?.path?.split('/')?.last ?? "";
+      MultipartFile imageFile = await MultipartFile.fromFile(image.path, filename: fileName);
+      formData.files.add(MapEntry(
+        "image",
+        imageFile,
+      ));
+    }
+    // formData.fields..add(MapEntry("name",name));
+    // formData.fields..add(MapEntry("email",email));
+    // formData.fields..add(MapEntry("phone", phone));
+    // if(alterphone.isNotEmpty) formData.fields..add(MapEntry("phone2", alterphone));
+    // if(description.isNotEmpty) formData.fields..add(MapEntry("description", description));
+    // formData.fields..add(MapEntry("languages", languages));
+    // formData.fields..add(MapEntry("state", selectedState));
+
+    // _bloc!.addCommittee(formData).then((value) {
+    //   Get.back();
+    //   CommitteeAddResponse response = value;
+    //   if (response.success!) {
+    //     toastMessage("${response.message}");
+    //     Get.to(AdminHomeScreen());
+    //   } else {
+    //     toastMessage("${response.message}");
     //   }
-    //   return
-    //     await _signUp(college_name,college_code,college_email,college_phone,college_address,college_city,_selectedState!,name,email,phone);
-    // }
+    // }).catchError((err) {
+    //   Get.back();
+    //   toastMessage('Email already taken!');
+    // });
   }
+
 }
+
