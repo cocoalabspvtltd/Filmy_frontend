@@ -1,9 +1,9 @@
-
 import 'package:film/models/login_response.dart';
-import 'package:film/screens/authscreens/splashpage.dart';
+import 'package:film/screens/authscreens/loginscreen.dart';
 import 'package:film/utils/user.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class SharedPrefs {
 
@@ -88,7 +88,7 @@ print("user-<${user}");
   static Future<bool> logOut() async {
     await _preferences.clear();
     UserDetails.set('', '', '', '', '', '', '', '', '',"",'');
-    Get.offAll(() => HomePage());
+    Get.offAll(() => LoginScreen());
     return true;
   }
 
