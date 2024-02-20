@@ -21,6 +21,7 @@ class SharedPrefs {
 
   static String spimage = 'spImage';
   static String spbaseurl = 'spBaseurl';
+  static String spprofileurl = "spprofileurl";
 
 
   static init() async {
@@ -38,6 +39,7 @@ class SharedPrefs {
       getString(spRole),
       getString(spimage),
       getString(spbaseurl),
+      getString(spprofileurl)
     );
   }
 
@@ -67,6 +69,7 @@ print("user-<${user}");
     await setString(spRole, '${user.role ?? ''}');
     await setString(spimage, '${user.image ?? ''}');
     await setString(spbaseurl, '$baseurl');
+    await setString(spprofileurl, "${user.profilePhotoUrl}");
 
     UserDetails.set(
       token,
@@ -79,7 +82,8 @@ print("user-<${user}");
       '${user.gender ?? ''}',
       '${user.role ?? ''}',
       "${user.image??""}",
-      baseurl
+      baseurl,
+      "${user.profilePhotoUrl}"
 
     );
     return true;
@@ -87,7 +91,7 @@ print("user-<${user}");
 
   static Future<bool> logOut() async {
     await _preferences.clear();
-    UserDetails.set('', '', '', '', '', '', '', '', '',"",'');
+    UserDetails.set('', '', '', '', '', '', '', '', '',"",'',"");
     Get.offAll(() => HomePage());
     return true;
   }
