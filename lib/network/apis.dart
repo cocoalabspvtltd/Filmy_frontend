@@ -3,7 +3,7 @@ class Apis {
   static String loginUser = 'api/login';
   static String logOutUser='api/logout';
   static String skillList="api/users/skills-list";
-  static String userupdate = "api/users/user-details";
+  static String userupdate = "api/users/store/user-details";
   //Admin
   static String addCommittee="api/admin/committee/store";
   static String fetchCommitteList="api/admin/committee/table";

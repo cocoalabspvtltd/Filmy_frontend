@@ -113,8 +113,8 @@ class _ProfilePageState extends State<ProfilePage> {
       await _uploadImage(imageFile); // Upload the image
     }
   }
-
-
+  String  baseUrl="";
+  String image = "";
   Future<void> _uploadImage(File imageFile) async {
     final uri = Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/update_profile_picture');
     final request = http.MultipartRequest('POST', uri);
@@ -131,7 +131,15 @@ class _ProfilePageState extends State<ProfilePage> {
     final response = await request.send();
 
     if (response.statusCode == 200) {
-      print('Image uploaded successfully');
+      final Map<String, dynamic> jsonResponse = json.decode(await response.stream.bytesToString());
+
+      // Extract the baseUrl
+      baseUrl = jsonResponse['baseUrl'];
+       image = jsonResponse["picture"]["image"];
+
+      // Return the full image URL
+
+      print('Image uploaded successfully=>${image}');
       // Handle success response
     } else {
       print('Failed to upload image');
@@ -192,12 +200,17 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         child: _image != null
                             ? ClipOval(
-                          child: Image.file(
-                            _image!,
+                          child: Image.network(
+                            '$baseUrl/$image',
                             fit: BoxFit.cover,
                           ),
                         )
-                            : Icon(Icons.account_circle, size: 80),
+                            : ClipOval(
+                          child: Image.network(
+                            '${UserDetails.userbaseur}/${UserDetails.userimage}',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                       Icon(Icons.edit),
                     ],

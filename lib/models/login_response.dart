@@ -4,12 +4,14 @@ class LoginResponse {
   bool? success;
   int? status;
   String? message;
+  String? baseUrl;
 
   LoginResponse(
-      {this.token, this.user, this.success, this.status, this.message});
+      {this.token, this.user, this.success, this.status, this.message,this.baseUrl});
 
   LoginResponse.fromJson(Map<String, dynamic> json) {
     token = json['token'];
+    baseUrl = json["baseUrl"];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     success = json['success'];
     status = json['status'];
@@ -19,6 +21,7 @@ class LoginResponse {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['token'] = this.token;
+    data["baseUrl"]= this.baseUrl;
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }

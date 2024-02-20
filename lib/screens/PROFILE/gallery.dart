@@ -1,9 +1,12 @@
 
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/user.dart';
+import 'package:film/widgets/app_dialogs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,12 +24,19 @@ class Gallery extends StatefulWidget {
 
 class _GalleryState extends State<Gallery> {
   @override
+  void initState() {
+    super.initState();
+
+    _galleryImages();
+
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _galleryImages();
+    });
+  }
+
+  @override
   List<XFile> _images = [];
-  final dioOptions = dio.Options(
-    headers: {'Authorization': 'Bearer ${UserDetails.apiToken}'},
-    contentType: Headers.formUrlEncodedContentType,
-    responseType: dio.ResponseType.json,
-  );
+  List gallery = [];
   Future<void> _pickImages() async {
     final picker = ImagePicker();
     final pickedImages = await picker.pickMultiImage();
@@ -37,9 +47,9 @@ class _GalleryState extends State<Gallery> {
     }
   }
 
-
   Future<void> _uploadImages() async {
     if (_images.isNotEmpty) {
+      AppDialogs.loading();
       var uri = Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/upload_gallery');
       var request = http.MultipartRequest('POST', uri);
       request.headers['Authorization'] = 'Bearer ${UserDetails.apiToken}';
@@ -48,18 +58,51 @@ class _GalleryState extends State<Gallery> {
         request.files.add(await http.MultipartFile.fromPath(
           'images[]',
           image.path,
-
         ));
       }
       var response = await request.send();
       if (response.statusCode == 200) {
+        toastMessage("Gallery images uploaded successfully");
         print('Gallery images uploaded successfully');
-        // Handle success response
+        AppDialogs.closeDialog();
+        // Refresh the page after uploading images
+        refreshGallery();
       } else {
         print('Failed to upload gallery images');
         // Handle error response
       }
     }
+  }
+
+  Future<void> _galleryImages() async {
+    AppDialogs.loading();
+    var uri = Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/user-gallery');
+    var response = await http.get(uri, headers: {
+      'Authorization': 'Bearer ${UserDetails.apiToken}',
+      'Content-Type': 'application/json',
+    });
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      setState(() {
+        gallery = jsonResponse['gallery'];
+      });
+      print('Gallery images fetched successfully > $gallery');
+      AppDialogs.closeDialog();
+      // Handle success response
+    } else {
+      print('Failed to fetch gallery images');
+      // Handle error response
+    }
+  }
+
+  // New function to refresh the gallery
+  void refreshGallery() {
+    setState(() {
+      _images = [];
+      gallery = [];
+    });
+    _galleryImages();
   }
 
   @override
@@ -69,15 +112,39 @@ class _GalleryState extends State<Gallery> {
         backgroundColor: Colors.cyan,
         title: Text('Your gallery'),
       ),
-      body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 4.0,
-          mainAxisSpacing: 4.0,
-        ),
+      body: gallery.isEmpty
+          ? ListView.builder(
         itemCount: _images.length,
         itemBuilder: (context, index) {
           return Image.file(File(_images[index].path));
+        },
+      )
+          : ListView.builder(
+        itemCount: gallery.length,
+        itemBuilder: (context, index) {
+          final image = gallery[index]['images'];
+          return Row(
+            children:[ Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: Container(height: 200,width: 200,
+                  child: Image.network(
+                    'http://2a67-117-193-46-94.ngrok-free.app/storage/$image',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+              IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  // Add logic here to delete the image
+                  // You can use the image ID or other unique identifier
+                },
+              ),
+          ]
+          );
+
         },
       ),
       floatingActionButton: FloatingActionButton(
