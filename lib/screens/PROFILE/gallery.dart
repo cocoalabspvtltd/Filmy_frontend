@@ -37,7 +37,8 @@ class _GalleryState extends State<Gallery> {
   @override
   List<XFile> _images = [];
   List gallery = [];
-  Future<void> _pickImages() async {
+  String galleryid =""
+;  Future<void> _pickImages() async {
     final picker = ImagePicker();
     final pickedImages = await picker.pickMultiImage();
     if (pickedImages != null) {
@@ -75,7 +76,7 @@ class _GalleryState extends State<Gallery> {
   }
 
   Future<void> _galleryImages() async {
-    AppDialogs.loading();
+   // AppDialogs.loading();
     var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/gallery');
     var response = await http.get(uri, headers: {
       'Authorization': 'Bearer ${UserDetails.apiToken}',
@@ -86,6 +87,7 @@ class _GalleryState extends State<Gallery> {
       final jsonResponse = json.decode(response.body);
       setState(() {
         gallery = jsonResponse['gallery'];
+     //   galleryid = jsonResponse["gallery"]["id"];
       });
       print('Gallery images fetched successfully > $gallery');
       AppDialogs.closeDialog();
@@ -96,7 +98,28 @@ class _GalleryState extends State<Gallery> {
       // Handle error response
     }
   }
+  Future<void> _uploadImagesdelete(int id) async {
 
+      print("obje>a${id}");
+
+      var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/galleries/${id}/delete');
+      var request = http.MultipartRequest('DELETE', uri);
+      request.headers['Authorization'] = 'Bearer ${UserDetails.apiToken}';
+      request.headers['content-type'] = 'application/json';
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        toastMessage("Gallery images deleted successfully");
+        print('Gallery images uploaded successfully');
+        AppDialogs.closeDialog();
+        // Refresh the page after uploading images
+        refreshGallery();
+      } else {
+        print('Failed to delete gallery images');
+        // Handle error response
+      }
+
+  }
   // New function to refresh the gallery
   void refreshGallery() {
     setState(() {
@@ -156,7 +179,8 @@ class _GalleryState extends State<Gallery> {
               ),
                 IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: () {
+                  onPressed: () async{
+                    await _uploadImagesdelete(gallery[index]['id']);
                     // Add logic here to delete the image
                     // You can use the image ID or other unique identifier
                   },
