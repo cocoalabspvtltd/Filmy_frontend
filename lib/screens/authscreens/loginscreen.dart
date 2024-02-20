@@ -1,15 +1,11 @@
-
-
 import 'dart:convert';
-
 import 'package:film/screens/PROFILE/PROFILESCREEN.dart';
-import 'package:film/screens/authscreens/signup.dart';
 import 'package:film/screens/authscreens/signupscreen.dart';
+import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/widgets/app_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
 import '../../bloc/authBloc/auth.dart';
 import '../../models/login_response.dart';
 import '../../utils/api_helper.dart';
@@ -30,12 +26,12 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController user = TextEditingController();
   TextEditingController pass = TextEditingController();
   FormatAndValidate formatAndValidate = FormatAndValidate();
+  bool _obscureTextPassword = true;
 
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       backgroundColor: Colors.cyan,
-
       body: SafeArea(child:Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -64,13 +60,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-
-
             const SizedBox(
               height: 16,
             ),
-
-
             TextField(
               controller: user,
               style: const TextStyle(color: Colors.white),
@@ -99,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
 
             TextField(
-              obscureText: true,
+              obscureText: _obscureTextPassword,
               style: const TextStyle(color: Colors.white),
               controller: pass,
               decoration: InputDecoration(
@@ -114,6 +106,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderSide: const BorderSide(
                     width: 0,
                     style: BorderStyle.none,
+                  ),
+                ),
+                suffixIcon: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _obscureTextPassword = !_obscureTextPassword;
+                    });
+                  },
+                  child: Icon(
+                    _obscureTextPassword
+                        ? Icons.visibility_off :Icons.visibility,
+                    color: Colors.white,
                   ),
                 ),
                 filled: true,
@@ -196,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ));
   }
 
-          _validate() async {
+  _validate() async {
     var email = user.text;
     var password =pass.text;
 
@@ -209,33 +213,26 @@ class _LoginScreenState extends State<LoginScreen> {
     return await _login(email, password);
     }
 
-        Future _login(String email, String password) async {
+    Future _login(String email, String password) async {
     AppDialogs.loading();
       Map<String, dynamic> body = {};
       body["email"] = email;
       body["password"] = password;
       try {
         LoginResponse response = await _authBloc.login(json.encode(body));
-        print("response.success-->${response.success}");
         if (response.success == true) {
-          toastMessage("Login Successfully" ?? '');
+          toastMessage("Login Successfully");
           await SharedPrefs.logIn(response);
-          Get.to(() => ProfilePage());
-
-          // if (response.user!.role == "admin") {
-          //   Get.offAll(() => AdminHomeScreen());
-          // } else if (response.user!.role == "college") {
-          //   Get.offAll(() => CollegeHomeScreen());
-          // } else {
-          //   Get.offAll(() => CommitteHomeScreen());
-          // }
+          if (response.user!.role == "public-user") {
+            Get.offAll(() => ProfilePage());
+          } else {
+            Get.offAll(() => PHomeScreen());
+          }
         }  else {
-
-          toastMessage("response.message" ?? '');
+          toastMessage("${response.message}");
         }
       } catch (error) {
-
-        // toastMessage('Please enter valid email and password');
+        toastMessage('No account registered with this email!...Please enter valid credentials');
       }
     }
 

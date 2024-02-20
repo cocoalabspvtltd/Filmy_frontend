@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:film/screens/PROFILE/PROFILESCREEN.dart';
 import 'package:film/screens/authscreens/loginscreen.dart';
-import 'package:film/screens/authscreens/splashpage.dart';
+import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:flutter/material.dart';
-
-
+import 'package:get/get.dart';
 import '../../core/colors.dart';
 import '../../core/space.dart';
 import '../../core/text_style.dart';
@@ -12,7 +12,6 @@ import '../../utils/api_helper.dart';
 import '../../utils/shared_prefs.dart';
 import '../../utils/user.dart';
 import '../../widget/main_button.dart';
-import 'login.dart';
 
 class Splash extends StatefulWidget {
   Splash({Key? key}) : super(key: key);
@@ -37,27 +36,21 @@ class _SplashState extends State<Splash> {
       if (UserDetails.apiToken.isEmpty) await SharedPrefs.init();
       await SharedPrefs.init();
 
-      // Future.delayed(Duration(milliseconds: 1400), () {
-      //   if (UserDetails.apiToken.isNotEmpty) {
-      //     print("Token-->${UserDetails.apiToken}");
-      //     print("role___________" + UserDetails.userRole);
-      //     if (UserDetails.userRole == 'admin') {
-      //       return Get.offAll(() => AdminHomeScreen());
-      //     } else if (UserDetails.userRole == 'college') {
-      //        return Get.offAll(() => CollegeHomeScreen());
-      //     }
-      //     else {
-      //        return Get.offAll(() => CommitteHomeScreen());
-      //     }
-      //   } else {
-      //      return Get.offAll(() => LoginScreen());
-      //   }
-      // });
+      Future.delayed(Duration(milliseconds: 1400), () {
+        if (UserDetails.apiToken.isNotEmpty) {
+          print("Token-->${UserDetails.apiToken}");
+          print("role___________" + UserDetails.userRole);
+          if (UserDetails.userRole == 'public-user') {
+            return Get.offAll(() => ProfilePage());
+          }
+          else {
+             return Get.offAll(() => PHomeScreen());
+          }
+        } else {
+           return Get.offAll(() => LoginScreen());
+        }
+      });
     });
-    Timer(
-        Duration(seconds: 5),
-            () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LoginScreen())));
   }
 
   @override
