@@ -1,12 +1,13 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:film/screens/homescreens/home_screen.dart';
+import 'package:film/bloc/professionalBloc/project_bloc.dart';
+import 'package:film/models/common.dart';
+import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/string_formatter_and_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -27,6 +28,10 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
   TextEditingController directorControl = TextEditingController();
   TextEditingController descriptionControl = TextEditingController();
   File? _image;
+  ProjectBloc _bloc =ProjectBloc();
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,20 +42,18 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
         body: SingleChildScrollView(
           child: Stack(
               children: [
-                ClipPath(
-                  clipper: ClippingClass(),
-                  child: Container(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height*4/7,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [ Color(0xFF4DD0E1),
-                          Color(0xFF4DD0E1),],
-                      ),
-                    ),
-                  ),
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height,
+                  color: Colors.cyan,
+                  // decoration: BoxDecoration(
+                  //   gradient: LinearGradient(
+                  //     begin: Alignment.topCenter,
+                  //     end: Alignment.bottomCenter,
+                  //     colors: [ Color(0xFF4DD0E1),
+                  //       Color(0xFF4DD0E1),],
+                  //   ),
+                  // ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0,right: 20,left: 20),
@@ -201,12 +204,11 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 16,),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 76,left: 76,top: 20),
+                      SizedBox(height: 20,),
+                      Center(
                         child: Container(
-                          height: 55,
-                          width: double.infinity,
+                          height: 40,
+                          width: 120,
                           child: ElevatedButton(
                             onPressed: () {
                               _validate();
@@ -218,7 +220,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                               child: Text(
                                 "Create",
                                 style: TextStyle(
-                                  fontSize: 23,
+                                  fontSize: 20,
                                   color: Colors.white,
                                 ),
                               ),
@@ -269,13 +271,14 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
       return toastMessage("Please provide director");
     }
       return
-        await _createProject(project_name,project_type,project_director,project_description,image);
+        await _createProject(project_name,project_type,project_duration,project_director,project_description,image);
     }
 
 
   Future _createProject(
       String name,
       String type,
+      String duration,
       String director,
       String description,
       File? image,
@@ -285,31 +288,29 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
       String fileName = image?.path?.split('/')?.last ?? "";
       MultipartFile imageFile = await MultipartFile.fromFile(image.path, filename: fileName);
       formData.files.add(MapEntry(
-        "image",
+        "poster",
         imageFile,
       ));
     }
-    // formData.fields..add(MapEntry("name",name));
-    // formData.fields..add(MapEntry("email",email));
-    // formData.fields..add(MapEntry("phone", phone));
-    // if(alterphone.isNotEmpty) formData.fields..add(MapEntry("phone2", alterphone));
-    // if(description.isNotEmpty) formData.fields..add(MapEntry("description", description));
-    // formData.fields..add(MapEntry("languages", languages));
-    // formData.fields..add(MapEntry("state", selectedState));
+    formData.fields..add(MapEntry("project_name",name));
+    formData.fields..add(MapEntry("type",type));
+    formData.fields..add(MapEntry("description", description));
+    if(duration.isNotEmpty) formData.fields..add(MapEntry("duration", duration));
+    if(director.isNotEmpty) formData.fields..add(MapEntry("director", director));
 
-    // _bloc!.addCommittee(formData).then((value) {
-    //   Get.back();
-    //   CommitteeAddResponse response = value;
-    //   if (response.success!) {
-    //     toastMessage("${response.message}");
-    //     Get.to(AdminHomeScreen());
-    //   } else {
-    //     toastMessage("${response.message}");
-    //   }
-    // }).catchError((err) {
-    //   Get.back();
-    //   toastMessage('Email already taken!');
-    // });
+    _bloc.addProject(formData).then((value) {
+      Get.back();
+      CommonResponse response = value;
+      if (response.success!) {
+        toastMessage("${response.message}");
+        Get.to(PHomeScreen());
+      } else {
+        toastMessage("${response.message}");
+      }
+    }).catchError((err) {
+      Get.back();
+      toastMessage('Email already taken!');
+    });
   }
 
 }
