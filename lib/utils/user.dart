@@ -1,6 +1,6 @@
 
 
-class UserDetails {
+class User_Details {
   static String apiToken = '';
   static String userId = '';
   static String userName = '';

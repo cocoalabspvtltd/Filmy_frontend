@@ -16,7 +16,7 @@ class _HomeState extends State<Home> {
   @override
 
   Widget build(BuildContext context) {
-    print("jsd-=>${UserDetails.userName}");
+    print("jsd-=>${User_Details.userName}");
     return Scaffold(
       body: Stack(
         clipBehavior: Clip.none, fit: StackFit.loose,
@@ -53,7 +53,7 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                    "Hi ${UserDetails.userName}",
+                    "Hi ${User_Details.userName}",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 32,

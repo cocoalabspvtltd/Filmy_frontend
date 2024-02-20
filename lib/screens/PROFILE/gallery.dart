@@ -52,7 +52,7 @@ class _GalleryState extends State<Gallery> {
       AppDialogs.loading();
       var uri = Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/upload_gallery');
       var request = http.MultipartRequest('POST', uri);
-      request.headers['Authorization'] = 'Bearer ${UserDetails.apiToken}';
+      request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
       request.headers['content-type'] = 'application/json';
       for (var image in _images) {
         request.files.add(await http.MultipartFile.fromPath(
@@ -78,7 +78,7 @@ class _GalleryState extends State<Gallery> {
     AppDialogs.loading();
     var uri = Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/user-gallery');
     var response = await http.get(uri, headers: {
-      'Authorization': 'Bearer ${UserDetails.apiToken}',
+      'Authorization': 'Bearer ${User_Details.apiToken}',
       'Content-Type': 'application/json',
     });
 

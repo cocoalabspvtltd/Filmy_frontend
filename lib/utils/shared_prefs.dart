@@ -26,7 +26,7 @@ class SharedPrefs {
   static init() async {
     _preferences = await SharedPreferences.getInstance();
     print("user-");
-    UserDetails.set(
+    User_Details.set(
       getString(spToken),
       getString(spUserId),
       getString(spName),
@@ -52,8 +52,8 @@ class SharedPrefs {
   static Future<bool> logIn(LoginResponse response) async {
     if (response.user == null) return false;
 
-    String token = response.token ?? UserDetails.apiToken;
-    String baseurl = response.baseUrl?? UserDetails.userbaseur;
+    String token = response.token ?? User_Details.apiToken;
+    String baseurl = response.baseUrl?? User_Details.userbaseur;
     User user = response.user!;
 print("user-<${user}");
     await setString(spToken, '$token');
@@ -68,7 +68,7 @@ print("user-<${user}");
     await setString(spimage, '${user.image ?? ''}');
     await setString(spbaseurl, '$baseurl');
 
-    UserDetails.set(
+    User_Details.set(
       token,
       '${user.id ?? ''}',
       '${user.name ?? ''}',
@@ -87,7 +87,7 @@ print("user-<${user}");
 
   static Future<bool> logOut() async {
     await _preferences.clear();
-    UserDetails.set('', '', '', '', '', '', '', '', '',"",'');
+    User_Details.set('', '', '', '', '', '', '', '', '',"",'');
     Get.offAll(() => LoginScreen());
     return true;
   }

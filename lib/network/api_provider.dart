@@ -38,7 +38,7 @@ class ApiProvider {
 
   Dio getJsonInstanceAuth() {
     _dio!.options.headers.addAll({
-       "authorization": "Bearer  ${UserDetails.apiToken}",
+       "authorization": "Bearer  ${User_Details.apiToken}",
     });
     return _dio!;
   }

@@ -28,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String dropdownValueinterest= "Select";
   List<Skills> Skillsmulti = [];
   Map<String, String> headers = {
-    'Authorization': 'Bearer ${UserDetails.apiToken}',
+    'Authorization': 'Bearer ${User_Details.apiToken}',
     'Accept': 'application/json', // Assuming JSON content type
   };
    String title="";
@@ -118,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _uploadImage(File imageFile) async {
     final uri = Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/update_profile_picture');
     final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = 'Bearer ${UserDetails.apiToken}';
+    request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
     request.headers['content-type'] = 'application/json';
     request.files.add(http.MultipartFile(
       'profile_picture',
@@ -207,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         )
                             : ClipOval(
                           child: Image.network(
-                            '${UserDetails.userbaseur}/${UserDetails.userimage}',
+                            '${User_Details.userbaseur}/${User_Details.userimage}',
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -219,20 +219,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0,right: 76,left: 76),
                         child: textfield(
-                                   hintText: '${UserDetails.userName}',
+                                   hintText: '${User_Details.userName}',
                                     ),
                       ),
 
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0,right: 76,left: 76),
                   child: textfield(
-                    hintText: '${UserDetails.userEmail}',
+                    hintText: '${User_Details.userEmail}',
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0,right: 76,left: 76),
                   child: textfield(
-                    hintText: '${UserDetails.userMobile}',
+                    hintText: '${User_Details.userMobile}',
                   ),
                 ),
 
