@@ -1,9 +1,11 @@
 import 'package:film/models/profile.dart';
+import 'package:film/screens/professional/component/professionl_home.dart';
 import 'package:film/screens/professional/create_project_screen.dart';
+import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/shared_prefs.dart';
 import 'package:film/utils/user.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 
 class PHomeScreen extends StatefulWidget {
   const PHomeScreen({Key? key}) : super(key: key);
@@ -13,6 +15,22 @@ class PHomeScreen extends StatefulWidget {
 }
 
 class _PHomeScreenState extends State<PHomeScreen> {
+
+  late int _selectedIndex;
+  DateTime? currentBackPressTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = 3;
+  }
+
+  void _onTappedItem(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -22,117 +40,60 @@ class _PHomeScreenState extends State<PHomeScreen> {
         title: Text("Hi ${User_Details.userName}"),
         actions: [
           IconButton(onPressed: (){
-
-          }, icon: Icon(Icons.person_outline,size: 26,)),
-          IconButton(onPressed: (){
             SharedPrefs.logOut();
           }, icon: Icon(Icons.logout)),
         ],
         toolbarHeight: 150,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding:  EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              if(User_Details.userRole=="professionals")
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => CreateProjectScreen());
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      width: MediaQuery.of(context).size.width * 0.36,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: const Radius.circular(13.0),
-                              bottomRight: const Radius.circular(13.0))),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: (MediaQuery.of(context).size.width * 0.36) / 2,
-                            width: MediaQuery.of(context).size.width * 0.36,
-                            child: new Container(
-                                decoration: new BoxDecoration(
-                                  color: Colors.cyan,
-                                  borderRadius: new BorderRadius.only(
-                                    bottomLeft: Radius.circular(
-                                        (MediaQuery.of(context).size.width * 0.36).toDouble()),
-                                    bottomRight: Radius.circular(
-                                        (MediaQuery.of(context).size.width * 0.36).toDouble()),
-                                  ),
-                                ),
-                                child:
-                              Icon(Icons.propane_tank_outlined),
-                            ),
-                          ),
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Projects",
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                          SizedBox(height: 10,)
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 10,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      width: MediaQuery.of(context).size.width * 0.36,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: const Radius.circular(13.0),
-                              bottomRight: const Radius.circular(13.0))),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: (MediaQuery.of(context).size.width * 0.36) / 2,
-                            width: MediaQuery.of(context).size.width * 0.36,
-                            child: new Container(
-                                decoration: new BoxDecoration(
-                                  color: Colors.cyan,
-                                  borderRadius: new BorderRadius.only(
-                                    bottomLeft: Radius.circular(
-                                        (MediaQuery.of(context).size.width * 0.36).toDouble()),
-                                    bottomRight: Radius.circular(
-                                        (MediaQuery.of(context).size.width * 0.36).toDouble()),
-                                  ),
-                                ),
-                                child: Icon(Icons.add_card_outlined)),
-                          ),
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Hiring",
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                          SizedBox(height: 10,)
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.grey[50],
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.cyan,
+        onTap: _onTappedItem,
+        currentIndex: _selectedIndex,
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
+        items: [
+          BottomNavigationBarItem(
+            label: "Hiring",
+            icon: Icon(Icons.work_outline_outlined)
           ),
-        ),
+          BottomNavigationBarItem(
+            label: "Projects",
+              icon: Icon(Icons.propane_tank_outlined)
+          ),
+          BottomNavigationBarItem(
+            label: "profile",
+              icon: Icon(Icons.person_outline)
+          ),
+          BottomNavigationBarItem(
+            label: "Home",
+              icon: Icon(Icons.home_filled)
+          ),
+        ],
       ),
+      body: WillPopScope(
+        onWillPop: () {
+      DateTime now = DateTime.now();
+      if (currentBackPressTime == null ||
+          now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+        currentBackPressTime = now;
+        toastMessage("Double press back to exit");
+        return Future.value(false);
+      }
+      return Future.value(true);
+    },
+    child: _selectedIndex == 3
+    ? ProfessionalHome()
+        : _selectedIndex == 2
+    ? Text("Profile")
+        : _selectedIndex == 1
+    ? Text("Projects")
+        : _selectedIndex == 0
+    ? Text("Hiring")
+        : Center(child: Text("hai")),
+    ),
+
     );
 
   }
