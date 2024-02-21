@@ -11,6 +11,7 @@ class Apis {
   static String usergallery = "api/users/upload_gallery";
   //professional
   static String storeProject="api/professionals/projects/store";
+  static String fetchProjectList="api/professionals/projects/list";
 
   //college
   static String addComplaint="api/colleges/profiles/store";

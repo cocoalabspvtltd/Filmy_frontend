@@ -301,17 +301,18 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
     _bloc.addProject(formData).then((value) {
       Get.back();
       CommonResponse response = value;
-      if (response.success!) {
+      if (response.statusCode == 200) {
         toastMessage("${response.message}");
-        Get.to(PHomeScreen());
+        Get.to(() => PHomeScreen());
       } else {
         toastMessage("${response.message}");
       }
     }).catchError((err) {
       Get.back();
-      toastMessage('Email already taken!');
+      print('${err}');
+      toastMessage('Project not created');
     });
-  }
 
+  }
 }
 
