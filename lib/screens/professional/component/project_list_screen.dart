@@ -3,11 +3,12 @@ import 'package:film/bloc/professionalBloc/project_bloc.dart';
 import 'package:film/core/load_more_listener.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/models/common.dart';
+import 'package:film/screens/professional/projects/edit_project_screen.dart';
 import 'package:film/utils/custom_loader/linear_loader.dart';
 import 'package:film/widgets/common_api_loader.dart';
 import 'package:film/widgets/common_api_result_empty_widget.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 
 class ProjectListScreen extends StatefulWidget {
   const ProjectListScreen({Key? key}) : super(key: key);
@@ -16,12 +17,13 @@ class ProjectListScreen extends StatefulWidget {
   State<ProjectListScreen> createState() => _ProjectListScreenState();
 }
 
-class _ProjectListScreenState extends State<ProjectListScreen> with LoadMoreListener{
-
+class _ProjectListScreenState extends State<ProjectListScreen>
+    with LoadMoreListener {
   late ProjectBloc _bloc;
   late ScrollController _itemsScrollController;
   bool isLoadingMore = false;
-  List<Projects> filteredProjectist = [];
+  List<Projects> filteredProjectList = [];
+
   @override
   void initState() {
     _bloc = ProjectBloc(listener: this);
@@ -32,8 +34,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> with LoadMoreList
   }
 
   @override
-
-
   refresh(bool isLoading) {
     if (mounted) {
       setState(() {
@@ -43,7 +43,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> with LoadMoreList
   }
 
   paginate() async {
-    print('paginate');
     await _bloc.getprojectList(true);
   }
 
@@ -51,95 +50,98 @@ class _ProjectListScreenState extends State<ProjectListScreen> with LoadMoreList
     if (_itemsScrollController.offset >=
         _itemsScrollController.position.maxScrollExtent &&
         !_itemsScrollController.position.outOfRange) {
-      print("reach the bottom");
       paginate();
     }
     if (_itemsScrollController.offset <=
         _itemsScrollController.position.minScrollExtent &&
         !_itemsScrollController.position.outOfRange) {
-      print("reach the top");
+      // Reached the top
     }
   }
+
   void filterProjectList(String query) {
     setState(() {
-      filteredProjectist = _bloc.projectList
+      filteredProjectList = _bloc.projectList
           .where((project) =>
       project.projectName!.toLowerCase().contains(query.toLowerCase()) ||
           project.type!.toLowerCase().contains(query.toLowerCase()) ||
-          project.director!.toLowerCase().contains(query.toLowerCase()))
+          ( project.director != null &&
+              project.director!.toLowerCase().contains(query.toLowerCase())))
           .toList();
     });
   }
-
-  @override
   TextEditingController searchController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
         color: Colors.white,
         backgroundColor: Colors.cyan,
-        onRefresh: () {
-          return _bloc.getprojectList(false);
-        },
+        onRefresh: () => _bloc.getprojectList(false),
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           controller: _itemsScrollController,
           child: Column(
             children: [
-              SizedBox(height: 10,),
+              SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.only(left: 12,right: 12,top: 12,),
                 child: TextField(
                   controller: searchController,
                   decoration: InputDecoration(
                     hintText: 'Search...',
-                    prefixIcon: Icon(Icons.search,color: Colors.cyan,),
-                    contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 4),
+                    prefixIcon: Icon(Icons.search, color: Colors.cyan),
+                    contentPadding:
+                    EdgeInsets.symmetric(vertical: 3, horizontal: 4),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.cyan), // Set active border color
+                      borderSide: BorderSide(color: Colors.cyan),
                     ),
                   ),
-                  style: TextStyle( // Set style for entered text
-                    color: Colors.cyan, // Change the text color
-                    fontSize: 16.0, // Adjust the font size
+                  style: TextStyle(
+                    color: Colors.cyan,
+                    fontSize: 16.0,
                   ),
                   onChanged: (value) {
+                    print("njn${value}");
                     filterProjectList(value);
                   },
                 ),
               ),
               StreamBuilder<ApiResponse<ProjectListResponse>>(
-                  stream: _bloc.projectListStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      switch (snapshot.data!.status!) {
-                        case Status.LOADING:
-                          return CommonApiLoader();
-                        case Status.COMPLETED:
-                          // ProjectListResponse resp = snapshot.data!.data;
-                          List<Projects> ProjectList = _bloc.projectList;
-                          return (ProjectList.isEmpty) ||
-                              (filteredProjectist.isEmpty && searchController.text.isNotEmpty)
-                              ? CommonApiResultsEmptyWidget("No records found")
-                              : _buildProjectList(filteredProjectist.isNotEmpty
-                              ? filteredProjectist
-                              : _bloc.projectList);
-                        case Status.ERROR:
-                          return SizedBox(
-                            height: MediaQuery.of(context).size.height - 180,
-                            child: CommonApiResultsEmptyWidget(
-                                "${snapshot.data!.message!}",
-                                textColorReceived: Colors.black),
-                          );
-                      }
+                stream: _bloc.projectListStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data!.status!) {
+                      case Status.LOADING:
+                        return CommonApiLoader();
+                      case Status.COMPLETED:
+                        List<Projects> projectList = _bloc.projectList;
+                        return (projectList.isEmpty) ||
+                            (filteredProjectList.isEmpty && searchController.text.isNotEmpty)
+                            ? CommonApiResultsEmptyWidget("No records found")
+                            : _buildProjectList(filteredProjectList.isNotEmpty
+                            ? filteredProjectList
+                            : _bloc.projectList);
+                      case Status.ERROR:
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height - 180,
+                          child: CommonApiResultsEmptyWidget(
+                            "${snapshot.data!.message!}",
+                            textColorReceived: Colors.black,
+                          ),
+                        );
                     }
-                    return SizedBox(
-                        height: MediaQuery.of(context).size.height - 180, child: CommonApiLoader());
-                  }),
+                  }
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height - 180,
+                    child: CommonApiLoader(),
+                  );
+                },
+              ),
               if (isLoadingMore) LinearLoader(),
               SizedBox(
                 height: 30,
@@ -150,82 +152,111 @@ class _ProjectListScreenState extends State<ProjectListScreen> with LoadMoreList
       ),
     );
   }
+
   Widget _buildProjectList(List<Projects> projectList) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount:projectList.length, // Replace with the actual number of colleges
+        itemCount: projectList.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: ListTile(
-              tileColor: Colors.grey[200],
-              contentPadding: EdgeInsets.all(10),
-              leading: Container(
-                height: 60,
-                width: 60,
-                padding: EdgeInsets.all(1),
-                decoration: BoxDecoration(
-                  color: Colors.black87,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    imageUrl:
-                    '${projectList[index].posterUrl}',
-                    placeholder: (context, url) => Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    errorWidget: (context, url, error) => ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image(
-                        fit: BoxFit.cover,
-                        image: AssetImage('assets/images/dp.png'),
-                        // height: 60,
-                        // width: 60,
-                      ),
-                    ),
-                  ),
-                ),
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: Colors.white60, width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${projectList[index].projectName} ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional.topEnd,
+                      child: Text(
+                        "${projectList[index].createdAt}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.cyan,
+                    GestureDetector(
+                      onTap: () {
+                        // Handle image tap here
+                      },
+                      child: ListTile(
+                        isThreeLine: true,
+                        leading: Container(
+                          width: MediaQuery.of(context).size.width * .25,
+                          padding: EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.fill,
+                              imageUrl: projectList[index].posterUrl!,
+                              placeholder: (context, url) =>
+                                  Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) => Container(
+                                margin: EdgeInsets.all(5),
+                                child: Image.asset(
+                                  "assets/images/no_data.png",
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        child: Text("Edit"),
-                      ),
-                      SizedBox(width: 10,),
-                      ElevatedButton(
-                        onPressed: () async {
-                          _showDeleteConfirmationDialog(context,projectList[index].id.toString());
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
+                        trailing: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                _showDeleteConfirmationDialog(
+                                    context, projectList[index].id.toString());
+                              },
+                              child: Icon(Icons.delete_outline, color: Colors.red[800]),
+                            ),
+                            SizedBox(height: 6),
+                            GestureDetector(
+                              onTap: () async {
+                                Get.to(EditProjectScreen(details: projectList[index]));
+                              },
+                              child: Icon(Icons.edit, color: Colors.cyan),
+                            ),
+                          ],
                         ),
-                        child: Text("Delete"),
+                        title: Text(
+                          "${projectList[index].projectName}",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${projectList[index].type}",
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                            if (projectList[index].director != null)
+                              Text(
+                                "Director : ${projectList[index].director}",
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              ),
+                            if (projectList[index].duration != null)
+                              Text(
+                                "Duration : ${projectList[index].duration}",
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -234,7 +265,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> with LoadMoreList
     );
   }
 
-  void _showDeleteConfirmationDialog(BuildContext context,String id) {
+  void _showDeleteConfirmationDialog(BuildContext context, String id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -243,19 +274,19 @@ class _ProjectListScreenState extends State<ProjectListScreen> with LoadMoreList
           content: Text('Are you sure you want to delete?'),
           actions: <Widget>[
             TextButton(
-              onPressed: () async{
-                // await _bloc.deleteCommittee(id);
-                // await Future.delayed(Duration(seconds: 2));
-                // _bloc.getCommitteeList(false);
-                // Navigator.of(context).pop();
+              onPressed: () async {
+                await _bloc.deleteProject(id);
+                await Future.delayed(Duration(seconds: 2));
+                _bloc.getprojectList(false);
+                Navigator.of(context).pop();
               },
-              child: Text('Delete',style: TextStyle(color: Colors.red),),
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel',style: TextStyle(color: Colors.cyan),),
+              child: Text('Cancel', style: TextStyle(color: Colors.cyan)),
             ),
           ],
         );

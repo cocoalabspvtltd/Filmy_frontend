@@ -1,5 +1,6 @@
 import 'package:film/models/profile.dart';
 import 'package:film/screens/professional/component/professionl_home.dart';
+import 'package:film/screens/professional/component/project_list_screen.dart';
 import 'package:film/screens/professional/create_project_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/shared_prefs.dart';
@@ -43,7 +44,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
             SharedPrefs.logOut();
           }, icon: Icon(Icons.logout)),
         ],
-        toolbarHeight: 150,
+        toolbarHeight: 140,
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.grey[50],
@@ -88,7 +89,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
         : _selectedIndex == 2
     ? Text("Profile")
         : _selectedIndex == 1
-    ? Text("Projects")
+    ? ProjectListScreen()
         : _selectedIndex == 0
     ? Text("Hiring")
         : Center(child: Text("hai")),
