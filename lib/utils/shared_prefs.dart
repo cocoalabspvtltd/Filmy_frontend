@@ -93,7 +93,7 @@ print("user-<${user}");
   static Future<bool> logOut() async {
     await _preferences.clear();
 
-    UserDetails.set('', '', '', '', '', '', '', '', '',"",'',"");
+    User_Details.set('', '', '', '', '', '', '', '', '',"",'',"");
 
     Get.offAll(() => LoginScreen());
     return true;

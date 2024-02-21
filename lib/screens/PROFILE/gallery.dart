@@ -104,7 +104,7 @@ class _GalleryState extends State<Gallery> {
 
       var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/galleries/${id}/delete');
       var request = http.MultipartRequest('DELETE', uri);
-      request.headers['Authorization'] = 'Bearer ${UserDetails.apiToken}';
+      request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
       request.headers['content-type'] = 'application/json';
 
       var response = await request.send();
@@ -171,7 +171,7 @@ class _GalleryState extends State<Gallery> {
                 child: Center(
                   child: Container(height: 200,width: 100,
                     child: Image.network(
-                      '${UserDetails.userbaseur}/$image',
+                      '${User_Details.userbaseur}/$image',
                       fit: BoxFit.cover,
                     ),
                   ),
