@@ -6,6 +6,8 @@ import 'package:film/utils/shared_prefs.dart';
 import 'package:film/utils/user.dart';
 import 'package:flutter/material.dart';
 
+import '../PROFILE/PROFILESCREEN.dart';
+
 
 class PHomeScreen extends StatefulWidget {
   const PHomeScreen({Key? key}) : super(key: key);
@@ -86,7 +88,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
     child: _selectedIndex == 3
     ? ProfessionalHome()
         : _selectedIndex == 2
-    ? Text("Profile")
+    ? ProfilePage()
         : _selectedIndex == 1
     ? Text("Projects")
         : _selectedIndex == 0

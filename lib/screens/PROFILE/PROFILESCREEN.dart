@@ -385,9 +385,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                  //
                    Padding(
-                     padding: const EdgeInsets.only(right: 76,left: 76,top: 20),
+                     padding: const EdgeInsets.only(right: 76,left: 76,top: 10,bottom:20),
                      child: Container(
-                                height: 55,
+                                height: 50,
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: () async{
@@ -402,7 +402,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Text(
                                       " Complete Your Profile",
                                       style: TextStyle(
-                                        fontSize: 23,
+                                        fontSize: 13,
                                         color: Colors.white,
                                       ),
                                     ),

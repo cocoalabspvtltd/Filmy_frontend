@@ -114,6 +114,26 @@ class _ProfessionalHomeState extends State<ProfessionalHome> {
                   ),
                 ],
               ),
+              Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: const [
+                        SizedBox(
+                          height: 100,
+                        ),
+                        Image(
+                          image: AssetImage(
+                              'assets/image/no-post.png'),
+                          height: 200,
+                          width: 150,
+                        ),
+                        Text(
+                            "Currently No Post Available"),
+
+                      ],
+                    ),
+                  ))
             ],
           ),
         ),
