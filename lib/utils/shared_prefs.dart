@@ -1,9 +1,10 @@
+
 import 'package:film/models/login_response.dart';
 import 'package:film/screens/authscreens/loginscreen.dart';
+
 import 'package:film/utils/user.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class SharedPrefs {
 
@@ -21,6 +22,7 @@ class SharedPrefs {
 
   static String spimage = 'spImage';
   static String spbaseurl = 'spBaseurl';
+  static String spprofileurl = "spprofileurl";
 
 
   static init() async {
@@ -38,6 +40,7 @@ class SharedPrefs {
       getString(spRole),
       getString(spimage),
       getString(spbaseurl),
+      getString(spprofileurl)
     );
   }
 
@@ -67,6 +70,7 @@ print("user-<${user}");
     await setString(spRole, '${user.role ?? ''}');
     await setString(spimage, '${user.image ?? ''}');
     await setString(spbaseurl, '$baseurl');
+    await setString(spprofileurl, "${user.profilePhotoUrl}");
 
     User_Details.set(
       token,
@@ -79,7 +83,8 @@ print("user-<${user}");
       '${user.gender ?? ''}',
       '${user.role ?? ''}',
       "${user.image??""}",
-      baseurl
+      baseurl,
+      "${user.profilePhotoUrl}"
 
     );
     return true;
@@ -87,7 +92,9 @@ print("user-<${user}");
 
   static Future<bool> logOut() async {
     await _preferences.clear();
-    User_Details.set('', '', '', '', '', '', '', '', '',"",'');
+
+    UserDetails.set('', '', '', '', '', '', '', '', '',"",'',"");
+
     Get.offAll(() => LoginScreen());
     return true;
   }

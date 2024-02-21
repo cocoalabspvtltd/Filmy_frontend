@@ -37,7 +37,8 @@ class _GalleryState extends State<Gallery> {
   @override
   List<XFile> _images = [];
   List gallery = [];
-  Future<void> _pickImages() async {
+  String galleryid =""
+;  Future<void> _pickImages() async {
     final picker = ImagePicker();
     final pickedImages = await picker.pickMultiImage();
     if (pickedImages != null) {
@@ -50,7 +51,7 @@ class _GalleryState extends State<Gallery> {
   Future<void> _uploadImages() async {
     if (_images.isNotEmpty) {
       AppDialogs.loading();
-      var uri = Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/upload_gallery');
+      var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/upload_gallery');
       var request = http.MultipartRequest('POST', uri);
       request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
       request.headers['content-type'] = 'application/json';
@@ -75,8 +76,8 @@ class _GalleryState extends State<Gallery> {
   }
 
   Future<void> _galleryImages() async {
-    AppDialogs.loading();
-    var uri = Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/user-gallery');
+   // AppDialogs.loading();
+    var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/gallery');
     var response = await http.get(uri, headers: {
       'Authorization': 'Bearer ${User_Details.apiToken}',
       'Content-Type': 'application/json',
@@ -86,16 +87,39 @@ class _GalleryState extends State<Gallery> {
       final jsonResponse = json.decode(response.body);
       setState(() {
         gallery = jsonResponse['gallery'];
+     //   galleryid = jsonResponse["gallery"]["id"];
       });
       print('Gallery images fetched successfully > $gallery');
       AppDialogs.closeDialog();
       // Handle success response
     } else {
+
       print('Failed to fetch gallery images');
       // Handle error response
     }
   }
+  Future<void> _uploadImagesdelete(int id) async {
 
+      print("obje>a${id}");
+
+      var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/galleries/${id}/delete');
+      var request = http.MultipartRequest('DELETE', uri);
+      request.headers['Authorization'] = 'Bearer ${UserDetails.apiToken}';
+      request.headers['content-type'] = 'application/json';
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        toastMessage("Gallery images deleted successfully");
+        print('Gallery images uploaded successfully');
+        AppDialogs.closeDialog();
+        // Refresh the page after uploading images
+        refreshGallery();
+      } else {
+        print('Failed to delete gallery images');
+        // Handle error response
+      }
+
+  }
   // New function to refresh the gallery
   void refreshGallery() {
     setState(() {
@@ -113,40 +137,61 @@ class _GalleryState extends State<Gallery> {
         title: Text('Your gallery'),
       ),
       body: gallery.isEmpty
-          ? ListView.builder(
+          ?GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+        ),
         itemCount: _images.length,
         itemBuilder: (context, index) {
           return Image.file(File(_images[index].path));
         },
       )
-          : ListView.builder(
+
+      // ListView.builder(
+      //   itemCount: _images.length,
+      //   itemBuilder: (context, index) {
+      //     return Image.file(File(_images[index].path));
+      //   },
+      // )
+          : GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+        ),
         itemCount: gallery.length,
+
         itemBuilder: (context, index) {
           final image = gallery[index]['images'];
           return Row(
-            children:[ Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Center(
-                child: Container(height: 200,width: 200,
-                  child: Image.network(
-                    'http://2a67-117-193-46-94.ngrok-free.app/storage/$image',
-                    fit: BoxFit.cover,
+              children:[ Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
+                  child: Container(height: 200,width: 100,
+                    child: Image.network(
+                      '${UserDetails.userbaseur}/$image',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-              IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  // Add logic here to delete the image
-                  // You can use the image ID or other unique identifier
-                },
-              ),
-          ]
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () async{
+                    await _uploadImagesdelete(gallery[index]['id']);
+                    // Add logic here to delete the image
+                    // You can use the image ID or other unique identifier
+                  },
+                ),
+              ]
           );
 
         },
       ),
+
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.cyan,
         onPressed: () async {

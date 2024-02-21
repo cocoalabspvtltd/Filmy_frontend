@@ -12,6 +12,7 @@ class User_Details {
   static String userRole = '';
   static String userimage="";
   static String userbaseur="";
+  static String profile_photo_url = "";
 
 
   static void set(
@@ -23,7 +24,7 @@ class User_Details {
       String dob,
       String age,
       String gender,
-      String role, String image, String baseurl,
+      String role, String image, String baseurl,String profile_photourl,
       ) {
     apiToken = token;
     userId = id;
@@ -36,6 +37,7 @@ class User_Details {
     userRole = role;
     userimage = image;
     userbaseur = baseurl;
+    profile_photo_url = profile_photourl;
 
   }
 }

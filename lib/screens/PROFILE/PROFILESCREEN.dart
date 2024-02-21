@@ -47,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
   void _fetchJuryMembers() async {
 
-    final response = await http.get(Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/skills-list'),
+    final response = await http.get(Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/skills-list'),
         headers: headers
     );
     final jsonResponse = json.decode(response.body);
@@ -116,7 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String  baseUrl="";
   String image = "";
   Future<void> _uploadImage(File imageFile) async {
-    final uri = Uri.parse('https://2a67-117-193-46-94.ngrok-free.app/api/users/update_profile_picture');
+    final uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/update_profile_picture');
     final request = http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
     request.headers['content-type'] = 'application/json';
