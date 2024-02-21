@@ -4,7 +4,7 @@ class Apis {
   static String logOutUser='api/logout';
   static String skillList="api/users/skills-list";
   static String userupdate = "api/users/store/user-details";
-
+  static String userforgotpassword = "api/users/forgot-password";
   //professional
   static String storeProject="api/professionals/projects/store";
 

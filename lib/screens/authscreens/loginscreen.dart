@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:film/screens/PROFILE/PROFILESCREEN.dart';
 import 'package:film/screens/authscreens/signupscreen.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
+import 'package:film/utils/user.dart';
 import 'package:film/widgets/app_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ import '../../utils/api_helper.dart';
 import '../../utils/shared_prefs.dart';
 import '../../utils/string_formatter_and_validator.dart';
 import '../homescreens/home_screen.dart';
+import 'forgotpassword.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -169,13 +171,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
             Row(
               children: [
-                const Text(
-                  "FORGOT PASSWORD?",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1C1C1C),
-                    height: 1,
+                GestureDetector(
+                  onTap: (){Get.to(()=>ForgotPasswordScreen());},
+                  child: const Text(
+                    "FORGOT PASSWORD?",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1C1C1C),
+                      height: 1,
+                    ),
                   ),
                 ),
                 Spacer(),
@@ -223,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (response.success == true) {
           toastMessage("Login Successfully");
           await SharedPrefs.logIn(response);
-          if (response.user!.role == "public-user") {
+          if (response.user!.role == "public-user"&&User_Details.status=="inactive") {
             Get.offAll(() => ProfilePage());
           } else {
             Get.offAll(() => PHomeScreen());
