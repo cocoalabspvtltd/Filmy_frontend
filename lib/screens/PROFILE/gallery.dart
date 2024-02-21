@@ -16,6 +16,8 @@ import 'package:dio/dio.dart' as dio;
 
 import 'package:http/http.dart' as http;
 
+import '../../network/apis.dart';
+
 class Gallery extends StatefulWidget {
   const Gallery({Key? key}) : super(key: key);
 
@@ -52,7 +54,7 @@ class _GalleryState extends State<Gallery> {
   Future<void> _uploadImages() async {
     if (_images.isNotEmpty) {
       AppDialogs.loading();
-      var uri = Uri.parse('https://07f1-117-221-145-221.ngrok-free.app/api/users/upload_gallery');
+      var uri = Uri.parse('${Apis.url}${Apis.usergallery}');
       var request = http.MultipartRequest('POST', uri);
       request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
       request.headers['content-type'] = 'application/json';
