@@ -102,7 +102,8 @@ class _GalleryState extends State<Gallery> {
 
       print("obje>a${id}");
 
-      var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/galleries/${id}/delete');
+      var uri = Uri.parse(''
+          '/api/users/galleries/${id}/delete');
       var request = http.MultipartRequest('DELETE', uri);
       request.headers['Authorization'] = 'Bearer ${UserDetails.apiToken}';
       request.headers['content-type'] = 'application/json';
@@ -137,7 +138,8 @@ class _GalleryState extends State<Gallery> {
         title: Text('Your gallery'),
       ),
       body: gallery.isEmpty
-          ?GridView.builder(
+          ?
+      GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 8.0,
