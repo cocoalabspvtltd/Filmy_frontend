@@ -4,17 +4,9 @@ class Apis {
   static String logOutUser='api/logout';
   static String skillList="api/users/skills-list";
   static String userupdate = "api/users/store/user-details";
-  //Admin
-  static String addCommittee="api/admin/committee/store";
-  static String fetchCommitteList="api/admin/committee/table";
-  static String fetchCollegeList="api/admin/colleges/table";
-  static String fetchComplaintsList="api/admin/profiles/table";
-  static String deleteComplaint="api/admin/profiles/";
-  static String rejectOrAccept="api/admin/colleges/";
-  static String deleteCollege="api/admin/colleges/";
-  static String deleteCommittee="api/admin/committee/";
-  static String editCommittee="api/admin/committee/";
-  static String schedule="api/admin/hearings/";
+
+  //professional
+  static String storeProject="api/professionals/projects/store";
 
   //college
   static String addComplaint="api/colleges/profiles/store";

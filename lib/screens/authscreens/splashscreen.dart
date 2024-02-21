@@ -33,14 +33,14 @@ class _SplashState extends State<Splash> {
 
       setState(() {});
 
-      if (UserDetails.apiToken.isEmpty) await SharedPrefs.init();
+      if (User_Details.apiToken.isEmpty) await SharedPrefs.init();
       await SharedPrefs.init();
 
       Future.delayed(Duration(milliseconds: 1400), () {
-        if (UserDetails.apiToken.isNotEmpty) {
-          print("Token-->${UserDetails.apiToken}");
-          print("role___________" + UserDetails.userRole);
-          if (UserDetails.userRole == 'public-user') {
+        if (User_Details.apiToken.isNotEmpty) {
+          print("Token-->${User_Details.apiToken}");
+          print("role___________" + User_Details.userRole);
+          if (User_Details.userRole == 'public-user') {
             return Get.offAll(() => ProfilePage());
           }
           else {

@@ -11,9 +11,9 @@ class ApiInterceptor extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    if (UserDetails.apiToken.isNotEmpty) {
+    if (User_Details.apiToken.isNotEmpty) {
       if (!options.headers.containsKey('authorization')) {
-        options.headers.addAll({"Authorization": "Bearer ${UserDetails.apiToken}"});
+        options.headers.addAll({"Authorization": "Bearer ${User_Details.apiToken}"});
       }
 
     }

@@ -9,7 +9,7 @@ class ApiProvider {
 
   //todo change to live base url
 
-  static String baseUrl = 'https://9274-117-201-130-102.ngrok-free.app/';
+  static String baseUrl = 'https://07f1-117-221-145-221.ngrok-free.app/';
 
   //static String baseUrl = 'https://9a6a-117-201-131-18.ngrok.io/';
 
@@ -38,7 +38,7 @@ class ApiProvider {
 
   Dio getJsonInstanceAuth() {
     _dio!.options.headers.addAll({
-       "authorization": "Bearer  ${UserDetails.apiToken}",
+       "authorization": "Bearer  ${User_Details.apiToken}",
     });
     return _dio!;
   }
