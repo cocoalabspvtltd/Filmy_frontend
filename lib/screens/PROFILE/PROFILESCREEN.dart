@@ -13,6 +13,7 @@ import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:http/http.dart' as http;
 import '../../bloc/authBloc/auth.dart';
 import '../../models/skillresponse.dart';
+import '../../network/apis.dart';
 import '../../utils/user.dart';
 import '../homescreens/home_screen.dart';
 
@@ -47,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
   void _fetchJuryMembers() async {
 
-    final response = await http.get(Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/skills-list'),
+    final response = await http.get(Uri.parse('${Apis.url}${Apis.userSkillList}'),
         headers: headers
     );
     final jsonResponse = json.decode(response.body);
@@ -116,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String  baseUrl="";
   String image = "";
   Future<void> _uploadImage(File imageFile) async {
-    final uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/update_profile_picture');
+    final uri = Uri.parse('${Apis.url}${Apis.userUpdateprofilepic}');
     final request = http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
     request.headers['content-type'] = 'application/json';

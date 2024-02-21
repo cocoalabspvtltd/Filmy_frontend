@@ -48,7 +48,8 @@ class User {
   String? dob;
   String? gender;
   int? age;
-  String? profilePhotoUrl;
+  String? status;
+
 
   User(
       {this.id,
@@ -66,7 +67,7 @@ class User {
         this.dob,
         this.gender,
         this.age,
-        this.profilePhotoUrl});
+        this.status});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -84,7 +85,7 @@ class User {
     dob = json['dob'];
     gender = json['gender'];
     age = json['age'];
-    profilePhotoUrl = json['profile_photo_url'];
+    status = json['profile_photo_url'];
   }
 
   Map<String, dynamic> toJson() {
@@ -104,7 +105,7 @@ class User {
     data['dob'] = this.dob;
     data['gender'] = this.gender;
     data['age'] = this.age;
-    data['profile_photo_url'] = this.profilePhotoUrl;
+    data['profile_photo_url'] = this.status;
     return data;
   }
 }

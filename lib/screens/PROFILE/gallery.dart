@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/user.dart';
 import 'package:film/widgets/app_dialogs.dart';
@@ -14,6 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart' as dio;
 
 import 'package:http/http.dart' as http;
+
+import '../../network/apis.dart';
 
 class Gallery extends StatefulWidget {
   const Gallery({Key? key}) : super(key: key);
@@ -51,7 +54,7 @@ class _GalleryState extends State<Gallery> {
   Future<void> _uploadImages() async {
     if (_images.isNotEmpty) {
       AppDialogs.loading();
-      var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/upload_gallery');
+      var uri = Uri.parse('${Apis.url}${Apis.usergallery}');
       var request = http.MultipartRequest('POST', uri);
       request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
       request.headers['content-type'] = 'application/json';
@@ -77,7 +80,7 @@ class _GalleryState extends State<Gallery> {
 
   Future<void> _galleryImages() async {
    // AppDialogs.loading();
-    var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/gallery');
+    var uri = Uri.parse('https://07f1-117-221-145-221.ngrok-free.app/api/users/gallery');
     var response = await http.get(uri, headers: {
       'Authorization': 'Bearer ${User_Details.apiToken}',
       'Content-Type': 'application/json',
@@ -102,7 +105,8 @@ class _GalleryState extends State<Gallery> {
 
       print("obje>a${id}");
 
-      var uri = Uri.parse('https://9274-117-201-130-102.ngrok-free.app/api/users/galleries/${id}/delete');
+      var uri = Uri.parse(''
+          '/api/users/galleries/${id}/delete');
       var request = http.MultipartRequest('DELETE', uri);
       request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
       request.headers['content-type'] = 'application/json';
@@ -137,7 +141,8 @@ class _GalleryState extends State<Gallery> {
         title: Text('Your gallery'),
       ),
       body: gallery.isEmpty
-          ?GridView.builder(
+          ?
+      GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 8.0,

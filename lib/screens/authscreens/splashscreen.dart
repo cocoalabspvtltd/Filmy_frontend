@@ -39,8 +39,8 @@ class _SplashState extends State<Splash> {
       Future.delayed(Duration(milliseconds: 1400), () {
         if (User_Details.apiToken.isNotEmpty) {
           print("Token-->${User_Details.apiToken}");
-          print("role___________" + User_Details.userRole);
-          if (User_Details.userRole == 'public-user') {
+          print("role___________" + User_Details.status);
+          if (User_Details.userRole == 'public-user'&&User_Details.status=="inactive") {
             return Get.offAll(() => ProfilePage());
           }
           else {
