@@ -5,6 +5,7 @@ import 'package:film/models/common.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/network/api_error_message.dart';
 import 'package:film/repository/professionalrepo.dart';
+import 'package:film/utils/api_helper.dart';
 
 class ProjectBloc {
   ProfessionalRepository? _repository;
@@ -76,6 +77,28 @@ class ProjectBloc {
   Future<CommonResponse> addProject(FormData formdata) async {
     try {
       CommonResponse response = await _repository!.addProject(formdata);
+      return response;
+    } catch (e, s) {
+      Completer().completeError(e, s);
+      throw e;
+    }
+  }
+
+  Future<CommonResponse?> deleteProject(String Id) async {
+    try {
+      CommonResponse response = await _repository!
+          .deleteProject(Id);
+      toastMessage(response.message);
+      return response;
+    } catch (e, s) {
+      Completer().completeError(e, s);
+    }
+    return null;
+  }
+
+  Future<CommonResponse> editProject(id,FormData formdata) async {
+    try {
+      CommonResponse response = await _repository!.editProject(formdata,id);
       return response;
     } catch (e, s) {
       Completer().completeError(e, s);

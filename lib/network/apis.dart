@@ -12,6 +12,8 @@ class Apis {
   //professional
   static String storeProject="api/professionals/projects/store";
   static String fetchProjectList="api/professionals/projects/list";
+  static String deleteProject="api/professionals/projects/";
+  static String editProject="api/professionals/projects/";
 
   //college
   static String addComplaint="api/colleges/profiles/store";

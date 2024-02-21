@@ -29,4 +29,18 @@ class ProfessionalRepository {
     return CommonResponse.fromJson(response.data);
   }
 
+  Future<CommonResponse> deleteProject(String id) async {
+    final response = await apiClient!
+        .getJsonInstance()
+        .delete('${Apis.deleteProject}$id/delete');
+    return CommonResponse.fromJson(response.data);
+  }
+
+  Future<CommonResponse> editProject(FormData formdata, id) async {
+    Response response = await apiClient!
+        .getJsonInstance()
+        .post('${Apis.editProject}$id/update', data: formdata);
+    return CommonResponse.fromJson(response.data);
+  }
+
 }
