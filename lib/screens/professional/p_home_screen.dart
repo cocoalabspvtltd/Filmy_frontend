@@ -1,4 +1,9 @@
+import 'package:film/models/profile.dart';
+import 'package:film/screens/professional/create_project_screen.dart';
+import 'package:film/utils/shared_prefs.dart';
+import 'package:film/utils/user.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class PHomeScreen extends StatefulWidget {
   const PHomeScreen({Key? key}) : super(key: key);
@@ -11,66 +16,125 @@ class _PHomeScreenState extends State<PHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(30))),
+        backgroundColor: Colors.cyan,
+        title: Text("Hi ${User_Details.userName}"),
+        actions: [
+          IconButton(onPressed: (){
+
+          }, icon: Icon(Icons.person_outline,size: 26,)),
+          IconButton(onPressed: (){
+            SharedPrefs.logOut();
+          }, icon: Icon(Icons.logout)),
+        ],
+        toolbarHeight: 150,
+      ),
       body: SafeArea(
-        child: Column(
-          children: [
-            // Padding(
-            //   padding: const EdgeInsets.only(
-            //       top: 15.0, left: 10, right: 10, bottom: 4),
-            //   child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.start,
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       const Text(
-            //         "Friend's you might know",
-            //         style: TextStyle(
-            //             fontWeight: FontWeight.bold, fontSize: 16),
-            //       ),
-            //       const SizedBox(
-            //         height: 8,
-            //       ),
-            //       // _youKnowWidget(context),
-            //     ],
-            //   ),
-            // )
-            Card(
-              elevation: 4.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: InkWell(
-                onTap: () {
-                  // Add functionality to create project
-                },
-                borderRadius: BorderRadius.circular(8.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(
-                        Icons.add,
-                        size: 36.0,
-                        color: Colors.blue,
+        child: Padding(
+          padding:  EdgeInsets.all(12.0),
+          child: Column(
+            children: [
+              if(User_Details.userRole=="professionals")
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => CreateProjectScreen());
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      width: MediaQuery.of(context).size.width * 0.36,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: const Radius.circular(13.0),
+                              bottomRight: const Radius.circular(13.0))),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: (MediaQuery.of(context).size.width * 0.36) / 2,
+                            width: MediaQuery.of(context).size.width * 0.36,
+                            child: new Container(
+                                decoration: new BoxDecoration(
+                                  color: Colors.cyan,
+                                  borderRadius: new BorderRadius.only(
+                                    bottomLeft: Radius.circular(
+                                        (MediaQuery.of(context).size.width * 0.36).toDouble()),
+                                    bottomRight: Radius.circular(
+                                        (MediaQuery.of(context).size.width * 0.36).toDouble()),
+                                  ),
+                                ),
+                                child:
+                              Icon(Icons.propane_tank_outlined),
+                            ),
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Projects",
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          SizedBox(height: 10,)
+                        ],
                       ),
-                      SizedBox(height: 16.0),
-                      Text(
-                        'Create Project',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 10,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      width: MediaQuery.of(context).size.width * 0.36,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: const Radius.circular(13.0),
+                              bottomRight: const Radius.circular(13.0))),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: (MediaQuery.of(context).size.width * 0.36) / 2,
+                            width: MediaQuery.of(context).size.width * 0.36,
+                            child: new Container(
+                                decoration: new BoxDecoration(
+                                  color: Colors.cyan,
+                                  borderRadius: new BorderRadius.only(
+                                    bottomLeft: Radius.circular(
+                                        (MediaQuery.of(context).size.width * 0.36).toDouble()),
+                                    bottomRight: Radius.circular(
+                                        (MediaQuery.of(context).size.width * 0.36).toDouble()),
+                                  ),
+                                ),
+                                child: Icon(Icons.add_card_outlined)),
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Hiring",
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          SizedBox(height: 10,)
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+
   }
+
 }
