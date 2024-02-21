@@ -7,6 +7,7 @@ class Apis {
 
   //professional
   static String storeProject="api/professionals/projects/store";
+  static String fetchProjectList="api/professionals/projects/list";
 
   //college
   static String addComplaint="api/colleges/profiles/store";
