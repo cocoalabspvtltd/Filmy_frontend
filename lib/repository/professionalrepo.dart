@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:film/models/common.dart';
+import 'package:film/models/hiring_list_response.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/network/api_provider.dart';
 import 'package:film/network/apis.dart';
@@ -42,5 +43,20 @@ class ProfessionalRepository {
         .post('${Apis.editProject}$id/update', data: formdata);
     return CommonResponse.fromJson(response.data);
   }
+
+  Future<CommonResponse> addHiring(String body) async {
+    Response response = await apiClient!
+        .getJsonInstance()
+        .post(Apis.storeHiring, data: body);
+    return CommonResponse.fromJson(response.data);
+  }
+
+  Future<HiringListResponse> getHiringList(int perPage,
+      int page) async {
+    final response = await apiClient!.getJsonInstance().get(
+        '${Apis.fetchHiringList}?page=$page&per_page=$perPage');
+    return HiringListResponse.fromJson(response.data);
+  }
+
 
 }
