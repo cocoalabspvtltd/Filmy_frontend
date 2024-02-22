@@ -1,12 +1,13 @@
 import 'package:film/models/profile.dart';
 import 'package:film/screens/professional/component/professionl_home.dart';
 import 'package:film/screens/professional/component/project_list_screen.dart';
-import 'package:film/screens/professional/projects/create_project_screen.dart';
+
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/shared_prefs.dart';
-import 'package:film/utils/user.dart';
+
 import 'package:flutter/material.dart';
 
+import '../../utils/user.dart';
 import '../PROFILE/PROFILESCREEN.dart';
 
 
@@ -39,15 +40,27 @@ class _PHomeScreenState extends State<PHomeScreen> {
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(30))),
-        backgroundColor: Colors.cyan,
-        title: Text("Hi ${User_Details.userName}"),
+        backgroundColor: Colors.white, // Set the background color of the AppBar
+        title: Text(
+          'Home',
+          style: TextStyle(color: Colors.black), // Set the text color of the title
+        ),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu, color: Colors.cyan), // Set the color of the menu icon
+            onPressed: () {
+              Scaffold.of(context).openDrawer(); // Open the side drawer
+            },
+          ),
+        ),
         actions: [
-          IconButton(onPressed: (){
-            SharedPrefs.logOut();
-          }, icon: Icon(Icons.logout)),
+          IconButton(
+            icon: Icon(Icons.notifications,color: Colors.cyan,),
+            onPressed: () {
+              // Handle notification button press
+            },
+          ),
         ],
-        toolbarHeight: 140,
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.grey[50],

@@ -136,8 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
       final Map<String, dynamic> jsonResponse =
           json.decode(await response.stream.bytesToString());
 
-      // Extract the baseUrl
-      baseUrl = jsonResponse['baseUrl'];
+
       image = jsonResponse["picture"]["image"];
 
       // Return the full image URL
