@@ -27,7 +27,6 @@ class SharedPrefs {
 
   static init() async {
     _preferences = await SharedPreferences.getInstance();
-    print("user-");
     User_Details.set(
       getString(spToken),
       getString(spUserId),
@@ -58,7 +57,6 @@ class SharedPrefs {
     String token = response.token ?? User_Details.apiToken;
     String baseurl = response.baseUrl?? User_Details.userbaseur;
     User user = response.user!;
-print("user-<${user}");
     await setString(spToken, '$token');
     await setString(spUserId, '${user.id ?? ''}');
     await setString(spEmail, '${user.email ?? ''}');

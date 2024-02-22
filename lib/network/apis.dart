@@ -7,7 +7,7 @@ class Apis {
   static String userupdate = "api/users/store/user-details";
   static String userforgotpassword = "api/users/forgot-password";
   static String userUpdateprofilepic = "api/users/update_profile_picture";
-  static String userSkillList = "api/users/skills-list";
+  static String userSkillList = "api/skills-list";
   static String usergallery = "api/users/upload_gallery";
   static String fetchgallery = "api/users/gallery";
   //professional
@@ -15,6 +15,8 @@ class Apis {
   static String fetchProjectList="api/professionals/projects/list";
   static String deleteProject="api/professionals/projects/";
   static String editProject="api/professionals/projects/";
+  static String storeHiring="api/professionals/hiring/requests/store";
+  static String fetchHiringList="api/professionals/hiring/requests/list";
 
   //college
   static String addComplaint="api/colleges/profiles/store";

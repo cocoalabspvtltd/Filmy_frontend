@@ -117,6 +117,12 @@ class FormatAndValidate {
         : null;
   }
 
+  validateOpening(value) {
+    return value.isEmpty || value.length < 1 || value.length > 3
+        ? "Enter valid year"
+        : null;
+  }
+
   validateAadhaar(value) {
     return value!.isEmpty ||
         value.length != 12 ||
