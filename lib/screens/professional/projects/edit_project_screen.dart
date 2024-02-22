@@ -337,7 +337,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       CommonResponse response = value;
       if (response.statusCode == 200) {
         toastMessage("${response.message}");
-        Get.to(() => PHomeScreen());
+        Get.to(() => PHomeScreen(selectedIndex: 3,));
       } else {
         toastMessage("${response.message}");
       }

@@ -1,7 +1,7 @@
 import 'package:film/models/profile.dart';
 import 'package:film/screens/professional/component/professionl_home.dart';
 import 'package:film/screens/professional/component/project_list_screen.dart';
-import 'package:film/screens/professional/create_project_screen.dart';
+import 'package:film/screens/professional/projects/create_project_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/shared_prefs.dart';
 import 'package:film/utils/user.dart';
@@ -11,7 +11,8 @@ import '../PROFILE/PROFILESCREEN.dart';
 
 
 class PHomeScreen extends StatefulWidget {
-  const PHomeScreen({Key? key}) : super(key: key);
+  final int selectedIndex;
+  const PHomeScreen({Key? key, this.selectedIndex = 3}) : super(key: key);
 
   @override
   State<PHomeScreen> createState() => _PHomeScreenState();
@@ -25,7 +26,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = 3;
+    _selectedIndex = widget.selectedIndex;
   }
 
   void _onTappedItem(int index) {

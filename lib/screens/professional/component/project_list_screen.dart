@@ -3,6 +3,7 @@ import 'package:film/bloc/professionalBloc/project_bloc.dart';
 import 'package:film/core/load_more_listener.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/models/common.dart';
+import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/screens/professional/projects/edit_project_screen.dart';
 import 'package:film/utils/custom_loader/linear_loader.dart';
 import 'package:film/widgets/common_api_loader.dart';
@@ -122,7 +123,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                         List<Projects> projectList = _bloc.projectList;
                         return (projectList.isEmpty) ||
                             (filteredProjectList.isEmpty && searchController.text.isNotEmpty)
-                            ? CommonApiResultsEmptyWidget("No records found")
+                            ? CommonApiResultsEmptyWidget("No Projects found")
                             : _buildProjectList(filteredProjectList.isNotEmpty
                             ? filteredProjectList
                             : _bloc.projectList);
@@ -205,7 +206,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                               errorWidget: (context, url, error) => Container(
                                 margin: EdgeInsets.all(5),
                                 child: Image.asset(
-                                  "assets/images/no_data.png",
+                                  "assets/image/no-post.png",
                                   fit: BoxFit.fill,
                                 ),
                               ),
@@ -277,7 +278,8 @@ class _ProjectListScreenState extends State<ProjectListScreen>
               onPressed: () async {
                 await _bloc.deleteProject(id);
                 await Future.delayed(Duration(seconds: 2));
-                _bloc.getprojectList(false);
+                // _bloc.getprojectList(false);
+                Get.to(() => PHomeScreen(selectedIndex: 1,));
                 Navigator.of(context).pop();
               },
               child: Text('Delete', style: TextStyle(color: Colors.red)),
