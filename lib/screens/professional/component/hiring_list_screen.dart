@@ -209,13 +209,71 @@ class _HiringListScreenState extends State<HiringListScreen>
                         ),
                         title: Text(
                           "${projectList[index].title}",
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                          style: const TextStyle(fontWeight: FontWeight.w500,color: Colors.cyan,fontSize: 22),
                         ),
-                        subtitle: Text(
-                          "${projectList[index].description}",
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.assessment, color: Colors.blue),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Skills: ${projectList[index].skillNames!.join(', ')}",
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.work_outline, color: Colors.green),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Experience: ${projectList[index].experience != null ? projectList[index].experience : 'Not specified'}",
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.person, color: Colors.orange),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Openings: ${projectList[index].openings}",
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.check_circle_outline, color: Colors.green),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Status: ${projectList[index].status}",
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.payment, color: Colors.deepPurple),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Pay: ${projectList[index].pay}",
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
+
                     ),
                   ],
                 ),

@@ -2,6 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:film/screens/professional/create_project_screen.dart';
 import 'package:film/screens/professional/hiring/create_hiring_screen.dart';
+import 'package:film/utils/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -84,7 +85,7 @@ class _ProfessionalHomeState extends State<ProfessionalHome> {
             child: Column(
               children: [
 
-                Row(
+               User_Details.userRole =="professional"? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
@@ -136,7 +137,7 @@ class _ProfessionalHomeState extends State<ProfessionalHome> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.to(() => const CreateHiringScreen());
+                        Get.to(() =>  CreateHiringScreen(ProjectId: '',));
                       },
                       child: Container(
                         height: MediaQuery.of(context).size.height * 0.15,
@@ -177,7 +178,7 @@ class _ProfessionalHomeState extends State<ProfessionalHome> {
                       ),
                     ),
                   ],
-                ),
+                ):Container(),
                 _buildList(allPosts),
 
               ],
@@ -255,8 +256,8 @@ class _ProfessionalHomeState extends State<ProfessionalHome> {
 
 
           //     _newsFeedIconsRow(list[position], control.liked, context),
-                Padding(
-                  padding: const EdgeInsets.only(left: 260.0, right: 8.0),
+                const Padding(
+                  padding: EdgeInsets.only(left: 260.0, right: 8.0),
                   child: Text(
                     "Apply Here",
                     maxLines: 1,

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:film/models/login_response.dart';
 import 'package:film/models/profile.dart';
 import 'package:film/screens/homescreens/home_screen.dart';
+import 'package:film/utils/user.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 
@@ -51,7 +52,7 @@ class AuthRepository {
 
     });
     Response response =
-    await apiClient!.getJsonInstance().post(Apis.userupdate, data: formData,
+    await apiClient!.getJsonInstance().post(User_Details.userRole=="professional"?Apis.profupdate:Apis.userupdate, data: formData,
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {

@@ -14,10 +14,10 @@ class ProfileRepository {
     apiProvider = new ApiProvider();
   }
   Future<SkillResponse> getSkillList() async {
-    print("object->${await apiProvider.getJsonInstance().get('${Apis.skillList}',
+    print("object->${await apiProvider.getJsonInstance().get('${Apis.userSkillList}',
     )}");
     final response = await apiProvider.getJsonInstance().get(
-      '${Apis.skillList}',
+      '${Apis.userSkillList}',
     );
     return response.data;
   }

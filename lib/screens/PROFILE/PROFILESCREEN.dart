@@ -118,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String baseUrl = "";
   String image = "";
   Future<void> _uploadImage(File imageFile) async {
-    final uri = Uri.parse('${Apis.url}${Apis.userUpdateprofilepic}');
+    final uri = Uri.parse('${Apis.url}${User_Details.userRole =="professional"?Apis.professUpdateprofilepic:Apis.userUpdateprofilepic}');
     final request = http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
     request.headers['content-type'] = 'application/json';
@@ -152,20 +152,20 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.cyan,
-          title: Row(
-            children: [
-              Text("Profile"),
-              Spacer(),
-              GestureDetector(
-                  onTap: () {
-                    Get.to(Gallery());
-                  },
-                  child: Text("gallery"))
-            ],
-          ),
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: Colors.cyan,
+        //   title: Row(
+        //     children: [
+        //       Text("Profile"),
+        //       Spacer(),
+        //       GestureDetector(
+        //           onTap: () {
+        //             Get.to(Gallery());
+        //           },
+        //           child: Text("gallery"))
+        //     ],
+        //   ),
+        // ),
         body: SingleChildScrollView(
           child: Stack(children: [
             ClipPath(
@@ -200,7 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           border: Border.all(color: Colors.black, width: 2),
                           shape: BoxShape.circle,
                         ),
-                        child: _image != null
+                        child: _image == null
                             ? ClipOval(
                                 child: Image.network(
                                   '$baseUrl/$image',

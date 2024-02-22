@@ -38,15 +38,28 @@ class _PHomeScreenState extends State<PHomeScreen> {
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(30))),
-        backgroundColor: Colors.cyan,
-        title: Text("Hi ${User_Details.userName}"),
+        backgroundColor: Colors.white, // Set the background color of the AppBar
+        title: Text(
+          'Home',
+          style: TextStyle(color: Colors.black), // Set the text color of the title
+        ),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu, color: Colors.cyan), // Set the color of the menu icon
+            onPressed: () {
+              Scaffold.of(context).openDrawer(); // Open the side drawer
+            },
+          ),
+        ),
         actions: [
-          IconButton(onPressed: (){
-            SharedPrefs.logOut();
-          }, icon: Icon(Icons.logout)),
+          IconButton(
+            icon: Icon(Icons.logout,color: Colors.cyan,),
+            onPressed: () {SharedPrefs.logOut();
+
+              // Handle notification button press
+            },
+          ),
         ],
-        toolbarHeight: 140,
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.grey[50],

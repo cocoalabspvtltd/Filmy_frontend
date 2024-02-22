@@ -53,8 +53,9 @@ class ProfessionalRepository {
 
   Future<HiringListResponse> getHiringList(int perPage,
       int page) async {
-    final response = await apiClient!.getJsonInstance().get(
+    final response = await apiClient!.getJsonInstance().post(
         '${Apis.fetchHiringList}?page=$page&per_page=$perPage');
+    print("respo-/.${response}");
     return HiringListResponse.fromJson(response.data);
   }
 
