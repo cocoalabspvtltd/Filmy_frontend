@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:film/bloc/professionalBloc/hiring_bloc.dart';
 import 'package:film/bloc/professionalBloc/project_bloc.dart';
 import 'package:film/core/load_more_listener.dart';
+import 'package:film/models/hiring_list_response.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/models/common.dart';
-import 'package:film/screens/professional/hiring/create_hiring_screen.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/screens/professional/projects/edit_project_screen.dart';
 import 'package:film/utils/custom_loader/linear_loader.dart';
@@ -12,24 +13,24 @@ import 'package:film/widgets/common_api_result_empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ProjectListScreen extends StatefulWidget {
-  const ProjectListScreen({Key? key}) : super(key: key);
+class HiringListScreen extends StatefulWidget {
+  const HiringListScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProjectListScreen> createState() => _ProjectListScreenState();
+  State<HiringListScreen> createState() => _HiringListScreenState();
 }
 
-class _ProjectListScreenState extends State<ProjectListScreen>
+class _HiringListScreenState extends State<HiringListScreen>
     with LoadMoreListener {
-  late ProjectBloc _bloc;
+  late HiringBloc _bloc;
   late ScrollController _itemsScrollController;
   bool isLoadingMore = false;
-  List<Projects> filteredProjectList = [];
+  List<Hirings> filteredHiringList = [];
 
   @override
   void initState() {
-    _bloc = ProjectBloc(listener: this);
-    _bloc.getprojectList(false);
+    _bloc = HiringBloc(listener: this);
+    _bloc.gethiringList(false);
     _itemsScrollController = ScrollController();
     _itemsScrollController.addListener(_scrollListener);
     super.initState();
@@ -45,7 +46,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
   }
 
   paginate() async {
-    await _bloc.getprojectList(true);
+    await _bloc.gethiringList(true);
   }
 
   void _scrollListener() async {
@@ -63,12 +64,10 @@ class _ProjectListScreenState extends State<ProjectListScreen>
 
   void filterProjectList(String query) {
     setState(() {
-      filteredProjectList = _bloc.projectList
-          .where((project) =>
-      project.projectName!.toLowerCase().contains(query.toLowerCase()) ||
-          project.type!.toLowerCase().contains(query.toLowerCase()) ||
-          ( project.director != null &&
-              project.director!.toLowerCase().contains(query.toLowerCase())))
+      filteredHiringList = _bloc.hiringList
+          .where((hiring) =>
+      hiring.title!.toLowerCase().contains(query.toLowerCase()) ||
+          hiring.experience!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
@@ -79,7 +78,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
       body: RefreshIndicator(
         color: Colors.white,
         backgroundColor: Colors.cyan,
-        onRefresh: () => _bloc.getprojectList(false),
+        onRefresh: () => _bloc.gethiringList(false),
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           controller: _itemsScrollController,
@@ -113,21 +112,21 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                   },
                 ),
               ),
-              StreamBuilder<ApiResponse<ProjectListResponse>>(
-                stream: _bloc.projectListStream,
+              StreamBuilder<ApiResponse<HiringListResponse>>(
+                stream: _bloc.hiringListStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     switch (snapshot.data!.status!) {
                       case Status.LOADING:
                         return CommonApiLoader();
                       case Status.COMPLETED:
-                        List<Projects> projectList = _bloc.projectList;
-                        return (projectList.isEmpty) ||
-                            (filteredProjectList.isEmpty && searchController.text.isNotEmpty)
+                        List<Hirings> hiringList = _bloc.hiringList;
+                        return (hiringList.isEmpty) ||
+                            (filteredHiringList.isEmpty && searchController.text.isNotEmpty)
                             ? CommonApiResultsEmptyWidget("No Projects found")
-                            : _buildProjectList(filteredProjectList.isNotEmpty
-                            ? filteredProjectList
-                            : _bloc.projectList);
+                            : _buildProjectList(filteredHiringList.isNotEmpty
+                            ? filteredHiringList
+                            : _bloc.hiringList);
                       case Status.ERROR:
                         return SizedBox(
                           height: MediaQuery.of(context).size.height - 180,
@@ -155,7 +154,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
     );
   }
 
-  Widget _buildProjectList(List<Projects> projectList) {
+  Widget _buildProjectList(List<Hirings> projectList) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: ListView.builder(
@@ -175,45 +174,22 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Column(
                   children: [
-                    Align(
-                      alignment: AlignmentDirectional.topEnd,
-                      child: Text(
-                        "${projectList[index].createdAt}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
+                    // Align(
+                    //   alignment: AlignmentDirectional.topEnd,
+                    //   child: Text(
+                    //     "${projectList[index].createdAt}",
+                    //     style: TextStyle(
+                    //       fontWeight: FontWeight.w500,
+                    //       fontStyle: FontStyle.italic,
+                    //     ),
+                    //   ),
+                    // ),
                     GestureDetector(
                       onTap: () {
                         // Handle image tap here
                       },
                       child: ListTile(
                         isThreeLine: true,
-                        leading: Container(
-                          width: MediaQuery.of(context).size.width * .25,
-                          padding: EdgeInsets.all(1),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: CachedNetworkImage(
-                              fit: BoxFit.fill,
-                              imageUrl: projectList[index].posterUrl!,
-                              placeholder: (context, url) =>
-                                  Center(child: CircularProgressIndicator()),
-                              errorWidget: (context, url, error) => Container(
-                                margin: EdgeInsets.all(5),
-                                child: Image.asset(
-                                  "assets/image/no-post.png",
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
                         trailing: Column(
                           children: [
                             GestureDetector(
@@ -226,57 +202,18 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                             SizedBox(height: 6),
                             GestureDetector(
                               onTap: () async {
-                                Get.to(EditProjectScreen(details: projectList[index]));
                               },
                               child: Icon(Icons.edit, color: Colors.cyan),
                             ),
                           ],
                         ),
                         title: Text(
-                          "${projectList[index].projectName}",
+                          "${projectList[index].title}",
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${projectList[index].type}",
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            if (projectList[index].director != null)
-                              Text(
-                                "Director : ${projectList[index].director}",
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              ),
-                            if (projectList[index].duration != null)
-                              Text(
-                                "Duration : ${projectList[index].duration}",
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              ),
-                            SizedBox(height: 6,),
-                            Align(alignment: AlignmentDirectional.bottomEnd,
-                                child: Container(
-                                  height: 22,
-                                  width: 100,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Get.to(CreateHiringScreen(ProjectId:projectList[index].id.toString()));
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.black,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "Add Hiring",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            )
-                          ],
+                        subtitle: Text(
+                          "${projectList[index].description}",
+                          style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
@@ -300,7 +237,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-                await _bloc.deleteProject(id);
+                // await _bloc.deleteProject(id);
                 await Future.delayed(Duration(seconds: 2));
                 // _bloc.getprojectList(false);
                 Get.to(() => PHomeScreen(selectedIndex: 3,));

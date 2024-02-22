@@ -1,7 +1,6 @@
-import 'package:film/models/profile.dart';
 import 'package:film/screens/professional/component/professionl_home.dart';
 import 'package:film/screens/professional/component/project_list_screen.dart';
-import 'package:film/screens/professional/projects/create_project_screen.dart';
+import 'package:film/screens/professional/component/hiring_list_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/shared_prefs.dart';
 import 'package:film/utils/user.dart';
@@ -94,7 +93,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
         : _selectedIndex == 1
     ? ProjectListScreen()
         : _selectedIndex == 0
-    ? Text("Hiring")
+    ? HiringListScreen()
         : Center(child: Text("hai")),
     ),
 

@@ -74,7 +74,7 @@ class _ProfessionalHomeState extends State<ProfessionalHome> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(() => CreateHiringScreen());
+                      Get.to(() => CreateHiringScreen(ProjectId: '',));
                     },
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.15,
