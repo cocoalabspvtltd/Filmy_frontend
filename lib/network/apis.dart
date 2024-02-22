@@ -9,6 +9,7 @@ class Apis {
   static String userUpdateprofilepic = "api/users/update_profile_picture";
   static String userSkillList = "api/users/skills-list";
   static String usergallery = "api/users/upload_gallery";
+  static String fetchgallery = "api/users/gallery";
   //professional
   static String storeProject="api/professionals/projects/store";
   static String fetchProjectList="api/professionals/projects/list";

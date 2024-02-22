@@ -80,12 +80,12 @@ class _GalleryState extends State<Gallery> {
 
   Future<void> _galleryImages() async {
    // AppDialogs.loading();
-    var uri = Uri.parse('https://07f1-117-221-145-221.ngrok-free.app/api/users/gallery');
+    var uri = Uri.parse('${Apis.url}${Apis.fetchgallery}');
     var response = await http.get(uri, headers: {
       'Authorization': 'Bearer ${User_Details.apiToken}',
       'Content-Type': 'application/json',
     });
-
+print("respon->${response.body}");
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       setState(() {
@@ -105,7 +105,7 @@ class _GalleryState extends State<Gallery> {
 
       print("obje>a${id}");
 
-      var uri = Uri.parse(''
+      var uri = Uri.parse('${Apis.url}'
           '/api/users/galleries/${id}/delete');
       var request = http.MultipartRequest('DELETE', uri);
       request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
