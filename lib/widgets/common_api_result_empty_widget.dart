@@ -21,7 +21,7 @@ class CommonApiResultsEmptyWidget extends StatelessWidget {
             width: 10,
           ),
           Image(
-            image: AssetImage('assets/images/no_data.png'),
+            image: AssetImage('assets/image/no-post.png'),
             height: MediaQuery.of(context).size.height * .20,
             width: MediaQuery.of(context).size.width * .40,
           ),
