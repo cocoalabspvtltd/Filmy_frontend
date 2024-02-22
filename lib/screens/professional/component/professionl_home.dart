@@ -1,5 +1,6 @@
 
-import 'package:film/screens/professional/create_project_screen.dart';
+import 'package:film/screens/professional/hiring/create_hiring_screen.dart';
+import 'package:film/screens/professional/projects/create_project_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -73,6 +74,7 @@ class _ProfessionalHomeState extends State<ProfessionalHome> {
                   ),
                   GestureDetector(
                     onTap: () {
+                      Get.to(() => CreateHiringScreen());
                     },
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.15,
