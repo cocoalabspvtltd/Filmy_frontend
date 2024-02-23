@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:film/bloc/professionalBloc/hiring_bloc.dart';
 import 'package:film/models/common.dart';
 import 'package:film/models/skillresponse.dart';
@@ -360,8 +361,7 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
     } else if (selectedOptionsIds.isEmpty) {
       return toastMessage("Please select skills");
     }
-    if (experience.isNotEmpty &&
-        formatAndValidate.validateName(experience) != null) {
+    if (experience == null) {
       return toastMessage("Please enter experience");
     }
     if (opening == null) {
@@ -371,51 +371,64 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
       return toastMessage("Please enter salary");
     }
 
-    return await _createHiring(title, description, experience, opening, salary);
+    return await _createHiring(title,   selectedOptionsIds,description, experience, opening, salary,widget.ProjectId);
   }
-
-  Future _createHiring(
-    String title,
-    String description,
-    String experience,
-    String opening,
-    String salary,
-  ) async {
-    AppDialogs.loading();
-
-    Map<String, dynamic> body = {};
-    body["title"] = title;
-    body["description"] = description;
-    body["skills"] = selectedOptionsIds;
-    if (experience.isNotEmpty) {
-      body["experience"] = experience;
-    }
-
-    if (opening.isNotEmpty) {
-      body["openings"] = opening;
-    }
-
-    if (salary.isNotEmpty) {
-      body["pay"] = salary;
-    }
-    if (widget.ProjectId.isNotEmpty) {
-      body["project_id"] = widget.ProjectId;
-    }
-
-    try {
-      CommonResponse response =
-      await _bloc!.addHiring(json.encode(body));
-      print("body..${body}");
-      Get.back();
-      if (response.success!) {
-        Get.to(PHomeScreen());
-        toastMessage('${response.message!}');
-      } else {
-        toastMessage('${response.message!}');
-      }
-    } catch (e, s) {
-      Completer().completeError(e, s);
-      toastMessage('Not added hiring!');
-    }
+  _createHiring(String title, List<int> interestsids, description, experience, opening,
+      salary,prjid) async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    await _bloc.addHiring(
+         title,interestsids, description, experience, opening,
+        salary,prjid
+    );
   }
+  // Future _createHiring(
+  //   String title,
+  //   String description,
+  //   String experience,
+  //   String opening,
+  //   String salary,
+  // ) async {
+  //
+  //   FormData formData = FormData.fromMap({
+  //     "title":title,
+  //     "description":description,
+  //     "skills[]":selectedOptionsIds,
+  //
+  //   });
+  //   print("fo->${formData.fields}");
+  //   // Map<String, dynamic> body = {};
+  //   // body["title"] = title;
+  //   // body["description"] = description;
+  //   // body["skills"] = selectedOptionsIds;
+  //   if (experience.isNotEmpty) {
+  //     body["experience"] = experience;
+  //   }
+  //
+  //   if (opening.isNotEmpty) {
+  //     body["openings"] = opening;
+  //   }
+  //
+  //   if (salary.isNotEmpty) {
+  //     body["pay"] = salary;
+  //   }
+  //   if (widget.ProjectId.isNotEmpty) {
+  //     body["project_id"] = widget.ProjectId;
+  //   }
+  //
+  //   try {
+  //     CommonResponse response =
+  //     await _bloc!.addHiring(json.encode(formData));
+  //
+  //     Get.back();
+  //     if (response.success!) {
+  //       Get.to(PHomeScreen());
+  //       toastMessage('${response.message!}');
+  //     } else {
+  //       toastMessage('${response.message!}');
+  //     }
+  //   } catch (e, s) {
+  //     Completer().completeError(e, s);
+  //     toastMessage('Not added hiring!');
+  //   }
+  // }
 }

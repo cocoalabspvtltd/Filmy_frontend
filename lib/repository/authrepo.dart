@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:film/models/login_response.dart';
 import 'package:film/models/profile.dart';
 import 'package:film/screens/homescreens/home_screen.dart';
-import 'package:film/screens/professional/p_home_screen.dart';
+import 'package:film/screens/professional/component/professionl_home.dart';
 import 'package:film/utils/user.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -12,6 +12,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import '../models/common.dart';
 import '../network/api_provider.dart';
 import '../network/apis.dart';
+import '../screens/professional/p_home_screen.dart';
 import '../utils/api_helper.dart';
 
 
@@ -49,8 +50,6 @@ class AuthRepository {
       "profession":address,
       "years" :years,
       "resume":ImageName
-
-
     });
     Response response =
     await apiClient!.getJsonInstance().post(User_Details.userRole=="professional"?Apis.profupdate:Apis.userupdate, data: formData,
@@ -64,7 +63,7 @@ class AuthRepository {
     } else {
       toastMessage("${response.data['message']}");
       print(
-          "###########__________________ADD PROFILE UNSUCCESSFULLY________________##############");
+          "###########__________________ADD PROPERTY UNSUCESSFULLY________________##############");
       throw "";
     }
   }
