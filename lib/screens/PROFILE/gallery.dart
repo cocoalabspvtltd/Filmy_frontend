@@ -104,21 +104,27 @@ print("respon->${response.body}");
   Future<void> _uploadImagesdelete(int id) async {
 
       print("obje>a${id}");
-
+print('${Apis.url}'
+'api/users/galleries/${id}/delete');
       var uri = Uri.parse('${Apis.url}'
-          '/api/users/galleries/${id}/delete');
+          'api/users/galleries/${id}/delete');
       var request = http.MultipartRequest('DELETE', uri);
       request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
       request.headers['content-type'] = 'application/json';
 
       var response = await request.send();
-      if (response.statusCode == 200) {
+      String responseText = await response.stream.bytesToString();
+      Map<String, dynamic> jsonResponse = jsonDecode(responseText);
+      bool status = jsonResponse['status'];
+      String message = jsonResponse['message'];
+      if (status == true) {
         toastMessage("Gallery images deleted successfully");
         print('Gallery images uploaded successfully');
         AppDialogs.closeDialog();
         // Refresh the page after uploading images
         refreshGallery();
       } else {
+        toastMessage("Failed to delete gallery images");
         print('Failed to delete gallery images');
         // Handle error response
       }

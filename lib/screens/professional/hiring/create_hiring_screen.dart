@@ -386,7 +386,7 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
     Map<String, dynamic> body = {};
     body["title"] = title;
     body["description"] = description;
-    body["skills"] = selectedOptionsIds;
+    body["skills[]"] = selectedOptionsIds;
     if (experience.isNotEmpty) {
       body["experience"] = experience;
     }

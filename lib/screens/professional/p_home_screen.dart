@@ -2,6 +2,7 @@ import 'package:film/screens/PROFILE/gallery.dart';
 import 'package:film/screens/professional/component/professionl_home.dart';
 import 'package:film/screens/professional/component/project_list_screen.dart';
 import 'package:film/screens/professional/component/hiring_list_screen.dart';
+import 'package:film/screens/user/hiringapplyrequ.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/shared_prefs.dart';
 import 'package:film/utils/user.dart';
@@ -21,7 +22,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
   late int _selectedIndex;
   DateTime? currentBackPressTime;
   List<String> appBarTitle = [
-    "Hirings",
+    User_Details.userRole == "professional" ?  "Hirings":"Applications",
     User_Details.userRole == "professional" ? "Projects" : "Gallery",
     "Profile",
     "Home",
@@ -80,16 +81,17 @@ class _PHomeScreenState extends State<PHomeScreen> {
         selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
         unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
         items: [
-          BottomNavigationBarItem(
-              label: "Hiring", icon: Icon(Icons.work_outline_outlined)),
+          User_Details.userRole == "professional"?  const BottomNavigationBarItem(
+              label: "Hiring", icon: Icon(Icons.work_outline_outlined)):BottomNavigationBarItem(
+              label: "Application", icon: Icon(Icons.work_outline_outlined)),
           User_Details.userRole == "professional"
-              ? BottomNavigationBarItem(
+              ? const BottomNavigationBarItem(
                   label: "Projects", icon: Icon(Icons.propane_tank_outlined))
-              : BottomNavigationBarItem(
+              : const BottomNavigationBarItem(
                   label: "Gallery", icon: Icon(Icons.propane_tank_outlined)),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
               label: "profile", icon: Icon(Icons.person_outline)),
-          BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home_filled)),
+          const BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home_filled)),
         ],
       ),
       body: WillPopScope(
@@ -112,8 +114,9 @@ class _PHomeScreenState extends State<PHomeScreen> {
                         ? ProjectListScreen()
                         : Gallery()
                     : _selectedIndex == 0
-                        ? HiringListScreen()
-                        : Center(child: Text("hai")),
+                        ?User_Details.userRole == "professional"
+            ? HiringListScreen()
+                        : Applications():Center(child: Text("Hai"),)
       ),
     );
   }
