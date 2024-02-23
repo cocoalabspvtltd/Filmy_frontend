@@ -127,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
       isLoading = true;
     });
 
-    final uri = Uri.parse('${Apis.url}${User_Details.userRole =="professional"?Apis.professUpdateprofilepic:Apis.userUpdateprofilepic}');
+    final uri = Uri.parse('${Apis.url}${Apis.professUpdateprofilepic}');
     final request = http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
     request.headers['content-type'] = 'application/json';
