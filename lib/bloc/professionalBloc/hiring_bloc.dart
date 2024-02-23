@@ -99,16 +99,16 @@ class HiringBloc {
     }
     return null;
   }
-  //
-  // Future<CommonResponse> editProject(id,FormData formdata) async {
-  //   try {
-  //     CommonResponse response = await _repository!.editProject(formdata,id);
-  //     return response;
-  //   } catch (e, s) {
-  //     Completer().completeError(e, s);
-  //     throw e;
-  //   }
-  // }
+
+  Future<CommonResponse> editHiring(id,String formdata) async {
+    try {
+      CommonResponse response = await _repository!.editHiring(formdata,id);
+      return response;
+    } catch (e, s) {
+      Completer().completeError(e, s);
+      throw e;
+    }
+  }
 
 
 }
