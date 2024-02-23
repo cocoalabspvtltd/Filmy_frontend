@@ -208,9 +208,11 @@ class _HiringListScreenState extends State<HiringListScreen>
                               children: [
                                 Icon(Icons.assessment, color: Colors.blue),
                                 SizedBox(width: 6),
-                                Text(
-                                  "Skills: ${hiringList[index].skillNames!.join(', ')}",
-                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                Expanded(
+                                  child: Text(
+                                    "Skills: ${hiringList[index].skillNames!.join(', ')}",
+                                    style: TextStyle(fontWeight: FontWeight.w500),
+                                  ),
                                 ),
                               ],
                             ),
@@ -261,7 +263,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                             SizedBox(height: 6),
                             Row(
                               children: [
-                                Icon(Icons.check_circle_outline, color: Colors.green),
+                                Icon(Icons.description, color: Colors.green),
                                 SizedBox(width: 6),
                                 Expanded(
                                   child: Text(

@@ -46,6 +46,7 @@ class HiringListResponse {
   }
 }
 
+
 class Hirings {
   int? id;
   String? title;
