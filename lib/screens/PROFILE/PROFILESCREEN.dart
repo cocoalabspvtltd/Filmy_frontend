@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:film/screens/PROFILE/gallery.dart';
+import 'package:film/utils/api_helper.dart';
+import 'package:film/utils/string_formatter_and_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -72,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   FilePickerResult? result;
-  TextEditingController skillControl = TextEditingController();
+  FormatAndValidate formatAndValidate = FormatAndValidate();
   TextEditingController addressControl = TextEditingController();
   TextEditingController profControl = TextEditingController();
   TextEditingController experControl = TextEditingController();
@@ -115,11 +118,16 @@ class _ProfilePageState extends State<ProfilePage> {
       await _uploadImage(imageFile); // Upload the image
     }
   }
-
   String baseUrl = "";
   String image = "";
+  bool isLoading = false;
+
   Future<void> _uploadImage(File imageFile) async {
-    final uri = Uri.parse(Apis.professUpdateprofilepic);
+    setState(() {
+      isLoading = true;
+    });
+
+    final uri = Uri.parse('${Apis.url}${User_Details.userRole =="professional"?Apis.professUpdateprofilepic:Apis.userUpdateprofilepic}');
     final request = http.MultipartRequest('POST', uri);
     request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
     request.headers['content-type'] = 'application/json';
@@ -128,27 +136,32 @@ class _ProfilePageState extends State<ProfilePage> {
       imageFile.readAsBytes().asStream(),
       imageFile.lengthSync(),
       filename: 'image.jpg', // Provide a filename here
-      // Adjust content type if necessary
     ));
 
     final response = await request.send();
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse =
-          json.decode(await response.stream.bytesToString());
+      json.decode(await response.stream.bytesToString());
 
+      setState(() {
+        image = jsonResponse["picture"]["image"];
+        baseUrl = jsonResponse["baseUrl"];
+        isLoading = false;
+      });
 
-      image = jsonResponse["picture"]["image"];
-
-      // Return the full image URL
-
-      print('Image uploaded successfully=>${image}');
       // Handle success response
+      print("Response: $jsonResponse");
+      print('Image uploaded successfully: $image');
     } else {
+      setState(() {
+        isLoading = false;
+      });
       print('Failed to upload image');
       // Handle error response
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -188,38 +201,78 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             Column(
               children: [
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                Container(
+                  height: 130,
+                  width: screenWidth,
+                  child: Stack(
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width / 3,
-                        height: MediaQuery.of(context).size.width / 3,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: 2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: _image == null
-                            ? ClipOval(
-                                child: Image.network(
-                                  '$baseUrl/$image',
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : ClipOval(
-                                child: Image.network(
-                                  '${User_Details.userbaseur}/${User_Details.userimage}',
-                                  fit: BoxFit.cover,
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          padding: EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: BorderRadius.circular(60),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(60),
+                            child: _image != null
+                                ? CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl:
+                              '${baseUrl}/${image}',
+                              placeholder: (context, url) => Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: (context, url, error) => GestureDetector(
+                                onTap: () async {
+                                  await _pickImage();
+                                },
+                                child: CircleAvatar(
+                                  radius: 46.0,
+                                  backgroundImage:
+                                  AssetImage('assets/images/dp.png'),
+                                  backgroundColor: Colors.grey,
                                 ),
                               ),
+                            )
+                                : CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl:
+                              '${User_Details.userbaseur}/${User_Details.userimage}',
+                              placeholder: (context, url) => Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: (context, url, error) => GestureDetector(
+                                onTap: () async {
+                                  await _pickImage();
+                                },
+                                child: CircleAvatar(
+                                  radius: 46.0,
+                                  backgroundImage:
+                                  AssetImage('assets/images/dp.png'),
+                                  backgroundColor: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      Icon(Icons.edit),
+                      Positioned(
+                        right: MediaQuery.of(context).size.width / 3,
+                        bottom: 10,
+                        child: InkWell(
+                          onTap: () async {
+                            await _pickImage();
+                          },
+                          child: Icon(Icons.edit),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-
                 Padding(
                   padding:
                       const EdgeInsets.only(top: 10.0, right: 76, left: 76),
@@ -269,7 +322,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         style: TextStyle(color: Colors.black),
                       ),
                       title: Text('Select Interest'),
-                      buttonText: Text('Select skills'),
+                      buttonText: Text('Select Interests'),
                       onConfirm: (values) {
                         setState(() {
                           selectedOptionsIdsinterest =
@@ -455,15 +508,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        print("skill=>${skillControl.text}");
                         // Navigate to the CompleteProfile screen using Get.to method
-                        await _addPropertyFun(
-                            _filePath,
-                            selectedOptionsIdsinterest,
-                            addressControl.text,
-                            experControl.text,
-                            profControl.text,
-                            selectedOptionsIdsskills);
+                        _validate();
+                        // await _addPropertyFun(
+                        //     _filePath,
+                        //     selectedOptionsIdsinterest,
+                        //     addressControl.text,
+                        //     experControl.text,
+                        //     profControl.text,
+                        //     selectedOptionsIdsskills);
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.black,
@@ -509,6 +562,24 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  _validate() async {
+   var profesion=profControl.text;
+   var address=addressControl.text;
+   var  experince=experControl.text;
+
+   if (selectedOptionsIdsinterest.isEmpty) {
+     return toastMessage("Please select interests");
+   } else if (formatAndValidate.validateName(profesion) != null) {
+      return toastMessage("Please enter your professional");
+    } else if (formatAndValidate.validateAddress(address) != null) {
+      return toastMessage("Please enter your address");
+    } else if (selectedOptionsIdsskills.isEmpty) {
+      return toastMessage("Please select skills");
+    }else if (_filePath.isEmpty) {
+      return toastMessage("Please upload resume");
+    }
+    return await _addPropertyFun(_filePath,selectedOptionsIdsinterest,profesion,address,experince,selectedOptionsIdsskills);
+  }
   _addPropertyFun(String image, List<int> interestsids, profesion, address, years,
       List<int> skillsids) async {
     FocusScope.of(context).requestFocus(FocusNode());

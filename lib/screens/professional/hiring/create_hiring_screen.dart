@@ -373,11 +373,11 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
 
     return await _createHiring(title,   selectedOptionsIds,description, experience, opening, salary,widget.ProjectId);
   }
-  _createHiring(String title, List<int> interestsids, description, experience, opening,
+  _createHiring(String title, List<int> skillsIds, description, experience, opening,
       salary,prjid) async {
     FocusScope.of(context).requestFocus(FocusNode());
     await _bloc.addHiring(
-         title,interestsids, description, experience, opening,
+         title,skillsIds, description, experience, opening,
         salary,prjid
     );
   }

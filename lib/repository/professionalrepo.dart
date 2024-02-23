@@ -52,11 +52,11 @@ class ProfessionalRepository {
     return CommonResponse.fromJson(response.data);
   }
 
-  Future<CommonResponse> addHiring(  String title, List<int> interestsids, description, experience, opening,
+  Future<CommonResponse> addHiring( String title, List<int> skillsIds, description, experience, opening,
       salary,ProjectId) async {
     FormData formData = FormData.fromMap({
       "title":title,
-      "skills[]":interestsids,
+      "skills[]":skillsIds,
       "description":description,
 
     });
@@ -80,7 +80,7 @@ class ProfessionalRepository {
     await apiClient!.getJsonInstance().post(Apis.storeHiring, data: formData,
     );
 if(response.statusCode==200){
-  toastMessage("Request posted successfully");
+  toastMessage("${response.data['message']}");
   Get.to(()=>PHomeScreen());
 }
 else{
@@ -110,10 +110,40 @@ else{
         .delete('${Apis.deleteHiring}$id/delete');
     return CommonResponse.fromJson(response.data);
   }
-  Future<CommonResponse> editHiring(String body,id) async {
+  Future<CommonResponse> editHiring(String id,title, List<int> skillsIds, description, experience, opening,
+      salary,ProjectId) async {
+    FormData formData = FormData.fromMap({
+      "title":title,
+      "skills[]":skillsIds,
+      "description":description,
+
+    });
+    if (experience.isNotEmpty) {
+      formData.fields.add(MapEntry("experience", experience));
+    }
+
+    if (opening.isNotEmpty) {
+      formData.fields.add(MapEntry("openings", opening));
+    }
+
+    if (salary.isNotEmpty) {
+      formData.fields.add(MapEntry("pay", salary));
+    }
+
+    if (ProjectId.isNotEmpty) {
+      formData.fields.add(MapEntry("project_id", ProjectId));
+    }
+
     Response response = await apiClient!
         .getJsonInstance()
-        .post('${Apis.editHiring}$id/update', data: body);
+        .post('${Apis.editHiring}$id/update', data: formData);
+    if(response.statusCode==200){
+      toastMessage("${response.data['message']}");
+      Get.to(()=>PHomeScreen());
+    }
+    else{
+      toastMessage("Check Your enter details");
+    }
     return CommonResponse.fromJson(response.data);
   }
 
