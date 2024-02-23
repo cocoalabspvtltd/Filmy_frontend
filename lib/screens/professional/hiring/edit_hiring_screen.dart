@@ -253,7 +253,7 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
                     controller: experienceControl,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Enter experience',
+                        labelText: 'Enter experience (in years)',
                         fillColor: Colors.white),
                     onChanged: (value) {
                       print('The entered text is: $value');
@@ -368,51 +368,59 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
       return toastMessage("Please enter salary");
     }
 
-    return await _EditHiring(title, description, experience, opening, salary);
+    return await _editHiring(title,selectedOptionsIds, description, experience, opening, salary);
   }
 
-  Future _EditHiring(
-      String title,
-      String description,
-      String experience,
-      String opening,
-      String salary,
-      ) async {
-    AppDialogs.loading();
-
-    Map<String, dynamic> body = {};
-    body["title"] = title;
-    body["description"] = description;
-    body["skills"] = selectedOptionsIds;
-    if (experience.isNotEmpty) {
-      body["experience"] = experience;
-    }
-
-    if (opening.isNotEmpty) {
-      body["openings"] = opening;
-    }
-
-    if (salary.isNotEmpty) {
-      body["pay"] = salary;
-    }
-    if (widget.details.projectId !=null) {
-      body["project_id"] = widget.details.projectId;
-    }
-
-    try {
-      CommonResponse response =
-      await _bloc!.editHiring(widget.details.id,json.encode(body));
-      print("body..${body}");
-      Get.back();
-      if (response.success!) {
-        Get.to(PHomeScreen());
-        toastMessage('${response.message!}');
-      } else {
-        toastMessage('${response.message!}');
-      }
-    } catch (e, s) {
-      Completer().completeError(e, s);
-      toastMessage('Not edit hiring!');
-    }
+  _editHiring(String title, List<int> skillsIds, description, experience, opening,
+      salary) async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    await _bloc.editHiring(widget.details.id.toString(),
+        title,skillsIds, description, experience, opening,
+        salary,widget.details.projectId.toString()
+    );
   }
+  // Future _EditHiring(
+  //     String title,
+  //     String description,
+  //     String experience,
+  //     String opening,
+  //     String salary,
+  //     ) async {
+  //   AppDialogs.loading();
+  //
+  //   Map<String, dynamic> body = {};
+  //   body["title"] = title;
+  //   body["description"] = description;
+  //   body["skills"] = selectedOptionsIds;
+  //   if (experience.isNotEmpty) {
+  //     body["experience"] = experience;
+  //   }
+  //
+  //   if (opening.isNotEmpty) {
+  //     body["openings"] = opening;
+  //   }
+  //
+  //   if (salary.isNotEmpty) {
+  //     body["pay"] = salary;
+  //   }
+  //   if (widget.details.projectId !=null) {
+  //     body["project_id"] = widget.details.projectId;
+  //   }
+  //
+  //   try {
+  //     CommonResponse response =
+  //     await _bloc!.editHiring(widget.details.id,json.encode(body));
+  //     print("body..${body}");
+  //     Get.back();
+  //     if (response.success!) {
+  //       Get.to(PHomeScreen());
+  //       toastMessage('${response.message!}');
+  //     } else {
+  //       toastMessage('${response.message!}');
+  //     }
+  //   } catch (e, s) {
+  //     Completer().completeError(e, s);
+  //     toastMessage('Not edit hiring!');
+  //   }
+  // }
 }

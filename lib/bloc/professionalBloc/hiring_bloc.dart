@@ -77,11 +77,11 @@ class HiringBloc {
 
 
   Future<CommonResponse> addHiring(
-      String title, List<int> interestsids, description, experience, opening,
+      String title, List<int> skillsId, description, experience, opening,
       salary,ProjectId
       ) async {
     try {
-      CommonResponse response = await _repository!.addHiring( title,  interestsids, description, experience, opening,
+      CommonResponse response = await _repository!.addHiring( title,  skillsId, description, experience, opening,
           salary,ProjectId);
       return response;
     } catch (e, s) {
@@ -102,9 +102,11 @@ class HiringBloc {
     return null;
   }
 
-  Future<CommonResponse> editHiring(id,String formdata) async {
+  Future<CommonResponse> editHiring(id, String title, List<int> skillsId, description, experience, opening,
+      salary,ProjectId) async {
     try {
-      CommonResponse response = await _repository!.editHiring(formdata,id);
+      CommonResponse response = await _repository!.editHiring(id,title,  skillsId, description, experience, opening,
+          salary,ProjectId);
       return response;
     } catch (e, s) {
       Completer().completeError(e, s);

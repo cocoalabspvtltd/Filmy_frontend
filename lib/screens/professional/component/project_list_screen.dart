@@ -253,6 +253,15 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                                 "Duration : ${projectList[index].duration}",
                                 style: TextStyle(fontWeight: FontWeight.w500),
                               ),
+                            Container(
+                              height: 60, // Adjust the height as needed
+                              child: SingleChildScrollView(
+                                child: Text(
+                                  "Description: ${projectList[index].description}",
+                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ),
                             SizedBox(height: 6,),
                             Align(alignment: AlignmentDirectional.bottomEnd,
                                 child: Container(
