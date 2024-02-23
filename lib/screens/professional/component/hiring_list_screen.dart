@@ -5,6 +5,7 @@ import 'package:film/core/load_more_listener.dart';
 import 'package:film/models/hiring_list_response.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/models/common.dart';
+import 'package:film/screens/professional/hiring/edit_hiring_screen.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/screens/professional/projects/edit_project_screen.dart';
 import 'package:film/utils/custom_loader/linear_loader.dart';
@@ -62,7 +63,7 @@ class _HiringListScreenState extends State<HiringListScreen>
     }
   }
 
-  void filterProjectList(String query) {
+  void filterHringList(String query) {
     setState(() {
       filteredHiringList = _bloc.hiringList
           .where((hiring) =>
@@ -107,8 +108,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                     fontSize: 16.0,
                   ),
                   onChanged: (value) {
-                    print("njn${value}");
-                    filterProjectList(value);
+                    filterHringList(value);
                   },
                 ),
               ),
@@ -123,7 +123,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                         List<Hirings> hiringList = _bloc.hiringList;
                         return (hiringList.isEmpty) ||
                             (filteredHiringList.isEmpty && searchController.text.isNotEmpty)
-                            ? CommonApiResultsEmptyWidget("No Projects found")
+                            ? CommonApiResultsEmptyWidget("No hiring found")
                             : _buildProjectList(filteredHiringList.isNotEmpty
                             ? filteredHiringList
                             : _bloc.hiringList);
@@ -154,13 +154,13 @@ class _HiringListScreenState extends State<HiringListScreen>
     );
   }
 
-  Widget _buildProjectList(List<Hirings> projectList) {
+  Widget _buildProjectList(List<Hirings> hiringList) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: projectList.length,
+        itemCount: hiringList.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -174,16 +174,6 @@ class _HiringListScreenState extends State<HiringListScreen>
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Column(
                   children: [
-                    // Align(
-                    //   alignment: AlignmentDirectional.topEnd,
-                    //   child: Text(
-                    //     "${projectList[index].createdAt}",
-                    //     style: TextStyle(
-                    //       fontWeight: FontWeight.w500,
-                    //       fontStyle: FontStyle.italic,
-                    //     ),
-                    //   ),
-                    // ),
                     GestureDetector(
                       onTap: () {
                         // Handle image tap here
@@ -195,33 +185,33 @@ class _HiringListScreenState extends State<HiringListScreen>
                             GestureDetector(
                               onTap: () async {
                                 _showDeleteConfirmationDialog(
-                                    context, projectList[index].id.toString());
+                                    context, hiringList[index].id.toString());
                               },
                               child: Icon(Icons.delete_outline, color: Colors.red[800]),
                             ),
                             SizedBox(height: 6),
                             GestureDetector(
                               onTap: () async {
+                               Get.to(EditHiringScreen(details: hiringList[index],));
                               },
                               child: Icon(Icons.edit, color: Colors.cyan),
                             ),
                           ],
                         ),
                         title: Text(
-                          "${projectList[index].title}",
+                          "${hiringList[index].title}",
                           style: const TextStyle(fontWeight: FontWeight.w500,color: Colors.cyan,fontSize: 22),
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
                             SizedBox(height: 6),
                             Row(
                               children: [
                                 Icon(Icons.assessment, color: Colors.blue),
                                 SizedBox(width: 6),
                                 Text(
-                                  "Skills: ${projectList[index].skillNames!.join(', ')}",
+                                  "Skills: ${hiringList[index].skillNames!.join(', ')}",
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -232,7 +222,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                                 Icon(Icons.work_outline, color: Colors.green),
                                 SizedBox(width: 6),
                                 Text(
-                                  "Experience: ${projectList[index].experience != null ? projectList[index].experience : 'Not specified'}",
+                                  "Experience: ${hiringList[index].experience != null ? hiringList[index].experience : 'Not specified'}",
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -243,7 +233,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                                 Icon(Icons.person, color: Colors.orange),
                                 SizedBox(width: 6),
                                 Text(
-                                  "Openings: ${projectList[index].openings}",
+                                  "Openings: ${hiringList[index].openings}",
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -254,7 +244,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                                 Icon(Icons.check_circle_outline, color: Colors.green),
                                 SizedBox(width: 6),
                                 Text(
-                                  "Status: ${projectList[index].status}",
+                                  "Status: ${hiringList[index].status}",
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -265,7 +255,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                                 Icon(Icons.payment, color: Colors.deepPurple),
                                 SizedBox(width: 6),
                                 Text(
-                                  "Pay: ${projectList[index].pay}",
+                                  "Pay: ${hiringList[index].pay}",
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -295,9 +285,9 @@ class _HiringListScreenState extends State<HiringListScreen>
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-                // await _bloc.deleteProject(id);
+                await _bloc.deleteHiring(id);
                 await Future.delayed(Duration(seconds: 2));
-                // _bloc.getprojectList(false);
+               // _bloc.getprojectList(false);
                 Get.to(() => PHomeScreen(selectedIndex: 3,));
                 Navigator.of(context).pop();
               },

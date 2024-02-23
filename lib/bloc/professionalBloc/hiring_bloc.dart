@@ -6,6 +6,7 @@ import 'package:film/models/hiring_list_response.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/network/api_error_message.dart';
 import 'package:film/repository/professionalrepo.dart';
+import 'package:film/utils/api_helper.dart';
 
 class HiringBloc {
   ProfessionalRepository? _repository;
@@ -74,47 +75,6 @@ class HiringBloc {
   }
 
 
-  // addHiring(String title,String descrip,String exper,String opening,String salary,List<int> seleid,String projectId) async {
-  //
-  //   var formData = {
-  //     "title": title,
-  //     "description": descrip,
-  //     "skills": seleid,
-  //     if (exper != null||exper.isNotEmpty) "experience": exper,
-  //     if (opening != null||opening.isNotEmpty) "openings": opening,
-  //     if (salary != null || salary.isNotEmpty) "pay": salary,
-  //     if (projectId != null || projectId.isNotEmpty) "project_id": projectId
-  //   };
-  //   try {
-  //     CommonResponse response = await _repository!.addHiring(formData);
-  //     return response;
-  //   } catch (e, s) {
-  //     Completer().completeError(e, s);
-  //     throw e;
-  //   }
-  // }
-
-  // Future<CommonResponse?> deleteProject(String Id) async {
-  //   try {
-  //     CommonResponse response = await _repository!
-  //         .deleteProject(Id);
-  //     toastMessage(response.message);
-  //     return response;
-  //   } catch (e, s) {
-  //     Completer().completeError(e, s);
-  //   }
-  //   return null;
-  // }
-
-  // Future<CommonResponse> editProject(id,FormData formdata) async {
-  //   try {
-  //     CommonResponse response = await _repository!.editProject(formdata,id);
-  //     return response;
-  //   } catch (e, s) {
-  //     Completer().completeError(e, s);
-  //     throw e;
-  //   }
-  // }
 
   Future<CommonResponse> addHiring(
       String body,
@@ -127,5 +87,28 @@ class HiringBloc {
       throw e;
     }
   }
+
+  Future<CommonResponse?> deleteHiring(String Id) async {
+    try {
+      CommonResponse response = await _repository!
+          .deleteHiring(Id);
+      toastMessage(response.message);
+      return response;
+    } catch (e, s) {
+      Completer().completeError(e, s);
+    }
+    return null;
+  }
+  //
+  // Future<CommonResponse> editProject(id,FormData formdata) async {
+  //   try {
+  //     CommonResponse response = await _repository!.editProject(formdata,id);
+  //     return response;
+  //   } catch (e, s) {
+  //     Completer().completeError(e, s);
+  //     throw e;
+  //   }
+  // }
+
 
 }

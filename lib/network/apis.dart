@@ -20,6 +20,8 @@ class Apis {
   static String fetchHiringList="api/professionals/hiring/requests/list";
   static String professUpdateprofilepic = "api/professional/update_profile_picture";
   static String profupdate = "api/users/store/user-details";
+  static String deleteHiring="api/professionals/hiring/requests/";
+
   //college
   static String addComplaint="api/colleges/profiles/store";
   static String fetchCollegeComplaints="api/colleges/profiles/table";
