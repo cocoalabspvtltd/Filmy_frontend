@@ -47,8 +47,8 @@ class AuthRepository {
       "skills[]":idsskil,
       "interests[]":idsskilinterests,
       "address":profesion,
-      "profession":address,
-      "years" :years,
+      "profession":years,
+      "years" :address,
       "resume":ImageName
     });
     Response response =
@@ -57,11 +57,11 @@ class AuthRepository {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.data!);
-      toastMessage("${response.data['message']}");
+     //toastMessage("${response.data['message']}");
       Get.to(() => PHomeScreen());
       return profile.fromJson(response.data);
     } else {
-      toastMessage("${response.data['message']}");
+      //toastMessage("${response.data['message']}");
       print(
           "###########__________________ADD PROPERTY UNSUCESSFULLY________________##############");
       throw "";

@@ -99,7 +99,7 @@ else{
   Future<HiringHomeresponse> getapplicationList(int perPage,
       int page) async {
     final response = await apiClient!.getJsonInstance().post(
-        '${ User_Details.userRole =="professional"?Apis.applicationapplypro:Apis.applicationapply}?page=$page&per_page=$perPage');
+        '${Apis.applicationapply}?page=$page&per_page=$perPage');
     print("respo-/.${response}");
     return HiringHomeresponse.fromJson(response.data);
   }

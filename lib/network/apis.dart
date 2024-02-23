@@ -24,7 +24,7 @@ class Apis {
   static String editHiring="api/professionals/hiring/requests/";
   static String applicationapply = "api/users/hiring/requests/list";
 
-  static String applicationapplypro = "api/professionals/hiring/requests/list";
+ // static String applicationapplypro = "api/professionals/hiring/requests/list";
   //college
   static String addComplaint="api/colleges/profiles/store";
   static String fetchCollegeComplaints="api/colleges/profiles/table";
