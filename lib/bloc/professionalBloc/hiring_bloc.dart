@@ -77,10 +77,12 @@ class HiringBloc {
 
 
   Future<CommonResponse> addHiring(
-      String body,
+      String title, List<int> interestsids, description, experience, opening,
+      salary,ProjectId
       ) async {
     try {
-      CommonResponse response = await _repository!.addHiring(body);
+      CommonResponse response = await _repository!.addHiring( title,  interestsids, description, experience, opening,
+          salary,ProjectId);
       return response;
     } catch (e, s) {
       Completer().completeError(e, s);

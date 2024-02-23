@@ -50,8 +50,6 @@ class AuthRepository {
       "profession":address,
       "years" :years,
       "resume":ImageName
-
-
     });
     Response response =
     await apiClient!.getJsonInstance().post(User_Details.userRole=="professional"?Apis.profupdate:Apis.userupdate, data: formData,
