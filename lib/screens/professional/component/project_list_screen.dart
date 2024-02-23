@@ -302,7 +302,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
               onPressed: () async {
                 await _bloc.deleteProject(id);
                 await Future.delayed(Duration(seconds: 2));
-                // _bloc.getprojectList(false);
+                _bloc.getprojectList(false);
                 Get.to(() => PHomeScreen(selectedIndex: 3,));
                 Navigator.of(context).pop();
               },

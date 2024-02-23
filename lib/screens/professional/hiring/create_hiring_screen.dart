@@ -361,8 +361,7 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
     } else if (selectedOptionsIds.isEmpty) {
       return toastMessage("Please select skills");
     }
-    if (experience.isNotEmpty &&
-        formatAndValidate.validateName(experience) != null) {
+    if (experience == null) {
       return toastMessage("Please enter experience");
     }
     if (opening == null) {

@@ -1,5 +1,6 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:film/screens/professional/hiring/apply_hiring_screen.dart';
 import 'package:film/screens/professional/projects/create_project_screen.dart';
 import 'package:film/screens/professional/hiring/create_hiring_screen.dart';
 import 'package:film/utils/user.dart';
@@ -82,7 +83,6 @@ class _ProfessionalHomeState extends State<ProfessionalHome> {
             padding:  const EdgeInsets.all(12.0),
             child: Column(
               children: [
-
                User_Details.userRole =="professional"? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -254,17 +254,22 @@ class _ProfessionalHomeState extends State<ProfessionalHome> {
 
 
           //     _newsFeedIconsRow(list[position], control.liked, context),
-                const Padding(
-                  padding: EdgeInsets.only(left: 260.0, right: 8.0),
-                  child: Text(
-                    "Apply Here",
-                    maxLines: 1,
-                    style: TextStyle(
-                        height: 0,
-                        fontSize: 16,
-                        color: Colors.cyan,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.ellipsis),
+                InkWell(
+                  onTap: (){
+                    Get.to(ApplyHiringScreen());
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 220.0, right: 8.0),
+                    child: Text(
+                      "Apply Here",
+                      maxLines: 1,
+                      style: TextStyle(
+                          height: 0,
+                          fontSize: 16,
+                          color: Colors.cyan,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis),
+                    ),
                   ),
                 ),
                 const SizedBox(

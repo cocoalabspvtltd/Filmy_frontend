@@ -5,9 +5,10 @@ class LoginResponse {
   int? status;
   String? message;
   String? baseUrl;
+  Errors? errors;
 
   LoginResponse(
-      {this.token, this.user, this.success, this.status, this.message,this.baseUrl});
+      {this.token, this.user, this.success, this.status, this.message,this.baseUrl,this.errors});
 
   LoginResponse.fromJson(Map<String, dynamic> json) {
     token = json['token'];
@@ -16,6 +17,7 @@ class LoginResponse {
     success = json['success'];
     status = json['status'];
     message = json['message'];
+    errors = json['errors'] != null ? new Errors.fromJson(json['errors']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -28,6 +30,9 @@ class LoginResponse {
     data['success'] = this.success;
     data['status'] = this.status;
     data['message'] = this.message;
+    if (this.errors != null) {
+      data['errors'] = this.errors!.toJson();
+    }
     return data;
   }
 }
@@ -106,6 +111,23 @@ class User {
     data['gender'] = this.gender;
     data['age'] = this.age;
     data['profile_photo_url'] = this.status;
+    return data;
+  }
+}
+
+
+class Errors {
+  List<String>? email;
+
+  Errors({this.email});
+
+  Errors.fromJson(Map<String, dynamic> json) {
+    email = json['email'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['email'] = this.email;
     return data;
   }
 }
