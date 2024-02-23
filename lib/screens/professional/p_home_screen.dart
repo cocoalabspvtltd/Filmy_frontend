@@ -1,3 +1,4 @@
+import 'package:film/screens/PROFILE/gallery.dart';
 import 'package:film/screens/professional/component/professionl_home.dart';
 import 'package:film/screens/professional/component/project_list_screen.dart';
 import 'package:film/screens/professional/component/hiring_list_screen.dart';
@@ -74,8 +75,11 @@ class _PHomeScreenState extends State<PHomeScreen> {
             label: "Hiring",
             icon: Icon(Icons.work_outline_outlined)
           ),
-          BottomNavigationBarItem(
+    User_Details.userRole =="proffesional"    ?  BottomNavigationBarItem(
             label: "Projects",
+              icon: Icon(Icons.propane_tank_outlined)
+          ):BottomNavigationBarItem(
+              label: "Gallery",
               icon: Icon(Icons.propane_tank_outlined)
           ),
           BottomNavigationBarItem(
@@ -104,7 +108,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
         : _selectedIndex == 2
     ? ProfilePage()
         : _selectedIndex == 1
-    ? ProjectListScreen()
+    ? User_Details.userRole =="proffesional"?ProjectListScreen():Gallery()
         : _selectedIndex == 0
     ? HiringListScreen()
         : Center(child: Text("hai")),

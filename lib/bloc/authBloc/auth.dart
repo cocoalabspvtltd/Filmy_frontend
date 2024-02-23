@@ -36,10 +36,10 @@ class AuthBloc {
     }
   }
   Future<profile> addProperty(
-      String image,String interests,profesion,address,years,List<int> ids
+      String image,List<int> idsinterests,profesion,address,years,List<int> idsskill
       ) async {
     try {
-      profile response = await _authRepository!.Profileadd(image,interests,address,profesion,years,ids);
+      profile response = await _authRepository!.Profileadd(image,idsinterests,address,profesion,years,idsskill);
       return response;
     } catch (e, s) {
       Completer().completeError(e, s);

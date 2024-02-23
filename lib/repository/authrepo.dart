@@ -38,14 +38,14 @@ class AuthRepository {
     }
   }
 
-  Future<profile> Profileadd(String image,String interests,address ,years,profesion,List<int> ids) async {
+  Future<profile> Profileadd(String image,List<int> idsskilinterests,address ,years,profesion,List<int> idsskil) async {
     String fileName = image.split('/').last;
     var ImageName =   await MultipartFile.fromFile(image, filename: fileName);
     FormData formData = FormData.fromMap({
-      "skills":ids,
-      "interests":interests,
-      "address":address,
-      "profession":profesion,
+      "skills[]":idsskil,
+      "interests[]":idsskilinterests,
+      "address":profesion,
+      "profession":address,
       "years" :years,
       "resume":ImageName
 

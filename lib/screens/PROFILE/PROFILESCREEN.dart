@@ -39,7 +39,8 @@ class _ProfilePageState extends State<ProfilePage> {
     'Accept': 'application/json', // Assuming JSON content type
   };
   String title = "";
-  List<int> selectedOptionsIds = [];
+  List<int> selectedOptionsIdsskills = [];
+  List<int> selectedOptionsIdsinterest = [];
   List<dynamic> juryList = [];
   AuthBloc _authBloc = AuthBloc();
   @override
@@ -218,6 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
+
                 Padding(
                   padding:
                       const EdgeInsets.only(top: 10.0, right: 76, left: 76),
@@ -243,21 +245,48 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: 10.0, right: 76, left: 76),
+                  const EdgeInsets.only(top: 10.0, right: 76, left: 76),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: Colors.grey),
                     ),
-                    child: TextField(
-                      controller: skillControl,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Enter your Skill',
+                    child:   MultiSelectDialogField<Skills>(
+                      items: Skillsmulti.map((member) => MultiSelectItem<Skills>(
+                          member, member.name.toString())).toList(),
+                      initialValue: selectedOptionsIdsinterest.map((id) {
+                        return Skillsmulti.firstWhere(
+                                (element) => element.id == id);
+                      }).toList(),
+                      selectedColor: Colors.cyan,
+                      unselectedColor: Colors.black,
+                      confirmText: Text(
+                        'Submit',
+                        style: TextStyle(color: Colors.black),
                       ),
-                      onChanged: (value) {
-                        print('The entered text is: $value');
+                      cancelText: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      title: Text('Select Interest'),
+                      buttonText: Text('Select skills'),
+                      onConfirm: (values) {
+                        setState(() {
+                          selectedOptionsIdsinterest =
+                              values.map<int>((member) => member.id!).toList();
+                          print("Options: $selectedOptionsIdsinterest");
+                        });
                       },
+                      chipDisplay: MultiSelectChipDisplay(
+                        chipColor: Colors.cyan,
+                        textStyle: TextStyle(color: Colors.white),
+                      ),
+                      decoration: BoxDecoration(
+                        // Customize input decoration
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: Colors.grey), // Remove underline
+                        color: Colors.white, // Change fill color
+                      ),
                     ),
                   ),
                 ),
@@ -328,11 +357,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(color: Colors.grey),
                     ),
-                    child: MultiSelectDialogField<Skills>(
-                      items: Skillsmulti.map((member) =>
-                          MultiSelectItem<Skills>(
-                              member, member.name.toString())).toList(),
-                      initialValue: Skillsmulti,
+                    child:   MultiSelectDialogField<Skills>(
+                      items: Skillsmulti.map((member) => MultiSelectItem<Skills>(
+                          member, member.name.toString())).toList(),
+                      initialValue: selectedOptionsIdsskills.map((id) {
+                        return Skillsmulti.firstWhere(
+                                (element) => element.id == id);
+                      }).toList(),
                       selectedColor: Colors.cyan,
                       unselectedColor: Colors.black,
                       confirmText: Text(
@@ -347,14 +378,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       buttonText: Text('Select skills'),
                       onConfirm: (values) {
                         setState(() {
-                          selectedOptionsIds =
+                          selectedOptionsIdsskills =
                               values.map<int>((member) => member.id!).toList();
-                          print("Options: $selectedOptionsIds");
+                          print("Options: $selectedOptionsIdsskills");
                         });
                       },
                       chipDisplay: MultiSelectChipDisplay(
-                        chipColor: Colors.white,
-                        textStyle: TextStyle(color: Colors.black),
+                        chipColor: Colors.cyan,
+                        textStyle: TextStyle(color: Colors.white),
+                      ),
+                      decoration: BoxDecoration(
+                        // Customize input decoration
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: Colors.grey), // Remove underline
+                        color: Colors.white, // Change fill color
                       ),
                     ),
                   ),
@@ -422,11 +459,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         // Navigate to the CompleteProfile screen using Get.to method
                         await _addPropertyFun(
                             _filePath,
-                            skillControl.text,
+                            selectedOptionsIdsinterest,
                             addressControl.text,
                             experControl.text,
                             profControl.text,
-                            selectedOptionsIds);
+                            selectedOptionsIdsskills);
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.black,
@@ -472,16 +509,16 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  _addPropertyFun(String image, String interests, profesion, address, years,
-      List<int> ids) async {
+  _addPropertyFun(String image, List<int> interestsids, profesion, address, years,
+      List<int> skillsids) async {
     FocusScope.of(context).requestFocus(FocusNode());
     await _authBloc.addProperty(
       image!,
-      interests,
+      interestsids,
       address,
       years,
       profesion,
-      ids,
+      skillsids,
     );
   }
 }

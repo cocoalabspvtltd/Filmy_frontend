@@ -136,10 +136,7 @@ print("respon->${response.body}");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.cyan,
-        title: Text('Your gallery'),
-      ),
+
       body: gallery.isEmpty
           ?
       GridView.builder(
