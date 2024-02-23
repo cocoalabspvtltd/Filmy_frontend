@@ -22,8 +22,9 @@ class Apis {
   static String profupdate = "api/users/store/user-details";
   static String deleteHiring="api/professionals/hiring/requests/";
   static String editHiring="api/professionals/hiring/requests/";
+  static String applicationapply = "api/users/hiring/requests/list";
 
-
+  static String applicationapplypro = "api/professionals/hiring/requests/list";
   //college
   static String addComplaint="api/colleges/profiles/store";
   static String fetchCollegeComplaints="api/colleges/profiles/table";

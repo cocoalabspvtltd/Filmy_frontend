@@ -8,8 +8,11 @@ import 'package:film/network/apis.dart';
 import 'package:film/screens/professional/component/hiring_list_screen.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/utils/api_helper.dart';
+import 'package:film/utils/user.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+
+import '../models/hiring.dart';
 
 
 
@@ -92,6 +95,13 @@ else{
         '${Apis.fetchHiringList}?page=$page&per_page=$perPage');
     print("respo-/.${response}");
     return HiringListResponse.fromJson(response.data);
+  }
+  Future<HiringHomeresponse> getapplicationList(int perPage,
+      int page) async {
+    final response = await apiClient!.getJsonInstance().post(
+        '${ User_Details.userRole =="professional"?Apis.applicationapplypro:Apis.applicationapply}?page=$page&per_page=$perPage');
+    print("respo-/.${response}");
+    return HiringHomeresponse.fromJson(response.data);
   }
 
   Future<CommonResponse> deleteHiring(String id) async {

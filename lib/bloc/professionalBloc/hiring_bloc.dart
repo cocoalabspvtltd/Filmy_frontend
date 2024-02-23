@@ -35,6 +35,7 @@ class HiringBloc {
 
   List<Hirings> hiringList = [];
 
+
   gethiringList(bool isPagination, {int? perPage}) async {
     if (isPagination) {
       pageNumber = pageNumber + 1;
@@ -74,7 +75,44 @@ class HiringBloc {
     } finally {}
   }
 
+  getapplicationList(bool isPagination, {int? perPage}) async {
+    if (isPagination) {
+      pageNumber = pageNumber + 1;
+      listener!.refresh(true);
 
+    } else {
+      hiringDetailsListSink!.add(ApiResponse.loading('Fetching Data'));
+      pageNumber = 1;
+    }
+    try {
+      HiringListResponse response =
+      await _repository!.getHiringList(10, pageNumber);
+      hasNextPage = response.lastPage! >= pageNumber.toInt()
+          ? true
+          : false;
+      if (isPagination) {
+        if (hiringList.length == 0) {
+          hiringList = response.hirings!;
+        } else {
+          hiringList.addAll(response.hirings!);
+        }
+      } else {
+        hiringList = response.hirings! ?? [];
+      }
+      hiringDetailsListSink!.add(ApiResponse.completed(response));
+      if (isPagination) {
+        listener!.refresh(false);
+      }
+    } catch (error, s) {
+      Completer().completeError(error, s);
+      if (isPagination) {
+        listener!.refresh(false);
+      } else {
+        hiringDetailsListSink!
+            .add(ApiResponse.error(ApiErrorMessage.getNetworkError(error)));
+      }
+    } finally {}
+  }
 
   Future<CommonResponse> addHiring(
       String title, List<int> interestsids, description, experience, opening,
