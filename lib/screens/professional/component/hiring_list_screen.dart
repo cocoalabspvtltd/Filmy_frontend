@@ -63,13 +63,11 @@ class _HiringListScreenState extends State<HiringListScreen>
     }
   }
 
-  void filterHringList(String query) {
+  void filterHiringList(String query) {
     setState(() {
       filteredHiringList = _bloc.hiringList
           .where((hiring) =>
-      hiring.title!.toLowerCase().contains(query.toLowerCase()) ||
-          hiring.experience!.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      hiring.title!.toLowerCase().contains(query.toLowerCase())).toList();
     });
   }
   TextEditingController searchController = TextEditingController();
@@ -108,7 +106,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                     fontSize: 16.0,
                   ),
                   onChanged: (value) {
-                    filterHringList(value);
+                    filterHiringList(value);
                   },
                 ),
               ),
@@ -257,6 +255,19 @@ class _HiringListScreenState extends State<HiringListScreen>
                                 Text(
                                   "Pay: ${hiringList[index].pay}",
                                   style: TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.check_circle_outline, color: Colors.green),
+                                SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    "Description: ${hiringList[index].description}",
+                                    style: TextStyle(fontWeight: FontWeight.w500),
+                                  ),
                                 ),
                               ],
                             ),

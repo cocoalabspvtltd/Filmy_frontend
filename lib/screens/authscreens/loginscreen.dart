@@ -14,6 +14,7 @@ import '../../utils/shared_prefs.dart';
 import '../../utils/string_formatter_and_validator.dart';
 import '../homescreens/home_screen.dart';
 import 'forgotpassword.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -218,29 +219,57 @@ class _LoginScreenState extends State<LoginScreen> {
     return await _login(email, password);
     }
 
-    Future _login(String email, String password) async {
+  Future _login(String email, String password) async {
     AppDialogs.loading();
-      Map<String, dynamic> body = {};
-      body["email"] = email;
-      body["password"] = password;
-      try {
-        LoginResponse response = await _authBloc.login(json.encode(body));
-        if (response.success == true) {
+
+    // Prepare the request body
+    Map<String, dynamic> body = {
+      "email": email,
+      "password": password,
+    };
+
+
+    try {
+      final response = await http.post(
+        Uri.parse('https://cocoalabs.in/Filmy/public/api/login'),
+        body: body,
+      );
+      Get.back();
+      if (response.statusCode == 200) {
+        LoginResponse loginResponse = LoginResponse.fromJson(jsonDecode(response.body));
+        if (loginResponse.success == true) {
           toastMessage("Login Successfully");
-          await SharedPrefs.logIn(response);
-          if (response.user!.role == "public-user"&&User_Details.status=="inactive") {
+          await SharedPrefs.logIn(loginResponse);
+          if (loginResponse.user!.role == "public-user" && User_Details.status == "inactive") {
             Get.offAll(() => ProfilePage());
           } else {
             Get.offAll(() => PHomeScreen());
           }
-        }  else {
-          toastMessage("${response.message}");
+        }else {
+          if (response.statusCode == 200) {
+            toastMessage('You are not authorized!');
+          } else {
+            toastMessage(loginResponse.message ?? '');
+          }
         }
-      } catch (error) {
-        toastMessage('No account registered with this email!...Please enter valid credentials');
+      } else if (response.statusCode == 422) {
+        final jsonResponse = json.decode(response.body);
+        if (jsonResponse.containsKey('errors')) {
+          final errors = jsonResponse['errors'];
+          if (errors.containsKey('email')) {
+            toastMessage(errors['email'][0]);
+          }
+        } else {
+          toastMessage('Validation errors: ${jsonResponse['message']}');
+        }
+      } else {
+        toastMessage('${json.decode(response.body)['message']}');
       }
+    } catch (error) {
+      Get.back();
+      toastMessage('Failed to login. Please check your internet connection.');
     }
-
+  }
 
   }
 

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:film/models/login_response.dart';
 import 'package:film/models/profile.dart';
 import 'package:film/screens/homescreens/home_screen.dart';
+import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/utils/user.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -58,12 +59,12 @@ class AuthRepository {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.data!);
       toastMessage("${response.data['message']}");
-      Get.to(() => Home());
+      Get.to(() => PHomeScreen());
       return profile.fromJson(response.data);
     } else {
       toastMessage("${response.data['message']}");
       print(
-          "###########__________________ADD PROPERTY UNSUCESSFULLY________________##############");
+          "###########__________________ADD PROFILE UNSUCCESSFULLY________________##############");
       throw "";
     }
   }
