@@ -59,5 +59,10 @@ class ProfessionalRepository {
     return HiringListResponse.fromJson(response.data);
   }
 
-
+  Future<CommonResponse> deleteHiring(String id) async {
+    final response = await apiClient!
+        .getJsonInstance()
+        .delete('${Apis.deleteHiring}$id/delete');
+    return CommonResponse.fromJson(response.data);
+  }
 }

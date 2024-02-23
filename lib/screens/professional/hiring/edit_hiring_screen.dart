@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:film/bloc/professionalBloc/hiring_bloc.dart';
 import 'package:film/models/common.dart';
+import 'package:film/models/hiring_list_response.dart';
 import 'package:film/models/skillresponse.dart';
 import 'package:film/network/apis.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
@@ -18,16 +19,16 @@ import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 
-class CreateHiringScreen extends StatefulWidget {
-  final String ProjectId;
-  const CreateHiringScreen({Key? key, required this.ProjectId})
+class EditHiringScreen extends StatefulWidget {
+  final Hirings details;
+  const EditHiringScreen({Key? key, required this.details})
       : super(key: key);
 
   @override
-  State<CreateHiringScreen> createState() => _CreateHiringScreenState();
+  State<EditHiringScreen> createState() => _EditHiringScreenState();
 }
 
-class _CreateHiringScreenState extends State<CreateHiringScreen> {
+class _EditHiringScreenState extends State<EditHiringScreen> {
   FormatAndValidate formatAndValidate = FormatAndValidate();
   TextEditingController titleControl = TextEditingController();
   TextEditingController descriptionControl = TextEditingController();
@@ -45,8 +46,26 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
   List<int> selectedOptionsIds = [];
   List<dynamic> skilList = [];
   void initState() {
-    super.initState();
 
+    titleControl.text = widget.details.title!;
+    descriptionControl.text = widget.details.description!;
+    if (widget.details.experience != null && widget.details.experience!.isNotEmpty) {
+      experienceControl.text = widget.details.experience!;
+    }
+
+    if (widget.details.openings != null && widget.details.openings.toString().isNotEmpty) {
+      openingsControl.text = widget.details.openings!.toString();
+    }
+    if (widget.details.pay != null && widget.details.pay!.isNotEmpty) {
+      salaryControl.text = widget.details.pay!;
+    }
+    if (widget.details.skills != null && widget.details.skills!.isNotEmpty) {
+      selectedOptionsIds = widget.details.skills!.where((id) =>
+          Skillsmulti.any((skill) => skill.id == id)).toList();
+    }
+
+
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _fetchJuryMembers();
     });
@@ -73,11 +92,10 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Id-->${widget.ProjectId}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
-        title: Text("Hiring"),
+        title: Text("Edit Hiring"),
       ),
       body: SingleChildScrollView(
         child: Stack(children: [
@@ -197,17 +215,14 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: Colors.grey),
-                    color: Colors.white
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: Colors.grey),
+                      color: Colors.white
                   ),
                   child: MultiSelectDialogField<Skills>(
                     items: Skillsmulti.map((member) => MultiSelectItem<Skills>(
                         member, member.name.toString())).toList(),
-                    initialValue: selectedOptionsIds.map((id) {
-                      return Skillsmulti.firstWhere(
-                          (element) => element.id == id);
-                    }).toList(),
+                    initialValue: Skillsmulti.where((element) => widget.details.skills!.contains(element.id)).toList(),
                     selectedColor: Colors.cyan,
                     unselectedColor: Colors.black,
                     confirmText: Text(
@@ -232,10 +247,9 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
                       textStyle: TextStyle(color: Colors.white),
                     ),
                     decoration: BoxDecoration(
-                      // Customize input decoration
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: Colors.grey), // Remove underline
-                      color: Colors.white, // Change fill color
+                      border: Border.all(color: Colors.grey),
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -375,12 +389,12 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
   }
 
   Future _createHiring(
-    String title,
-    String description,
-    String experience,
-    String opening,
-    String salary,
-  ) async {
+      String title,
+      String description,
+      String experience,
+      String opening,
+      String salary,
+      ) async {
     AppDialogs.loading();
 
     Map<String, dynamic> body = {};
@@ -398,9 +412,9 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
     if (salary.isNotEmpty) {
       body["pay"] = salary;
     }
-    if (widget.ProjectId.isNotEmpty) {
-      body["project_id"] = widget.ProjectId;
-    }
+    // if (widget.ProjectId.isNotEmpty) {
+    //   body["project_id"] = widget.ProjectId;
+    // }
 
     try {
       CommonResponse response =

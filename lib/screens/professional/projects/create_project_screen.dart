@@ -303,7 +303,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
       CommonResponse response = value;
       if (response.statusCode == 200) {
         toastMessage("${response.message}");
-        Get.to(() => PHomeScreen());
+        Get.to(() => PHomeScreen(selectedIndex: 3,));
       } else {
         toastMessage("${response.message}");
       }

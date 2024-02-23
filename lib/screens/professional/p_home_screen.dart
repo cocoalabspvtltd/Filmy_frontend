@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 
 import '../PROFILE/PROFILESCREEN.dart';
 
-
 class PHomeScreen extends StatefulWidget {
   final int selectedIndex;
   const PHomeScreen({Key? key, this.selectedIndex = 3}) : super(key: key);
@@ -19,10 +18,14 @@ class PHomeScreen extends StatefulWidget {
 }
 
 class _PHomeScreenState extends State<PHomeScreen> {
-
   late int _selectedIndex;
   DateTime? currentBackPressTime;
-
+  List<String> appBarTitle = [
+    "Hirings",
+    User_Details.userRole == "professional" ? "Projects" : "Gallery",
+    "Profile",
+    "Home",
+  ];
   @override
   void initState() {
     super.initState();
@@ -37,16 +40,18 @@ class _PHomeScreenState extends State<PHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white, // Set the background color of the AppBar
         title: Text(
-          'Home',
-          style: TextStyle(color: Colors.black), // Set the text color of the title
+          appBarTitle[_selectedIndex],
+          style:
+              TextStyle(color: Colors.black), // Set the text color of the title
         ),
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(Icons.menu, color: Colors.cyan), // Set the color of the menu icon
+            icon: Icon(Icons.menu,
+                color: Colors.cyan), // Set the color of the menu icon
             onPressed: () {
               Scaffold.of(context).openDrawer(); // Open the side drawer
             },
@@ -54,8 +59,12 @@ class _PHomeScreenState extends State<PHomeScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout,color: Colors.cyan,),
-            onPressed: () {SharedPrefs.logOut();
+            icon: Icon(
+              Icons.logout,
+              color: Colors.cyan,
+            ),
+            onPressed: () {
+              SharedPrefs.logOut();
 
               // Handle notification button press
             },
@@ -72,50 +81,40 @@ class _PHomeScreenState extends State<PHomeScreen> {
         unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
         items: [
           BottomNavigationBarItem(
-            label: "Hiring",
-            icon: Icon(Icons.work_outline_outlined)
-          ),
-    User_Details.userRole =="proffesional"    ?  BottomNavigationBarItem(
-            label: "Projects",
-              icon: Icon(Icons.propane_tank_outlined)
-          ):BottomNavigationBarItem(
-              label: "Gallery",
-              icon: Icon(Icons.propane_tank_outlined)
-          ),
+              label: "Hiring", icon: Icon(Icons.work_outline_outlined)),
+          User_Details.userRole == "professional"
+              ? BottomNavigationBarItem(
+                  label: "Projects", icon: Icon(Icons.propane_tank_outlined))
+              : BottomNavigationBarItem(
+                  label: "Gallery", icon: Icon(Icons.propane_tank_outlined)),
           BottomNavigationBarItem(
-            label: "profile",
-              icon: Icon(Icons.person_outline)
-          ),
-          BottomNavigationBarItem(
-            label: "Home",
-              icon: Icon(Icons.home_filled)
-          ),
+              label: "profile", icon: Icon(Icons.person_outline)),
+          BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home_filled)),
         ],
       ),
       body: WillPopScope(
         onWillPop: () {
-      DateTime now = DateTime.now();
-      if (currentBackPressTime == null ||
-          now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
-        currentBackPressTime = now;
-        toastMessage("Double press back to exit");
-        return Future.value(false);
-      }
-      return Future.value(true);
-    },
-    child: _selectedIndex == 3
-    ? ProfessionalHome()
-        : _selectedIndex == 2
-    ? ProfilePage()
-        : _selectedIndex == 1
-    ? User_Details.userRole =="proffesional"?ProjectListScreen():Gallery()
-        : _selectedIndex == 0
-    ? HiringListScreen()
-        : Center(child: Text("hai")),
-    ),
-
+          DateTime now = DateTime.now();
+          if (currentBackPressTime == null ||
+              now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+            currentBackPressTime = now;
+            toastMessage("Double press back to exit");
+            return Future.value(false);
+          }
+          return Future.value(true);
+        },
+        child: _selectedIndex == 3
+            ? ProfessionalHome()
+            : _selectedIndex == 2
+                ? ProfilePage()
+                : _selectedIndex == 1
+                    ? User_Details.userRole == "professional"
+                        ? ProjectListScreen()
+                        : Gallery()
+                    : _selectedIndex == 0
+                        ? HiringListScreen()
+                        : Center(child: Text("hai")),
+      ),
     );
-
   }
-
 }

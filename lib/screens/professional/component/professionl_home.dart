@@ -1,13 +1,11 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:film/screens/professional/create_project_screen.dart';
+import 'package:film/screens/professional/projects/create_project_screen.dart';
 import 'package:film/screens/professional/hiring/create_hiring_screen.dart';
 import 'package:film/utils/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-
 import '../../../utils/api_helper.dart';
 import '../../../widgets/app_image_viewer.dart';
 import '../../../widgets/common_api_result_empty_widget.dart';
