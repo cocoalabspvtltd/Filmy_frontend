@@ -21,6 +21,8 @@ class Apis {
   static String professUpdateprofilepic = "api/professional/update_profile_picture";
   static String profupdate = "api/users/store/user-details";
   static String deleteHiring="api/professionals/hiring/requests/";
+  static String editHiring="api/professionals/hiring/requests/";
+
 
   //college
   static String addComplaint="api/colleges/profiles/store";

@@ -65,4 +65,11 @@ class ProfessionalRepository {
         .delete('${Apis.deleteHiring}$id/delete');
     return CommonResponse.fromJson(response.data);
   }
+  Future<CommonResponse> editHiring(String body,id) async {
+    Response response = await apiClient!
+        .getJsonInstance()
+        .post('${Apis.editHiring}$id/update', data: body);
+    return CommonResponse.fromJson(response.data);
+  }
+
 }
