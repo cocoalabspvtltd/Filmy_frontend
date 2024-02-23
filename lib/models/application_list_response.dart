@@ -50,7 +50,7 @@ class Applications {
   int? applicationId;
   int? userId;
   int? hiringId;
-  Null? projectName;
+  String? projectName;
   String? name;
   String? phone;
   String? email;

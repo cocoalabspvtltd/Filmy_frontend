@@ -23,6 +23,7 @@ class Apis {
   static String deleteHiring="api/professionals/hiring/requests/";
   static String editHiring="api/professionals/hiring/requests/";
   static String applicationapply = "api/users/hiring/requests/list";
+  static String fetchApplicationList = "api/professionals/hiring/requests/applications/";
 
  // static String applicationapplypro = "api/professionals/hiring/requests/list";
   //college

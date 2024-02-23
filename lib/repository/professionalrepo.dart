@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
+import 'package:film/models/application_list_response.dart';
 import 'package:film/models/common.dart';
 import 'package:film/models/hiring_list_response.dart';
 import 'package:film/models/project_list_response.dart';
@@ -145,6 +146,14 @@ else{
       toastMessage("Check Your enter details");
     }
     return CommonResponse.fromJson(response.data);
+  }
+
+  Future<ApplicationListResponse> getApplicationList(String id,int perPage,
+      int page) async {
+    final response = await apiClient!.getJsonInstance().post(
+        '${Apis.fetchApplicationList}$id/list?page=$page&per_page=$perPage');
+    print("respo-/.${response}");
+    return ApplicationListResponse.fromJson(response.data);
   }
 
 }
