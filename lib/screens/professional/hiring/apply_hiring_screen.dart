@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:film/bloc/professionalBloc/project_bloc.dart';
 import 'package:film/models/common.dart';
+import 'package:film/network/apis.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/string_formatter_and_validator.dart';
@@ -12,10 +14,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
+import '../../../widgets/app_dialogs.dart';
 class ApplyHiringScreen extends StatefulWidget {
-  const ApplyHiringScreen({Key? key}) : super(key: key);
-
+  const ApplyHiringScreen({Key? key, required this.id}) : super(key: key);
+final String id;
   @override
   State<ApplyHiringScreen> createState() => _ApplyHiringScreenState();
 }
@@ -25,6 +29,34 @@ class _ApplyHiringScreenState extends State<ApplyHiringScreen> {
   TextEditingController commentControl = TextEditingController();
 
   @override
+
+  Future<void> Applyhiring() async {
+    AppDialogs.loading();
+    var url = Uri.parse('${Apis.url}api/users/hiring/requests/applications/${widget.id}/store');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${User_Details.apiToken}', // Optional, if you need to include an authorization token
+    };
+    var body = jsonEncode({
+      'comments': commentControl.text,
+
+      // Add more key-value pairs as needed
+    });
+
+    var response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      toastMessage("Request Send Successfully");
+      AppDialogs.closeDialog();
+      Get.back();
+      print('Request successful');
+      print(response.body);
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+      print(response.body);
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -139,7 +171,7 @@ class _ApplyHiringScreenState extends State<ApplyHiringScreen> {
                       height: 40,
                       width: 120,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async{await Applyhiring();},
                         style: ElevatedButton.styleFrom(
                           primary: Colors.black,
                         ),

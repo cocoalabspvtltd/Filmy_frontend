@@ -381,54 +381,5 @@ class _CreateHiringScreenState extends State<CreateHiringScreen> {
         salary,prjid
     );
   }
-  // Future _createHiring(
-  //   String title,
-  //   String description,
-  //   String experience,
-  //   String opening,
-  //   String salary,
-  // ) async {
-  //
-  //   FormData formData = FormData.fromMap({
-  //     "title":title,
-  //     "description":description,
-  //     "skills[]":selectedOptionsIds,
-  //
-  //   });
-  //   print("fo->${formData.fields}");
-  //   // Map<String, dynamic> body = {};
-  //   // body["title"] = title;
-  //   // body["description"] = description;
-  //   // body["skills"] = selectedOptionsIds;
-  //   if (experience.isNotEmpty) {
-  //     body["experience"] = experience;
-  //   }
-  //
-  //   if (opening.isNotEmpty) {
-  //     body["openings"] = opening;
-  //   }
-  //
-  //   if (salary.isNotEmpty) {
-  //     body["pay"] = salary;
-  //   }
-  //   if (widget.ProjectId.isNotEmpty) {
-  //     body["project_id"] = widget.ProjectId;
-  //   }
-  //
-  //   try {
-  //     CommonResponse response =
-  //     await _bloc!.addHiring(json.encode(formData));
-  //
-  //     Get.back();
-  //     if (response.success!) {
-  //       Get.to(PHomeScreen());
-  //       toastMessage('${response.message!}');
-  //     } else {
-  //       toastMessage('${response.message!}');
-  //     }
-  //   } catch (e, s) {
-  //     Completer().completeError(e, s);
-  //     toastMessage('Not added hiring!');
-  //   }
-  // }
+
 }
