@@ -110,6 +110,7 @@ class _ApplyHiringScreenState extends State<ApplyHiringScreen> {
                     )
                   ),
                   SizedBox(height: 10),
+
                   Text(
                     "Comment",
                     style: TextStyle(
