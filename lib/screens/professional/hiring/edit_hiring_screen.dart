@@ -38,6 +38,7 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
 
   HiringBloc _bloc = HiringBloc();
   List<Skills> Skillsmulti = [];
+  bool initialized = false;
   Map<String, String> headers = {
     'Authorization': 'Bearer ${User_Details.apiToken}',
     'Accept': 'application/json', // Assuming JSON content type
@@ -59,11 +60,7 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
     if (widget.details.pay != null && widget.details.pay!.isNotEmpty) {
       salaryControl.text = widget.details.pay!;
     }
-    if (widget.details.skills != null && widget.details.skills!.isNotEmpty) {
-      selectedOptionsIds = widget.details.skills!.where((id) =>
-          Skillsmulti.any((skill) => skill.id == id)).toList();
-    }
-
+    selectedOptionsIds = List<int>.from(widget.details.skills ?? []);
 
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -92,6 +89,7 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("Idss${selectedOptionsIds}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
@@ -101,7 +99,7 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
         child: Stack(children: [
           Container(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height * 1.2,
             color: Colors.cyan,
             // decoration: BoxDecoration(
             //   gradient: LinearGradient(
@@ -220,37 +218,22 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
                       color: Colors.white
                   ),
                   child: MultiSelectDialogField<Skills>(
-                    items: Skillsmulti.map((member) => MultiSelectItem<Skills>(
-                        member, member.name.toString())).toList(),
-                    initialValue: Skillsmulti.where((element) => widget.details.skills!.contains(element.id)).toList(),
-                    selectedColor: Colors.cyan,
-                    unselectedColor: Colors.black,
-                    confirmText: Text(
-                      'Submit',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    cancelText: Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    title: Text('Select skills'),
-                    buttonText: Text('Select skills'),
+                    items: Skillsmulti
+                        .map(
+                          (skill) => MultiSelectItem<Skills>(skill, skill.name.toString()),
+                    )
+                        .toList(),
+                    initialValue: Skillsmulti
+                        .where(
+                          (skill) => selectedOptionsIds.contains(skill.id),
+                    )
+                        .toList(),
                     onConfirm: (values) {
                       setState(() {
                         selectedOptionsIds =
-                            values.map<int>((member) => member.id!).toList();
-                        print("Options: $selectedOptionsIds");
+                            values.map<int>((skill) => skill.id!).toList();
                       });
                     },
-                    chipDisplay: MultiSelectChipDisplay(
-                      chipColor: Colors.cyan,
-                      textStyle: TextStyle(color: Colors.white),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: Colors.grey),
-                      color: Colors.white,
-                    ),
                   ),
                 ),
                 SizedBox(
@@ -341,7 +324,7 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          "Create",
+                          "Update",
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -385,10 +368,10 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
       return toastMessage("Please enter salary");
     }
 
-    return await _createHiring(title, description, experience, opening, salary);
+    return await _EditHiring(title, description, experience, opening, salary);
   }
 
-  Future _createHiring(
+  Future _EditHiring(
       String title,
       String description,
       String experience,
@@ -412,13 +395,13 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
     if (salary.isNotEmpty) {
       body["pay"] = salary;
     }
-    // if (widget.ProjectId.isNotEmpty) {
-    //   body["project_id"] = widget.ProjectId;
-    // }
+    if (widget.details.projectId !=null) {
+      body["project_id"] = widget.details.projectId;
+    }
 
     try {
       CommonResponse response =
-      await _bloc!.addHiring(json.encode(body));
+      await _bloc!.editHiring(widget.details.id,json.encode(body));
       print("body..${body}");
       Get.back();
       if (response.success!) {
@@ -429,7 +412,7 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
       }
     } catch (e, s) {
       Completer().completeError(e, s);
-      toastMessage('Not added hiring!');
+      toastMessage('Not edit hiring!');
     }
   }
 }

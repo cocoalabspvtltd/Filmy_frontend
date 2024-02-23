@@ -287,7 +287,7 @@ class _HiringListScreenState extends State<HiringListScreen>
               onPressed: () async {
                 await _bloc.deleteHiring(id);
                 await Future.delayed(Duration(seconds: 2));
-               // _bloc.getprojectList(false);
+                _bloc.gethiringList(false);
                 Get.to(() => PHomeScreen(selectedIndex: 3,));
                 Navigator.of(context).pop();
               },
