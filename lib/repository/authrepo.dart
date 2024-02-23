@@ -52,7 +52,7 @@ class AuthRepository {
       "resume":ImageName
     });
     Response response =
-    await apiClient!.getJsonInstance().post(User_Details.userRole=="professional"?Apis.profupdate:Apis.userupdate, data: formData,
+    await apiClient!.getJsonInstance().post(Apis.userupdate, data: formData,
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {

@@ -1,5 +1,6 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:film/screens/professional/hiring/apply_hiring_screen.dart';
 import 'package:film/screens/professional/projects/create_project_screen.dart';
 import 'package:film/screens/professional/hiring/create_hiring_screen.dart';
@@ -44,7 +45,11 @@ class _ProfessionalHomeScreenState extends State<ProfessionalHome>
   late ScrollController _itemsScrollController;
   bool isLoadingMore = false;
   List<UserHirings> filteredHiringList = [];
-
+  final List<String> images = [
+    'assets/image/image1.jpg', // Change the paths to match your actual asset paths
+    'assets/image/image2.jpg',
+    'assets/image/iamge3.jpg',
+  ];
   @override
   void initState() {
     _bloc = HiringHomeBloc(listener: this);
@@ -194,7 +199,34 @@ SizedBox(height: 20,),
                     ),
                   ),
                 ],
-              ):Container(),
+              ): Center(
+                child: CarouselSlider.builder(
+                  itemCount: images.length,
+                  options: CarouselOptions(
+                    autoPlay: true,
+                    autoPlayInterval: Duration(seconds: 2), // Auto-play interval
+                    enlargeCenterPage: true,
+                    viewportFraction: 0.8,
+                    aspectRatio: 2.0,
+                  ),
+                  itemBuilder: (BuildContext context, int index, int realIndex) {
+                    return Container(
+                      margin: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                          image: AssetImage(images[index]), // Use AssetImage for local images
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+
+
               StreamBuilder<ApiResponse<HiringHomeresponse>>(
                 stream: _bloc.hiringListStream,
                 builder: (context, snapshot) {
@@ -237,6 +269,18 @@ SizedBox(height: 20,),
 
 }
 
+Widget _buildCarouselItem(String label, Color color) {
+  return Container(
+    margin: EdgeInsets.all(8),
+    color: color,
+    child: Center(
+      child: Text(
+        label,
+        style: TextStyle(fontSize: 24, color: Colors.white),
+      ),
+    ),
+  );
+}
 
 Widget _buildList(List<UserHirings> list) {
   if (list.isEmpty) {
