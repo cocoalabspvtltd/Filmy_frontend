@@ -244,6 +244,7 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.red,
                                 ),
+
                                 child: Text("Reject"),
                               ),
                             ],
