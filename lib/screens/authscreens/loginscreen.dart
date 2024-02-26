@@ -34,176 +34,176 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      backgroundColor: Colors.cyan,
-      body: SafeArea(child:Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+        backgroundColor: Colors.cyan,
+        body: SafeArea(child:Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
 
-            const Text(
-              "Welcome to",
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1C1C1C),
-                height: 2,
-              ),
-            ),
-            const SizedBox(height: 20,),
-            const Text(
-              "Filmy",
-              style: TextStyle(
-                fontSize: 37,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                letterSpacing: 2,
-                height: 1,
-              ),
-            ),
-
-            const SizedBox(
-              height: 16,
-            ),
-            TextField(
-              controller: user,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: 'Email / Username',
-                hintStyle: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+              const Text(
+                "Welcome to",
+                style: TextStyle(
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
+                  color: Color(0xFF1C1C1C),
+                  height: 2,
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
-                ),
-                filled: true,
-                fillColor: Colors.black,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
               ),
-            ),
-
-            const SizedBox(
-              height: 16,
-            ),
-
-            TextField(
-              obscureText: _obscureTextPassword,
-              style: const TextStyle(color: Colors.white),
-              controller: pass,
-              decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+              const SizedBox(height: 20,),
+              const Text(
+                "Filmy",
+                style: TextStyle(
+                  fontSize: 37,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  letterSpacing: 2,
+                  height: 1,
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
-                ),
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _obscureTextPassword = !_obscureTextPassword;
-                    });
-                  },
-                  child: Icon(
-                    _obscureTextPassword
-                        ? Icons.visibility_off :Icons.visibility,
+              ),
+
+              const SizedBox(
+                height: 16,
+              ),
+              TextField(
+                controller: user,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'Email / Username',
+                  hintStyle: const TextStyle(
+                    fontSize: 16,
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: const BorderSide(
+                      width: 0,
+                      style: BorderStyle.none,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: Colors.black,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                 ),
-                filled: true,
-                fillColor: Colors.black,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
               ),
-            ),
 
-            const SizedBox(
-              height: 24,
-            ),
+              const SizedBox(
+                height: 16,
+              ),
 
-            Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: const Color(0xFF1C1C1C),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(25),
+              TextField(
+                obscureText: _obscureTextPassword,
+                style: const TextStyle(color: Colors.white),
+                controller: pass,
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  hintStyle: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: const BorderSide(
+                      width: 0,
+                      style: BorderStyle.none,
+                    ),
+                  ),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _obscureTextPassword = !_obscureTextPassword;
+                      });
+                    },
+                    child: Icon(
+                      _obscureTextPassword
+                          ? Icons.visibility_off :Icons.visibility,
+                      color: Colors.white,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: Colors.black,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF1C1C1C).withOpacity(0.2),
-                    spreadRadius: 3,
-                    blurRadius: 4,
-                    offset: const Offset(0, 3),
+              ),
+
+              const SizedBox(
+                height: 24,
+              ),
+
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1C1C1C),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(25),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF1C1C1C).withOpacity(0.2),
+                      spreadRadius: 3,
+                      blurRadius: 4,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Center(
+                    child: GestureDetector(
+                      onTap: (){
+                        _validate();
+                      },
+                      child: const Text(
+                        "LOGIN",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                ),
+              ),
+
+              const SizedBox(
+                height: 16,
+              ),
+
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: (){Get.to(()=>ForgotPasswordScreen());},
+                    child: const Text(
+                      "FORGOT PASSWORD?",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1C1C1C),
+                        height: 1,
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  GestureDetector(
+                    onTap: (){  Get.to(() => Signupscreen());},
+                    child: const Text(
+                      "SIGN UP",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1C1C1C),
+                        height: 1,
+                      ),
+                    ),
                   ),
                 ],
               ),
-              child: Center(
-                  child: GestureDetector(
-                    onTap: (){
-                      _validate();
-                    },
-                    child: const Text(
-                      "LOGIN",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-              ),
-            ),
 
-            const SizedBox(
-              height: 16,
-            ),
-
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: (){Get.to(()=>ForgotPasswordScreen());},
-                  child: const Text(
-                    "FORGOT PASSWORD?",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1C1C1C),
-                      height: 1,
-                    ),
-                  ),
-                ),
-                Spacer(),
-                GestureDetector(
-                  onTap: (){  Get.to(() => Signupscreen());},
-                  child: const Text(
-                    "SIGN UP",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1C1C1C),
-                      height: 1,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-          ],
-        ),
-      )
-      ));
+            ],
+          ),
+        )
+        ));
   }
 
   _validate() async {
@@ -214,10 +214,10 @@ class _LoginScreenState extends State<LoginScreen> {
       return toastMessage(formatAndValidate.validateEmailID(email));
     } else
     if (password == "" || password.length < 6) {
-    return toastMessage("Password length must be more than 6");
+      return toastMessage("Password length must be more than 6");
     }
     return await _login(email, password);
-    }
+  }
 
   Future _login(String email, String password) async {
     AppDialogs.loading();
@@ -234,7 +234,8 @@ class _LoginScreenState extends State<LoginScreen> {
         Uri.parse('https://cocoalabs.in/Filmy/public/api/login'),
         body: body,
       );
-      Get.back();
+      print("sttsus->${response.statusCode}");
+
       if (response.statusCode == 200) {
         LoginResponse loginResponse = LoginResponse.fromJson(jsonDecode(response.body));
         if (loginResponse.success == true) {
@@ -272,5 +273,4 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  }
-
+}
