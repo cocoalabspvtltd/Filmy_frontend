@@ -189,6 +189,9 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
                     ListTile(
                       isThreeLine: true,
                         leading: CircleAvatar(
+                          backgroundColor: projectList[index].userImage == null
+                              ? Colors.white // Change background color when userImage is null
+                              : null,
                           backgroundImage: projectList[index].userImage != null
                               ? CachedNetworkImageProvider(
                             '${Apis.storageUrl}${projectList[index].userImage}',
@@ -216,9 +219,38 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
                               "Comments : ${projectList[index].comments}",
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
+                          SizedBox(height: 6,),
+                          if (projectList[index].status == "accepted")
+                            Text(
+                              "${projectList[index].status!.toUpperCase()}",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          if (projectList[index].status == "rejected")
+                            Text(
+                              "${projectList[index].status!.toUpperCase()}",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          if (projectList[index].status == "pending")
+                            Text(
+                              "${projectList[index].status!.toUpperCase()}",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
                           SizedBox(
                             height: 6,
                           ),
+                          if(projectList[index].status == "pending")
                           Row(
                             children: [
                               ElevatedButton(
@@ -249,9 +281,26 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
                               ),
                             ],
                           ),
+                          if(projectList[index].status == "accepted")
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async{
+                                    await _bloc.acceptOrRejectApplication(
+                                        'rejected', projectList[index].applicationId.toString());
+                                    await Future.delayed(Duration(seconds: 2));
+                                    _bloc.getapplicationList(widget.id, false);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.red,
+                                  ),
+
+                                  child: Text("Reject"),
+                                ),
+                              ],
+                            ),
                         ],
                       ),
-                      trailing: Text("${projectList[index].status}")
                     ),
                   ],
                 ),

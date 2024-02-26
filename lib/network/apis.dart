@@ -7,7 +7,8 @@ class Apis {
   //static String skillList="api/users/skills-list";
   static String userupdate = "api/store/user-details";
   static String userforgotpassword = "api/users/forgot-password";
-
+  static String profileUpdate = "api/update/user-details";
+  static String fetchUserdetails = "api/user-details";
 
   static String userSkillList = "api/skills-list";
   static String usergallery = "api/users/upload_gallery";

@@ -39,7 +39,6 @@ class _ApplyHiringScreenState extends State<ApplyHiringScreen> {
     };
     var body = jsonEncode({
       'comments': commentControl.text,
-
       // Add more key-value pairs as needed
     });
 
