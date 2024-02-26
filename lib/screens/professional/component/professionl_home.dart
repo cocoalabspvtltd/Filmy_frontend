@@ -390,9 +390,10 @@ Widget _buildList(List<UserHirings> list) {
                   child: ElevatedButton(
 
                     onPressed: () {
-                      print("${list[position].projectId.toString()}");
+                      print("${list[position].projectId}");
 
-                      Get.to(()=>ApplyHiringScreen( id: list[position].projectId.toString(), ));
+                      Get.to(()=>ApplyHiringScreen( id: list[position].hiringId.toString(), ));
+                      print("${list[position].projectId}");
                       // Handle Apply Here button tap
                     },
                     child: Text("Apply Here"),

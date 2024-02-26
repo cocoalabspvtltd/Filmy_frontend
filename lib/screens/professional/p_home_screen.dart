@@ -12,7 +12,7 @@ import '../PROFILE/PROFILESCREEN.dart';
 
 class PHomeScreen extends StatefulWidget {
   final int selectedIndex;
-  const PHomeScreen({Key? key, this.selectedIndex = 3}) : super(key: key);
+  const PHomeScreen({Key? key, required this.selectedIndex}) : super(key: key);
 
   @override
   State<PHomeScreen> createState() => _PHomeScreenState();
@@ -25,7 +25,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
     User_Details.userRole == "professional" ?  "Hirings":"Applications",
     User_Details.userRole == "professional" ? "Projects" : "Gallery",
     "Profile",
-    "Home",
+   User_Details.status=="active"? "Home":"Profile",
   ];
   @override
   void initState() {
@@ -106,7 +106,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
           return Future.value(true);
         },
         child: _selectedIndex == 3
-            ? ProfessionalHome()
+            ?User_Details.status=="active"? ProfessionalHome():ProfilePage()
             : _selectedIndex == 2
                 ? ProfilePage()
                 : _selectedIndex == 1
