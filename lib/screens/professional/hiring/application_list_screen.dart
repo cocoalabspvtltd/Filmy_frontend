@@ -243,6 +243,7 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
                           "${projectList[index].name!.toUpperCase()}",
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
+
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
