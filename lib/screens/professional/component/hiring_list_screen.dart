@@ -5,6 +5,7 @@ import 'package:film/core/load_more_listener.dart';
 import 'package:film/models/hiring_list_response.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/models/common.dart';
+import 'package:film/screens/professional/hiring/application_list_screen.dart';
 import 'package:film/screens/professional/hiring/edit_hiring_screen.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/screens/professional/projects/edit_project_screen.dart';
@@ -273,6 +274,29 @@ class _HiringListScreenState extends State<HiringListScreen>
                                 ),
                               ],
                             ),
+                            Align(alignment: AlignmentDirectional.bottomEnd,
+                              child: Container(
+                                height: 22,
+                                width: 160,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                      Get.to(ApplicationListScreen(id:hiringList[index].id.toString()));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.black,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Hiring requests",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+
                           ],
                         ),
                       ),
