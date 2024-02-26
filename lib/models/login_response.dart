@@ -47,7 +47,7 @@ class User {
   String? dob;
   String? gender;
   int? age;
-  Null? image;
+  String? image;
   Null? twoFactorConfirmedAt;
   Null? currentTeamId;
   Null? profilePhotoPath;

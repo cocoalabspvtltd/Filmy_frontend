@@ -95,6 +95,7 @@ flutter:
   assets:
     - assets/image/
     - assets/icon/
+    - assets/image/person.png
 
   fonts:
     - family: SF Pro
