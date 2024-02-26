@@ -82,7 +82,7 @@ class ProfessionalRepository {
     );
 if(response.statusCode==200){
   toastMessage("${response.data['message']}");
-  Get.to(()=>PHomeScreen());
+  Get.to(()=>PHomeScreen(selectedIndex: 3,));
 }
 else{
   toastMessage("Check Your enter details");
@@ -140,7 +140,7 @@ else{
         .post('${Apis.editHiring}$id/update', data: formData);
     if(response.statusCode==200){
       toastMessage("${response.data['message']}");
-      Get.to(()=>PHomeScreen());
+      Get.to(()=>PHomeScreen(selectedIndex: 3,));
     }
     else{
       toastMessage("Check Your enter details");

@@ -40,11 +40,11 @@ class _SplashState extends State<Splash> {
         if (User_Details.apiToken.isNotEmpty) {
           print("Token-->${User_Details.apiToken}");
           print("role___________" + User_Details.status);
-          if (User_Details.userRole == 'public-user'&&User_Details.status=="inactive") {
-            return Get.offAll(() => ProfilePage());
+          if (User_Details.userRole == 'public-user') {
+            return Get.offAll(() => PHomeScreen(selectedIndex: 3,));
           }
           else {
-             return Get.offAll(() => PHomeScreen());
+             return Get.offAll(() => PHomeScreen(selectedIndex: 3,));
           }
         } else {
            return Get.offAll(() => LoginScreen());

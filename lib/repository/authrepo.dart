@@ -58,7 +58,7 @@ class AuthRepository {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.data!);
      //toastMessage("${response.data['message']}");
-      Get.to(() => PHomeScreen());
+      Get.to(() => PHomeScreen(selectedIndex: 3,));
       return profile.fromJson(response.data);
     } else {
       //toastMessage("${response.data['message']}");

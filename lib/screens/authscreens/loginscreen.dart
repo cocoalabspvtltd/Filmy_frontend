@@ -239,11 +239,12 @@ class _LoginScreenState extends State<LoginScreen> {
         LoginResponse loginResponse = LoginResponse.fromJson(jsonDecode(response.body));
         if (loginResponse.success == true) {
           toastMessage("Login Successfully");
+          print("sttsus->${loginResponse.user!.status}");
           await SharedPrefs.logIn(loginResponse);
-          if (loginResponse.user!.role == "public-user" && User_Details.status == "inactive") {
-            Get.offAll(() => ProfilePage());
+          if (loginResponse.user!.role == "public-user" || loginResponse.user!.status == "inactive") {
+            Get.offAll(() => PHomeScreen(selectedIndex:2));
           } else {
-            Get.offAll(() => PHomeScreen());
+            Get.offAll(() => PHomeScreen(selectedIndex: 3,));
           }
         }else {
           if (response.statusCode == 200) {
