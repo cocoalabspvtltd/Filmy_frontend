@@ -1,12 +1,14 @@
 class Apis {
   static String url = "https://cocoalabs.in/Filmy/public/";
+  static String storageUrl="https://cocoalabs.in/Filmy/public/storage/";
   static String registerUser = 'api/register';
   static String loginUser = 'api/login';
   static String logOutUser='api/logout';
   //static String skillList="api/users/skills-list";
   static String userupdate = "api/store/user-details";
   static String userforgotpassword = "api/users/forgot-password";
-
+  static String profileUpdate = "api/update/user-details";
+  static String fetchUserdetails = "api/user-details";
 
   static String userSkillList = "api/skills-list";
   static String usergallery = "api/users/upload_gallery";
@@ -24,6 +26,7 @@ class Apis {
   static String editHiring="api/professionals/hiring/requests/";
   static String applicationapply = "api/users/hiring/requests/list";
   static String fetchApplicationList = "api/professionals/hiring/requests/applications/";
+  static String rejectOrAccept="api/professionals/hiring/requests/applications/";
 
  // static String applicationapplypro = "api/professionals/hiring/requests/list";
   //college

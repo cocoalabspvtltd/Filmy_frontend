@@ -156,4 +156,14 @@ else{
     return ApplicationListResponse.fromJson(response.data);
   }
 
+  Future<CommonResponse> acceptOrRejectApplication(String status,
+      String Id) async {
+    final response = await apiClient!
+        .getJsonInstance()
+        .put('${Apis.rejectOrAccept}$Id/update', data: {
+      "status": status,
+    });
+    return CommonResponse.fromJson(response.data);
+  }
+
 }

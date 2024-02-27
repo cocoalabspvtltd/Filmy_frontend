@@ -89,7 +89,6 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Idss${selectedOptionsIds}");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan,
@@ -357,8 +356,7 @@ class _EditHiringScreenState extends State<EditHiringScreen> {
     } else if (selectedOptionsIds.isEmpty) {
       return toastMessage("Please select skills");
     }
-    if (experience.isNotEmpty &&
-        formatAndValidate.validateName(experience) != null) {
+    if (experience == null) {
       return toastMessage("Please enter experience");
     }
     if (opening == null) {

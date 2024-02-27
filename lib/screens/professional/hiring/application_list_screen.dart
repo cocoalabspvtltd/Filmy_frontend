@@ -5,9 +5,7 @@ import 'package:film/core/load_more_listener.dart';
 import 'package:film/models/application_list_response.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/models/common.dart';
-import 'package:film/screens/professional/hiring/create_hiring_screen.dart';
-import 'package:film/screens/professional/p_home_screen.dart';
-import 'package:film/screens/professional/projects/edit_project_screen.dart';
+import 'package:film/network/apis.dart';
 import 'package:film/utils/custom_loader/linear_loader.dart';
 import 'package:film/widgets/common_api_loader.dart';
 import 'package:film/widgets/common_api_result_empty_widget.dart';
@@ -16,10 +14,12 @@ import 'package:get/get.dart';
 
 class ApplicationListScreen extends StatefulWidget {
   final String id;
-  const ApplicationListScreen({Key? key,required this.id}) : super(key: key);
+
+  const ApplicationListScreen({Key? key, required this.id}) : super(key: key);
 
   @override
-  State<ApplicationListScreen> createState() => _ApplicationListScreenState();
+  State<ApplicationListScreen> createState() =>
+      _ApplicationListScreenState();
 }
 
 class _ApplicationListScreenState extends State<ApplicationListScreen>
@@ -32,7 +32,7 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
   @override
   void initState() {
     _bloc = ApplicationBloc(listener: this);
-    _bloc.getapplicationList(widget.id,false);
+    _bloc.getapplicationList(widget.id, false);
     _itemsScrollController = ScrollController();
     _itemsScrollController.addListener(_scrollListener);
     super.initState();
@@ -48,7 +48,7 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
   }
 
   paginate() async {
-    await _bloc.getapplicationList(widget.id,true);
+    await _bloc.getapplicationList(widget.id, true);
   }
 
   void _scrollListener() async {
@@ -70,12 +70,14 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
           .where((application) =>
       application.name!.toLowerCase().contains(query.toLowerCase()) ||
           application.phone!.toLowerCase().contains(query.toLowerCase()) ||
-          ( application.email != null &&
+          (application.email != null &&
               application.email!.toLowerCase().contains(query.toLowerCase())))
           .toList();
     });
   }
+
   TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +88,7 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
       body: RefreshIndicator(
         color: Colors.white,
         backgroundColor: Colors.cyan,
-        onRefresh: () => _bloc.getapplicationList(widget.id,false),
+        onRefresh: () => _bloc.getapplicationList(widget.id, false),
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           controller: _itemsScrollController,
@@ -94,7 +96,7 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
             children: [
               SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.only(left: 12,right: 12,top: 12,),
+                padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
                 child: TextField(
                   controller: searchController,
                   decoration: InputDecoration(
@@ -130,8 +132,10 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
                       case Status.COMPLETED:
                         List<Applications> projectList = _bloc.applicationList;
                         return (projectList.isEmpty) ||
-                            (filteredProjectList.isEmpty && searchController.text.isNotEmpty)
-                            ? CommonApiResultsEmptyWidget("No Applications found")
+                            (filteredProjectList.isEmpty &&
+                                searchController.text.isNotEmpty)
+                            ? CommonApiResultsEmptyWidget(
+                            "No Applications found")
                             : _buildApplicationList(filteredProjectList.isNotEmpty
                             ? filteredProjectList
                             : _bloc.applicationList);
@@ -182,89 +186,120 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Column(
                   children: [
-                    // Align(
-                    //   alignment: AlignmentDirectional.topEnd,
-                    //   child: Text(
-                    //     "${projectList[index].createdAt}",
-                    //     style: TextStyle(
-                    //       fontWeight: FontWeight.w500,
-                    //       fontStyle: FontStyle.italic,
-                    //     ),
-                    //   ),
-                    // ),
-                    GestureDetector(
-                      onTap: () {
-                        // Handle image tap here
-                      },
-                      child: ListTile(
-                        isThreeLine: true,
-                        // leading: Container(
-                        //   width: MediaQuery.of(context).size.width * .25,
-                        //   padding: EdgeInsets.all(1),
-                        //   decoration: BoxDecoration(
-                        //     borderRadius: BorderRadius.circular(8),
-                        //   ),
-                        //   child: ClipRRect(
-                        //     borderRadius: BorderRadius.circular(8),
-                        //     child: CachedNetworkImage(
-                        //       fit: BoxFit.fill,
-                        //       imageUrl: projectList[index].posterUrl!,
-                        //       placeholder: (context, url) =>
-                        //           Center(child: CircularProgressIndicator()),
-                        //       errorWidget: (context, url, error) => Container(
-                        //         margin: EdgeInsets.all(5),
-                        //         child: Image.asset(
-                        //           "assets/image/no-post.png",
-                        //           fit: BoxFit.fill,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        // trailing: Column(
-                        //   children: [
-                        //     GestureDetector(
-                        //       onTap: () async {
-                        //         _showDeleteConfirmationDialog(
-                        //             context, projectList[index].id.toString());
-                        //       },
-                        //       child: Icon(Icons.delete_outline, color: Colors.red[800]),
-                        //     ),
-                        //     SizedBox(height: 6),
-                        //     GestureDetector(
-                        //       onTap: () async {
-                        //         Get.to(EditProjectScreen(details: projectList[index]));
-                        //       },
-                        //       child: Icon(Icons.edit, color: Colors.cyan),
-                        //     ),
-                        //   ],
-                        // ),
-                        title: Text(
-                          "${projectList[index].name!.toUpperCase()}",
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                    ListTile(
+                      isThreeLine: true,
+                        leading: CircleAvatar(
+                          backgroundColor: projectList[index].userImage == null
+                              ? Colors.white // Change background color when userImage is null
+                              : null,
+                          backgroundImage: projectList[index].userImage != null
+                              ? CachedNetworkImageProvider(
+                            '${Apis.storageUrl}${projectList[index].userImage}',
+                          ) as ImageProvider<Object>
+                              : AssetImage('assets/image/person.png'),
                         ),
-
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                      title: Text(
+                        "${projectList[index].name!.toUpperCase()}",
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Phone : ${projectList[index].phone}",
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          if (projectList[index].email != null)
                             Text(
-                              "Phone : ${projectList[index].phone}",
+                              "Email : ${projectList[index].email}",
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
-                            if (projectList[index].email != null)
-                              Text(
-                                "Email : ${projectList[index].email}",
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                          if (projectList[index].comments != null)
+                            Text(
+                              "Comments : ${projectList[index].comments}",
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          SizedBox(height: 6,),
+                          if (projectList[index].status == "accepted")
+                            Text(
+                              "${projectList[index].status!.toUpperCase()}",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
                               ),
-                            if (projectList[index].comments != null)
-                              Text(
-                                "Comments : ${projectList[index].comments}",
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          if (projectList[index].status == "rejected")
+                            Text(
+                              "${projectList[index].status!.toUpperCase()}",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
                               ),
+                            ),
+                          if (projectList[index].status == "pending")
+                            Text(
+                              "${projectList[index].status!.toUpperCase()}",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          SizedBox(
+                            height: 6,
+                          ),
+                          if(projectList[index].status == "pending")
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async{
+                                  await _bloc.acceptOrRejectApplication(
+                                      'accepted', projectList[index].applicationId.toString());
+                                  await Future.delayed(Duration(seconds: 2));
+                                  _bloc.getapplicationList(widget.id, false);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.green,
+                                ),
+                                child: Text("Accept"),
+                              ),
+                              SizedBox(width: 10), // Adding space between buttons
+                              ElevatedButton(
+                                onPressed: () async{
+                                  await _bloc.acceptOrRejectApplication(
+                                      'rejected', projectList[index].applicationId.toString());
+                                  await Future.delayed(Duration(seconds: 2));
+                                  _bloc.getapplicationList(widget.id, false);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.red,
+                                ),
 
-                            SizedBox(height: 6,),
-                          ],
-                        ),
+                                child: Text("Reject"),
+                              ),
+                            ],
+                          ),
+                          if(projectList[index].status == "accepted")
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async{
+                                    await _bloc.acceptOrRejectApplication(
+                                        'rejected', projectList[index].applicationId.toString());
+                                    await Future.delayed(Duration(seconds: 2));
+                                    _bloc.getapplicationList(widget.id, false);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.red,
+                                  ),
+
+                                  child: Text("Reject"),
+                                ),
+                              ],
+                            ),
+                        ],
                       ),
                     ),
                   ],
@@ -276,5 +311,4 @@ class _ApplicationListScreenState extends State<ApplicationListScreen>
       ),
     );
   }
-
 }
