@@ -3,10 +3,12 @@ import 'dart:io';
 
 
 import 'package:film/models/login_response.dart';
+import 'package:get/get.dart';
 
 import '../../models/common.dart';
 import '../../models/profile.dart';
 import '../../repository/authrepo.dart';
+import '../../screens/professional/p_home_screen.dart';
 
 
 class AuthBloc {
@@ -40,6 +42,7 @@ class AuthBloc {
       ) async {
     try {
       profile response = await _authRepository!.Profileadd(image,idsinterests,address,years,profesion,idsskill);
+
       return response;
     } catch (e, s) {
       Completer().completeError(e, s);

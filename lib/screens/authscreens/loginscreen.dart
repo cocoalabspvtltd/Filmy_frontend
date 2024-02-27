@@ -15,7 +15,7 @@ import '../../utils/string_formatter_and_validator.dart';
 import '../homescreens/home_screen.dart';
 import 'forgotpassword.dart';
 import 'package:http/http.dart' as http;
-
+String statuscheck = "";
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -233,18 +233,21 @@ class _LoginScreenState extends State<LoginScreen> {
         Uri.parse('https://cocoalabs.in/Filmy/public/api/login'),
         body: body,
       );
-      print("sttsus->${response.statusCode}");
+
       Get.back();
       if (response.statusCode == 200) {
         LoginResponse loginResponse = LoginResponse.fromJson(jsonDecode(response.body));
+        print("-->${loginResponse.user!.status}");
         if (loginResponse.success == true) {
+          statuscheck = loginResponse.user!.status!;
           toastMessage("Login Successfully");
+
           print("sttsus->${loginResponse.user!.status}");
           await SharedPrefs.logIn(loginResponse);
-          if (loginResponse.user!.role == "public-user") {
-            Get.offAll(() => PHomeScreen(selectedIndex:2));
+          if (loginResponse.user!.role == "public-user"&& statuscheck=="active") {
+            Get.offAll(() => PHomeScreen(selectedIndex:3));
           } else {
-            Get.offAll(() => PHomeScreen(selectedIndex: 3,));
+            Get.offAll(() => PHomeScreen(selectedIndex: 2,));
           }
         }
       } else if (response.statusCode == 422) {
