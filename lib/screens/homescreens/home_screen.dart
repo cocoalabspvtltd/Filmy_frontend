@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
             child: Container(
               width: double.infinity,
               height: MediaQuery.of(context).size.height*4/7,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -36,31 +36,23 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          // Positioned(
-          //   left: 20,
-          //   top: 80,
-          //   height: 70,
-          //   width: 0,
-          //   child: ClipRRect(
-          //     borderRadius: BorderRadius.circular(100),
-          //     child: Image.asset("assets/icon/icons8-user-48.png"),
-          //   ),
-          // ),
           Positioned(
             left: 20,
             top: 150,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                Text
+                  (
                     "Hi ${User_Details.userName}",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 32,
                     )
                 ),
-                SizedBox(height: 16,),
-                Text(
+
+                const SizedBox(height: 16,),
+                const Text(
                     "Explore  opportunities in the\n world of film.",
                     style: TextStyle(
                       color: Colors.black,
@@ -72,8 +64,7 @@ class _HomeState extends State<Home> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (builder) => ProfilePage()));
                   },
-
-                  child: Text(
+                  child: const Text(
                       "PROFLE",
                       style: TextStyle(
                         color: Colors.black,
@@ -84,50 +75,6 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-
-          // Positioned(
-          //   left: 20,
-          //   top: 250,
-          //   right: 20,
-          //   child: Column(
-          //     children: <Widget>[
-          //       GestureDetector(
-          //         onTap:(){ },
-          //         child: Row(
-          //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //           children: <Widget>[
-          //             _customCard(
-          //                 imageUrl: "washing-machine.png",
-          //                 item: "",
-          //                 duration: "1 Day"
-          //             ),
-          //             _customCard(
-          //                 imageUrl: "dry.png",
-          //                 item: "",
-          //                 duration: "3 Days"
-          //             )
-          //           ],
-          //         ),
-          //       ),
-          //       SizedBox(height: 40,),
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //         children: <Widget>[
-          //           _customCard(
-          //               imageUrl: "clean.png",
-          //               item: "",
-          //               duration: "3 Days"
-          //           ),
-          //           _customCard(
-          //               imageUrl: "shoe.png",
-          //               item: "",
-          //               duration: "3 Days"
-          //           )
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // )
         ],
       ),
     );

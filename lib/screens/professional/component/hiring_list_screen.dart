@@ -1,14 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:film/bloc/professionalBloc/hiring_bloc.dart';
-import 'package:film/bloc/professionalBloc/project_bloc.dart';
 import 'package:film/core/load_more_listener.dart';
 import 'package:film/models/hiring_list_response.dart';
-import 'package:film/models/project_list_response.dart';
 import 'package:film/models/common.dart';
 import 'package:film/screens/professional/hiring/application_list_screen.dart';
 import 'package:film/screens/professional/hiring/edit_hiring_screen.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
-import 'package:film/screens/professional/projects/edit_project_screen.dart';
 import 'package:film/utils/custom_loader/linear_loader.dart';
 import 'package:film/widgets/common_api_loader.dart';
 import 'package:film/widgets/common_api_result_empty_widget.dart';
@@ -80,29 +77,29 @@ class _HiringListScreenState extends State<HiringListScreen>
         backgroundColor: Colors.cyan,
         onRefresh: () => _bloc.gethiringList(false),
         child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: _itemsScrollController,
           child: Column(
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.only(left: 12,right: 12,top: 12,),
                 child: TextField(
                   controller: searchController,
                   decoration: InputDecoration(
                     hintText: 'Search...',
-                    prefixIcon: Icon(Icons.search, color: Colors.cyan),
+                    prefixIcon: const Icon(Icons.search, color: Colors.cyan),
                     contentPadding:
-                    EdgeInsets.symmetric(vertical: 3, horizontal: 4),
+                    const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.cyan),
+                      borderSide: const BorderSide(color: Colors.cyan),
                     ),
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.cyan,
                     fontSize: 16.0,
                   ),
@@ -285,7 +282,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.black,
                                   ),
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       "Hiring requests",
                                       style: TextStyle(

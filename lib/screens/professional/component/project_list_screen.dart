@@ -81,34 +81,33 @@ class _ProjectListScreenState extends State<ProjectListScreen>
         backgroundColor: Colors.cyan,
         onRefresh: () => _bloc.getprojectList(false),
         child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: _itemsScrollController,
           child: Column(
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.only(left: 12,right: 12,top: 12,),
                 child: TextField(
                   controller: searchController,
                   decoration: InputDecoration(
                     hintText: 'Search...',
-                    prefixIcon: Icon(Icons.search, color: Colors.cyan),
+                    prefixIcon: const Icon(Icons.search, color: Colors.cyan),
                     contentPadding:
-                    EdgeInsets.symmetric(vertical: 3, horizontal: 4),
+                    const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.cyan),
+                      borderSide: const BorderSide(color: Colors.cyan),
                     ),
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.cyan,
                     fontSize: 16.0,
                   ),
                   onChanged: (value) {
-                    print("njn${value}");
                     filterProjectList(value);
                   },
                 ),
@@ -132,7 +131,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                         return SizedBox(
                           height: MediaQuery.of(context).size.height - 180,
                           child: CommonApiResultsEmptyWidget(
-                            "${snapshot.data!.message!}",
+                            snapshot.data!.message!,
                             textColorReceived: Colors.black,
                           ),
                         );
@@ -145,7 +144,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                 },
               ),
               if (isLoadingMore) LinearLoader(),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
             ],
@@ -160,14 +159,14 @@ class _ProjectListScreenState extends State<ProjectListScreen>
       padding: const EdgeInsets.all(15.0),
       child: ListView.builder(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: projectList.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Card(
               elevation: 0,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 side: BorderSide(color: Colors.white60, width: 1),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
@@ -179,7 +178,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                       alignment: AlignmentDirectional.topEnd,
                       child: Text(
                         "${projectList[index].createdAt}",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontStyle: FontStyle.italic,
                         ),
@@ -193,7 +192,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                         isThreeLine: true,
                         leading: Container(
                           width: MediaQuery.of(context).size.width * .25,
-                          padding: EdgeInsets.all(1),
+                          padding: const EdgeInsets.all(1),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -203,7 +202,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                               fit: BoxFit.fill,
                               imageUrl: projectList[index].posterUrl!,
                               placeholder: (context, url) =>
-                                  Center(child: CircularProgressIndicator()),
+                                  const Center(child: CircularProgressIndicator()),
                               errorWidget: (context, url, error) => Container(
                                 margin: EdgeInsets.all(5),
                                 child: Image.asset(
@@ -223,7 +222,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                               },
                               child: Icon(Icons.delete_outline, color: Colors.red[800]),
                             ),
-                            SizedBox(height: 6),
+                            const SizedBox(height: 6),
                             GestureDetector(
                               onTap: () async {
                                 Get.to(EditProjectScreen(details: projectList[index]));
@@ -241,30 +240,30 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                           children: [
                             Text(
                               "${projectList[index].type}",
-                              style: TextStyle(fontWeight: FontWeight.w500),
+                              style: const TextStyle(fontWeight: FontWeight.w500),
                             ),
                             if (projectList[index].director != null)
                               Text(
                                 "Director : ${projectList[index].director}",
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                                style: const TextStyle(fontWeight: FontWeight.w500),
                               ),
                             if (projectList[index].duration != null)
                               Text(
                                 "Duration : ${projectList[index].duration}",
-                                style: TextStyle(fontWeight: FontWeight.w500),
+                                style: const TextStyle(fontWeight: FontWeight.w500),
                               ),
                             Container(
                               height: 60, // Adjust the height as needed
                               child: SingleChildScrollView(
                                 child: Text(
                                   "Description: ${projectList[index].description}",
-                                  style: TextStyle(fontWeight: FontWeight.w500),
+                                  style: const TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 6,),
+                            const SizedBox(height: 6,),
                             Align(alignment: AlignmentDirectional.bottomEnd,
-                                child: Container(
+                                child: SizedBox(
                                   height: 22,
                                   width: 100,
                                   child: ElevatedButton(
@@ -274,7 +273,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                                     style: ElevatedButton.styleFrom(
                                       primary: Colors.black,
                                     ),
-                                    child: Center(
+                                    child: const Center(
                                       child: Text(
                                         "Add Hiring",
                                         style: TextStyle(
