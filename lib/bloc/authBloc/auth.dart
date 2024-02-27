@@ -46,6 +46,15 @@ class AuthBloc {
       throw e;
     }
   }
+  Future <dynamic> userprofilecheck() async {
+    try {
+      final response = await _authRepository!.userprofileornot();
+      return response;
+    } catch (e, s) {
+      Completer().completeError(e, s);
+      throw e;
+    }
+  }
 //
 // Future<ForgotPassVerifyOtpResponse> resetPasswordVerifyOtp(String otp) async {
 //   try {

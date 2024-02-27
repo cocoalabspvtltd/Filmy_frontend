@@ -7,8 +7,12 @@ import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/shared_prefs.dart';
 import 'package:film/utils/user.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
+import '../../bloc/authBloc/auth.dart';
 import '../PROFILE/PROFILESCREEN.dart';
+import '../user/applications_list.dart';
 
 class PHomeScreen extends StatefulWidget {
   final int selectedIndex;
@@ -21,14 +25,54 @@ class PHomeScreen extends StatefulWidget {
 class _PHomeScreenState extends State<PHomeScreen> {
   late int _selectedIndex;
   DateTime? currentBackPressTime;
+  AuthBloc _userprofilecheckBloc = AuthBloc();
   List<String> appBarTitle = [
     User_Details.userRole == "professional" ?  "Hirings":"Applications",
     User_Details.userRole == "professional" ? "Projects" : "Gallery",
     "Profile",
    User_Details.status=="active"? "Home":"Profile",
-  ];
+  ];  dynamic ? prepaidCardUserOrNot;
+  String ?Message ="";
+  String? statuscheck ;
+
+  getProfileUserOrNot() async {
+    prepaidCardUserOrNot = await _userprofilecheckBloc.userprofilecheck();
+    Message = prepaidCardUserOrNot["status"];
+    print("mes-?${Message}");
+    statuscheck= prepaidCardUserOrNot["success"];
+    if ( Message == "active") {
+      // Navigate to the profile page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfessionalHome()),
+      );
+    } else {
+      // Show an error message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Profile Inactive'),
+            content: Text('Your profile is inactive. Please contact support for assistance.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
+   // getProfileUserOrNot();
+
     super.initState();
     _selectedIndex = widget.selectedIndex;
   }
@@ -116,7 +160,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
                     : _selectedIndex == 0
                         ?User_Details.userRole == "professional"
             ? HiringListScreen()
-                        : Applications():Center(child: Text("Hai"),)
+                        : ApplicationListuser():Center(child: Text("Hai"),)
       ),
     );
   }

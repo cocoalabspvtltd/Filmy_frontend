@@ -67,7 +67,12 @@ class AuthRepository {
       throw "";
     }
   }
-
+  Future<dynamic> userprofileornot() async {
+    Response response =
+    await apiClient!.getJsonInstance().get(Apis.userprofilecheck);
+    print("resp-=>${response.data}");
+    return response.data;
+  }
   // getLogoutRepository() async {
   //   try {
   //     Response response =

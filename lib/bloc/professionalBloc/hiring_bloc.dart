@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'package:dio/src/form_data.dart';
 import 'package:film/core/load_more_listener.dart';
+import 'package:film/models/application_list_user.dart';
+
 import 'package:film/models/common.dart';
 import 'package:film/models/hiring_list_response.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/network/api_error_message.dart';
 import 'package:film/repository/professionalrepo.dart';
 import 'package:film/utils/api_helper.dart';
+
+import '../../screens/user/applications_list.dart';
 
 class HiringBloc {
   ProfessionalRepository? _repository;
@@ -35,6 +39,16 @@ class HiringBloc {
 
   List<Hirings> hiringList = [];
 
+   StreamController<ApiResponse<ApplicationList_User>>?
+  _apliactionlistController;
+
+  StreamSink<ApiResponse<ApplicationList_User>>?
+  get apliactionlistSink => _apliactionlistController?.sink;
+
+  Stream<ApiResponse<ApplicationList_User>>? get apliactionListStream =>
+      _apliactionlistController?.stream;
+
+  List<ApplicationList> applictios = [];
 
   gethiringList(bool isPagination, {int? perPage}) async {
     if (isPagination) {
@@ -81,25 +95,25 @@ class HiringBloc {
       listener!.refresh(true);
 
     } else {
-      hiringDetailsListSink!.add(ApiResponse.loading('Fetching Data'));
+      apliactionlistSink?.add(ApiResponse.loading('Fetching Data'));
       pageNumber = 1;
     }
     try {
-      HiringListResponse response =
-      await _repository!.getHiringList(10, pageNumber);
+      ApplicationList_User response =
+      await _repository!.getapplList(10, pageNumber);
       hasNextPage = response.lastPage! >= pageNumber.toInt()
           ? true
           : false;
       if (isPagination) {
-        if (hiringList.length == 0) {
-          hiringList = response.hirings!;
+        if (applictios.length == 0) {
+          applictios = response.applicationList!;
         } else {
-          hiringList.addAll(response.hirings!);
+          applictios.addAll(response.applicationList!);
         }
       } else {
-        hiringList = response.hirings! ?? [];
+        applictios = response.applicationList! ?? [];
       }
-      hiringDetailsListSink!.add(ApiResponse.completed(response));
+      apliactionlistSink?.add(ApiResponse.completed(response));
       if (isPagination) {
         listener!.refresh(false);
       }
@@ -108,11 +122,11 @@ class HiringBloc {
       if (isPagination) {
         listener!.refresh(false);
       } else {
-        hiringDetailsListSink!
-            .add(ApiResponse.error(ApiErrorMessage.getNetworkError(error)));
+        apliactionlistSink?.add(ApiResponse.error(ApiErrorMessage.getNetworkError(error)));
       }
     } finally {}
   }
+
 
   Future<CommonResponse> addHiring(
       String title, List<int> skillsId, description, experience, opening,

@@ -242,7 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
           toastMessage("Login Successfully");
           print("sttsus->${loginResponse.user!.status}");
           await SharedPrefs.logIn(loginResponse);
-          if (loginResponse.user!.role == "public-user" || loginResponse.user!.status == "inactive") {
+          if (loginResponse.user!.role == "public-user") {
             Get.offAll(() => PHomeScreen(selectedIndex:2));
           } else {
             Get.offAll(() => PHomeScreen(selectedIndex: 3,));

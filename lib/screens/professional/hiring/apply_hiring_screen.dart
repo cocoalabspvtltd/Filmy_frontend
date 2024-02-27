@@ -32,7 +32,7 @@ class _ApplyHiringScreenState extends State<ApplyHiringScreen> {
 
   Future<void> Applyhiring() async {
     AppDialogs.loading();
-    var url = Uri.parse('${Apis.url}api/users/hiring/requests/applications/${widget.id}/store');
+    var url = Uri.parse('${Apis.url}api/applications/${widget.id}/store');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${User_Details.apiToken}', // Optional, if you need to include an authorization token

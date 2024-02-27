@@ -13,6 +13,7 @@ import 'package:film/utils/user.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
+import '../models/application_list_user.dart';
 import '../models/hiring.dart';
 
 
@@ -96,6 +97,14 @@ else{
         '${Apis.fetchHiringList}?page=$page&per_page=$perPage');
     print("respo-/.${response}");
     return HiringListResponse.fromJson(response.data);
+  }
+
+  Future<ApplicationList_User> getapplList(int perPage,
+      int page) async {
+    final response = await apiClient!.getJsonInstance().post(
+        '${Apis.fetchappliedlist}?page=$page&per_page=$perPage');
+    print("respo-/.${response}");
+    return ApplicationList_User.fromJson(response.data);
   }
   Future<HiringHomeresponse> getapplicationList(int perPage,
       int page) async {
