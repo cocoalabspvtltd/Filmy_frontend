@@ -267,9 +267,11 @@ Widget _buildCarouselItem(String label, Color color) {
 
 Widget _buildList(List<UserHirings> list) {
   if (list.isEmpty) {
-    return SizedBox(
-      height: screenHeight / 3,
-      child: CommonApiResultsEmptyWidget(""),
+    return Center(
+      child: SizedBox(
+        height: screenHeight / 3,
+        child: CommonApiResultsEmptyWidget("No posts found"),
+      ),
     );
   }
 

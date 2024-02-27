@@ -5,6 +5,7 @@ import 'package:film/models/hiring_list_response.dart';
 import 'package:film/models/common.dart';
 import 'package:film/screens/professional/hiring/application_list_screen.dart';
 import 'package:film/screens/professional/hiring/edit_hiring_screen.dart';
+import 'package:film/screens/professional/hiring/my_applications.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/utils/custom_loader/linear_loader.dart';
 import 'package:film/widgets/common_api_loader.dart';
@@ -108,6 +109,31 @@ class _HiringListScreenState extends State<HiringListScreen>
                   },
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(right: 10,top: 8),
+                child: Align(alignment: AlignmentDirectional.bottomEnd,
+                  child: Container(
+                    height: 30,
+                    width: 160,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.to(MyApplicationScreen());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.cyan,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "My Applications",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               StreamBuilder<ApiResponse<HiringListResponse>>(
                 stream: _bloc.hiringListStream,
                 builder: (context, snapshot) {
@@ -152,7 +178,7 @@ class _HiringListScreenState extends State<HiringListScreen>
 
   Widget _buildProjectList(List<Hirings> hiringList) {
     return Padding(
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.only(left: 15,right: 15,bottom: 15,top: 7),
       child: ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -280,7 +306,7 @@ class _HiringListScreenState extends State<HiringListScreen>
                                       Get.to(ApplicationListScreen(id:hiringList[index].id.toString()));
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: Colors.black,
+                                    primary: Colors.cyan,
                                   ),
                                   child: const Center(
                                     child: Text(
@@ -293,7 +319,6 @@ class _HiringListScreenState extends State<HiringListScreen>
                                 ),
                               ),
                             )
-
                           ],
                         ),
                       ),
