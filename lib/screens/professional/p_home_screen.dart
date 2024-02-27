@@ -25,15 +25,16 @@ class PHomeScreen extends StatefulWidget {
 class _PHomeScreenState extends State<PHomeScreen> {
   late int _selectedIndex;
   DateTime? currentBackPressTime;
-  AuthBloc _userprofilecheckBloc = AuthBloc();
+
   List<String> appBarTitle = [
     User_Details.userRole == "professional" ?  "Hirings":"Applications",
     User_Details.userRole == "professional" ? "Projects" : "Gallery",
     "Profile",
-   User_Details.status=="active"? "Home":"Profile",
+   "Home"
   ];  dynamic ? prepaidCardUserOrNot;
   String ?Message ="";
   String? statuscheck ;
+  AuthBloc _userprofilecheckBloc = AuthBloc();
 
   getProfileUserOrNot() async {
     prepaidCardUserOrNot = await _userprofilecheckBloc.userprofilecheck();
@@ -41,11 +42,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
     print("mes-?${Message}");
     statuscheck= prepaidCardUserOrNot["success"];
     if ( Message == "active") {
-      // Navigate to the profile page
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfessionalHome()),
-      );
+Get.back();
     } else {
       // Show an error message
       showDialog(
@@ -68,10 +65,9 @@ class _PHomeScreenState extends State<PHomeScreen> {
     }
     setState(() {});
   }
-
   @override
   void initState() {
-   // getProfileUserOrNot();
+    getProfileUserOrNot();
 
     super.initState();
     _selectedIndex = widget.selectedIndex;
@@ -150,7 +146,7 @@ class _PHomeScreenState extends State<PHomeScreen> {
           return Future.value(true);
         },
         child: _selectedIndex == 3
-            ?User_Details.status=="active"? ProfessionalHome():ProfilePage()
+            ? ProfessionalHome()
             : _selectedIndex == 2
                 ? ProfilePage()
                 : _selectedIndex == 1

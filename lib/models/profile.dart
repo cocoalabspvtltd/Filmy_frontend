@@ -25,8 +25,8 @@ class profile {
 }
 
 class UserDetails {
-  String? skills;
-  String? interests;
+  List<int>? skills;
+  List<int>? interests;
   String? address;
   String? profession;
   String? years;
@@ -49,8 +49,8 @@ class UserDetails {
         this.id});
 
   UserDetails.fromJson(Map<String, dynamic> json) {
-    skills = json['skills'];
-    interests = json['interests'];
+    skills = json['skills'].cast<int>();
+    interests = json['interests'].cast<int>();
     address = json['address'];
     profession = json['profession'];
     years = json['years'];

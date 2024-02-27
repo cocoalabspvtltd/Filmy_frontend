@@ -6,6 +6,7 @@ import 'package:film/utils/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../bloc/authBloc/auth.dart';
 import '../../../utils/api_helper.dart';
 import '../../../widgets/common_api_result_empty_widget.dart';
 import 'package:film/core/load_more_listener.dart';
@@ -33,6 +34,8 @@ class _ProfessionalHomeScreenState extends State<ProfessionalHome>
     'assets/image/image2.jpg',
     'assets/image/iamge3.jpg',
   ];
+
+
   @override
   void initState() {
     _bloc = HiringHomeBloc(listener: this);

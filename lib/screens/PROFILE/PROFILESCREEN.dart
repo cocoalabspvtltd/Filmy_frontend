@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:film/screens/PROFILE/gallery.dart';
 import 'package:film/screens/PROFILE/update_profile_screen.dart';
+import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/string_formatter_and_validator.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +49,44 @@ class _ProfilePageState extends State<ProfilePage> {
   List<dynamic> juryList = [];
   AuthBloc _authBloc = AuthBloc();
   @override
+  dynamic ? prepaidCardUserOrNot;
+  String ?Message ="";
+  String? statuscheck ;
+  AuthBloc _userprofilecheckBloc = AuthBloc();
+
+  getProfileUserOrNot() async {
+    prepaidCardUserOrNot = await _userprofilecheckBloc.userprofilecheck();
+    Message = prepaidCardUserOrNot["status"];
+    print("mes-?${Message}");
+    statuscheck= prepaidCardUserOrNot["success"];
+    if ( Message == "active") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Profile active'),
+            content: Text('Your profile is active.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+              Navigator.pop(context);
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+
+
+    } else {
+      Get.back();
+    }
+    setState(() {});
+  }
   void initState() {
     super.initState();
-
+    getProfileUserOrNot();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _fetchJuryMembers();
     });
@@ -617,6 +653,7 @@ class _ProfilePageState extends State<ProfilePage> {
       profesion,
       skillsids,
     );
+
   }
 }
 
