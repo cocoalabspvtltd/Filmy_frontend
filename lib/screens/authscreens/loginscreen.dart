@@ -228,14 +228,13 @@ class _LoginScreenState extends State<LoginScreen> {
       "password": password,
     };
 
-
     try {
       final response = await http.post(
         Uri.parse('https://cocoalabs.in/Filmy/public/api/login'),
         body: body,
       );
       print("sttsus->${response.statusCode}");
-
+      Get.back();
       if (response.statusCode == 200) {
         LoginResponse loginResponse = LoginResponse.fromJson(jsonDecode(response.body));
         if (loginResponse.success == true) {
@@ -246,12 +245,6 @@ class _LoginScreenState extends State<LoginScreen> {
             Get.offAll(() => PHomeScreen(selectedIndex:2));
           } else {
             Get.offAll(() => PHomeScreen(selectedIndex: 3,));
-          }
-        }else {
-          if (response.statusCode == 200) {
-            toastMessage('You are not authorized!');
-          } else {
-            toastMessage(loginResponse.message ?? '');
           }
         }
       } else if (response.statusCode == 422) {

@@ -46,9 +46,9 @@ class AuthRepository {
     FormData formData = FormData.fromMap({
       "skills[]":idsskil,
       "interests[]":idsskilinterests,
-      "address":profesion,
-      "profession":years,
-      "years" :address,
+      "address":address,
+      "profession":profesion,
+      "years" :years,
       "resume":ImageName
     });
     Response response =
@@ -57,11 +57,11 @@ class AuthRepository {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.data!);
-     //toastMessage("${response.data['message']}");
+     toastMessage("Successfully completed your profile");
       Get.to(() => PHomeScreen(selectedIndex: 3,));
       return profile.fromJson(response.data);
     } else {
-      //toastMessage("${response.data['message']}");
+      toastMessage("${response.data['message']}");
       print(
           "###########__________________ADD PROPERTY UNSUCESSFULLY________________##############");
       throw "";
@@ -92,4 +92,42 @@ class AuthRepository {
   //     print(error);
   //   }
   // }
+
+  Future<profile> ProfileUpdate(String image,List<int> idsskilinterests,address ,years,profesion,List<int> idsskil) async {
+    FormData formData = FormData.fromMap({
+      "skills[]":idsskil,
+      "interests[]":idsskilinterests,
+    });
+
+    if (image.isNotEmpty) {
+      String fileName = image.split('/').last;
+      var imageFile = await MultipartFile.fromFile(image, filename: fileName);
+      formData.files.add(MapEntry("resume", imageFile));
+    }
+    if (address.isNotEmpty) {
+      formData.fields.add(MapEntry("address", address));
+    }
+    if (profesion.isNotEmpty) {
+      formData.fields.add(MapEntry("profession", profesion));
+    }
+    if (years.isNotEmpty) {
+      formData.fields.add(MapEntry("years", years));
+    }
+    Response response =
+    await apiClient!.getJsonInstance().post(Apis.profileUpdate, data: formData,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.data!);
+      toastMessage("Successfully completed your profile");
+      Get.to(() => PHomeScreen(selectedIndex: 3,));
+      return profile.fromJson(response.data);
+    } else {
+      toastMessage("${response.data['message']}");
+      print(
+          "###########__________________ADD PROPERTY UNSUCESSFULLY________________##############");
+      throw "";
+    }
+  }
+
 }

@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:film/screens/PROFILE/gallery.dart';
-import 'package:film/screens/PROFILE/update_profile_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/string_formatter_and_validator.dart';
 import 'package:flutter/material.dart';
@@ -20,29 +19,20 @@ import '../../network/apis.dart';
 import '../../utils/user.dart';
 import '../homescreens/home_screen.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class UpdateProfileScreen extends StatefulWidget {
+  const UpdateProfileScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  List<String> inntrest = [
-    "Select Intrest",
-    "Dubbing",
-    "Cinematography",
-    "vfx",
-    "production",
-    "scripting"
-  ];
+class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String dropdownValueinterest = "Select";
   List<Skills> Skillsmulti = [];
   Map<String, String> headers = {
     'Authorization': 'Bearer ${User_Details.apiToken}',
     'Accept': 'application/json', // Assuming JSON content type
   };
-  String title = "";
   List<int> selectedOptionsIdsskills = [];
   List<int> selectedOptionsIdsinterest = [];
   List<dynamic> juryList = [];
@@ -50,11 +40,39 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _fetchUserProfileDetails();
       _fetchJuryMembers();
     });
   }
+  Future<void> _fetchUserProfileDetails() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${Apis.url}${Apis.fetchUserdetails}'),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        setState(() {
+          profControl.text = jsonResponse['details']['profession'] ?? '';
+          addressControl.text = jsonResponse['details']['address'] ?? '';
+          experControl.text = jsonResponse['details']['years'].toString() ?? ''; // Assuming 'years' is the experience
+          selectedOptionsIdsinterest =
+          List<int>.from(jsonResponse['details']['interests'] ?? []);
+          selectedOptionsIdsskills =
+          List<int>.from(jsonResponse['details']['skills'] ?? []);
+          _filePathname = jsonResponse['details']['resume'] ?? 'No file selected';
+          print('File Path: $_filePath');
+
+        });
+      } else {
+        throw Exception('Failed to fetch user profile details');
+      }
+    } catch (error) {
+      print('Error fetching user profile details: $error');
+    }
+  }
+
 
   void _fetchJuryMembers() async {
     final response = await http
@@ -70,7 +88,6 @@ class _ProfilePageState extends State<ProfilePage> {
         Skillsmulti = juryList.map((e) => Skills.fromJson(e)).toList();
       });
     } else {
-      // If API call fails, handle the error
       throw Exception('Failed to load jury members');
     }
   }
@@ -105,82 +122,14 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  File? _image;
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedImage != null) {
-      final imageFile = File(pickedImage.path);
-      setState(() {
-        _image = imageFile;
-      });
-
-      await _uploadImage(imageFile); // Upload the image
-    }
-  }
-  String baseUrl = "";
-  String image = "";
-  bool isLoading = false;
-
-  Future<void> _uploadImage(File imageFile) async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final uri = Uri.parse('${Apis.url}${Apis.professUpdateprofilepic}');
-    final request = http.MultipartRequest('POST', uri);
-    request.headers['Authorization'] = 'Bearer ${User_Details.apiToken}';
-    request.headers['content-type'] = 'application/json';
-    request.files.add(http.MultipartFile(
-      'profile_picture',
-      imageFile.readAsBytes().asStream(),
-      imageFile.lengthSync(),
-      filename: 'image.jpg', // Provide a filename here
-    ));
-
-    final response = await request.send();
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse =
-      json.decode(await response.stream.bytesToString());
-
-      setState(() {
-        image = jsonResponse["picture"]["image"];
-        baseUrl = jsonResponse["baseUrl"];
-        isLoading = false;
-      });
-
-      // Handle success response
-      print("Response: $jsonResponse");
-      print('Image uploaded successfully: $image');
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-      print('Failed to upload image');
-      // Handle error response
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: Colors.cyan,
-        //   title: Row(
-        //     children: [
-        //       Text("Profile"),
-        //       Spacer(),
-        //       GestureDetector(
-        //           onTap: () {
-        //             Get.to(Gallery());
-        //           },
-        //           child: Text("gallery"))
-        //     ],
-        //   ),
-        // ),
+        appBar: AppBar(
+          backgroundColor: Colors.cyan,
+          title: Text("Edit Profile"),
+        ),
         body: SingleChildScrollView(
           child: Stack(children: [
             ClipPath(
@@ -202,101 +151,27 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             Column(
               children: [
-                Container(
-                  height: 130,
-                  width: screenWidth,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          width: 120,
-                          height: 120,
-                          padding: EdgeInsets.all(1),
-                          decoration: BoxDecoration(
-                            color: Colors.black87,
-                            borderRadius: BorderRadius.circular(60),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(60),
-                            child: _image != null
-                                ? CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl:
-                              '${baseUrl}/${image}',
-                              placeholder: (context, url) => Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                              errorWidget: (context, url, error) => GestureDetector(
-                                onTap: () async {
-                                  await _pickImage();
-                                },
-                                child: CircleAvatar(
-                                  radius: 46.0,
-                                  backgroundImage:
-                                  AssetImage('assets/images/person.png'),
-                                  backgroundColor: Colors.grey,
-                                ),
-                              ),
-                            )
-                                : CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl:
-                              '${User_Details.userbaseur}/${User_Details.userimage}',
-                              placeholder: (context, url) => Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                              errorWidget: (context, url, error) => GestureDetector(
-                                onTap: () async {
-                                  await _pickImage();
-                                },
-                                child: CircleAvatar(
-                                  radius: 46.0,
-                                  backgroundImage:
-                                  AssetImage('assets/images/dp.png'),
-                                  backgroundColor: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: MediaQuery.of(context).size.width / 3,
-                        bottom: 10,
-                        child: InkWell(
-                          onTap: () async {
-                            await _pickImage();
-                          },
-                          child: Icon(Icons.edit),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: 10.0, right: 76, left: 76),
+                  const EdgeInsets.only(top: 10.0, right: 76, left: 76),
                   child: textfield(
                     hintText: '${User_Details.userName}',
                   ),
                 ),
-
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: 10.0, right: 76, left: 76),
+                  const EdgeInsets.only(top: 10.0, right: 76, left: 76),
                   child: textfield(
                     hintText: '${User_Details.userEmail}',
                   ),
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: 10.0, right: 76, left: 76),
+                  const EdgeInsets.only(top: 10.0, right: 76, left: 76),
                   child: textfield(
                     hintText: '${User_Details.userMobile}',
                   ),
                 ),
-
                 Padding(
                   padding:
                   const EdgeInsets.only(top: 10.0, right: 76, left: 76),
@@ -346,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: 10.0, right: 76, left: 76),
+                  const EdgeInsets.only(top: 10.0, right: 76, left: 76),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -367,7 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: 10.0, right: 76, left: 76),
+                  const EdgeInsets.only(top: 10.0, right: 76, left: 76),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -388,7 +263,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: 10.0, right: 76, left: 76),
+                  const EdgeInsets.only(top: 10.0, right: 76, left: 76),
                   child: Container(
                     decoration: BoxDecoration(color: Colors.white),
                     child: TextField(
@@ -405,7 +280,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(top: 10.0, right: 76, left: 76),
+                  const EdgeInsets.only(top: 10.0, right: 76, left: 76),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
@@ -450,9 +325,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 16,
-                ),
                 Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -479,10 +351,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
-
-                const SizedBox(
-                  height: 10,
-                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 78.0),
                   child: ListView.separated(
@@ -500,56 +368,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                 ),
-                //
                 Padding(
                   padding: const EdgeInsets.only(
-                      right: 76, left: 76, top: 5, bottom: 20),
+                      right: 76, left: 76,bottom: 20),
                   child: Container(
                     height: 50,
-                    width: double.infinity,
+                    width: 100,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // Navigate to the CompleteProfile screen using Get.to method
                         _validate();
-                        // await _addPropertyFun(
-                        //     _filePath,
-                        //     selectedOptionsIdsinterest,
-                        //     addressControl.text,
-                        //     experControl.text,
-                        //     profControl.text,
-                        //     selectedOptionsIdsskills);
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.black,
                       ),
                       child: Center(
                         child: Text(
-                          " Complete Your Profile",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      right: 76, left: 76, bottom: 20),
-                  child: Container(
-                    height: 50,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        Get.to(UpdateProfileScreen());
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.black,
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Edit Your Profile",
+                          " Update",
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.white,
@@ -573,14 +407,15 @@ class _ProfilePageState extends State<ProfilePage> {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
       if (result != null) {
         setState(() {
-          // Get the selected file
           PlatformFile file = result.files.single;
-          // Get the file's path
           _filePath = file.path!;
-          // Get the file's name
           _filePathname = file.name;
-          // Do something with the file's name
           print('Selected file name: $_filePathname');
+        });
+      } else {
+        setState(() {
+          _filePath = 'No file selected';
+          _filePathname = '';
         });
       }
     } catch (e) {
@@ -589,28 +424,34 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   _validate() async {
-   var profesion=profControl.text;
-   var address=addressControl.text;
-   var  experince=experControl.text;
+    var profesion=profControl.text;
+    var address=addressControl.text;
+    var  experince=experControl.text;
 
-   if (selectedOptionsIdsinterest.isEmpty) {
-     return toastMessage("Please select interests");
-   } else if (formatAndValidate.validateName(profesion) != null) {
-      return toastMessage("Please enter your professional");
-    } else if (formatAndValidate.validateAddress(address) != null) {
-      return toastMessage("Please enter your address");
-    } else if (selectedOptionsIdsskills.isEmpty) {
+    if (selectedOptionsIdsinterest.isEmpty) {
+      return toastMessage("Please select interests");
+    }  else if (selectedOptionsIdsskills.isEmpty) {
       return toastMessage("Please select skills");
-    }else if (_filePath.isEmpty) {
+    }
+    if (_filePath == null || _filePathname==null) { // Check if no file is selected
       return toastMessage("Please upload resume");
     }
-    return await _addPropertyFun(_filePath,selectedOptionsIdsinterest,address,experince,profesion,selectedOptionsIdsskills);
+    if (experince ==null) {
+      return toastMessage("Please enter your experince");
+    }
+    if (profesion ==null && formatAndValidate.validateName(profesion) != null) {
+      return toastMessage("Please enter your professional");
+    }
+    if (address ==null && formatAndValidate.validateAddress(address) != null) {
+      return toastMessage("Please enter your address");
+    }
+    return await _updateProfile(_filePath,selectedOptionsIdsinterest,address,experince,profesion,selectedOptionsIdsskills);
   }
-  _addPropertyFun(String image, List<int> interestsids,address, years, profesion,
+  _updateProfile(String image, List<int> interestsids,address, years, profesion,
       List<int> skillsids) async {
     FocusScope.of(context).requestFocus(FocusNode());
-    await _authBloc.addProperty(
-      image!,
+    await _authBloc.editProfile(
+      image,
       interestsids,
       address,
       years,
@@ -620,20 +461,5 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-List<File> _selectedFiles = [];
 
-class HeaderCurvedContainer extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()..color = Color(0xFF4DD0E1);
-    Path path = Path()
-      ..relativeLineTo(0, 150)
-      ..quadraticBezierTo(size.width / 2, 225, size.width, 150)
-      ..relativeLineTo(0, -150)
-      ..close();
-    canvas.drawPath(path, paint);
-  }
 
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}

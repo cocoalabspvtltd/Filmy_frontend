@@ -77,7 +77,17 @@ class ApplicationBloc {
     } finally {}
   }
 
-
+  Future<CommonResponse?> acceptOrRejectApplication(String status, String applicationId) async {
+    try {
+      CommonResponse response = await _repository!
+          .acceptOrRejectApplication(status,applicationId);
+      toastMessage(response.message);
+      return response;
+    } catch (e, s) {
+      Completer().completeError(e, s);
+    }
+    return null;
+  }
 
 
 }
