@@ -1,4 +1,6 @@
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:film/screens/authscreens/loginscreen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/string_formatter_and_validator.dart';
@@ -8,6 +10,7 @@ import 'package:get/get.dart';
 import '../../models/common.dart';
 import '../../network/api_provider.dart';
 import '../../network/apis.dart';
+import '../../utils/user.dart';
 import '../../widgets/app_dialogs.dart';
 import '../../widgets/app_text_field.dart';
 
@@ -74,7 +77,7 @@ class ForgotPasswordScreen extends StatelessWidget {
       ),
     );
   }
-
+String mess="";
   FormatAndValidate formatAndValidate = FormatAndValidate();
 
   _validate(BuildContext context) async {
@@ -83,19 +86,34 @@ class ForgotPasswordScreen extends StatelessWidget {
     if (formatAndValidate.validateEmailID(email) != null) {
       return toastMessage(formatAndValidate.validateEmailID(email));
     }
-    CommonResponse response = await forgotPassword();
-    return showAlert(context,response.message!);
+  await forgotPassword(email);
+    return showAlert(context,mess);
   }
 
-  Future<CommonResponse> forgotPassword() async {
-    AppDialogs.loading();
-    final response = await apiProvider.getJsonInstance().post(
-        '${Apis.userforgotpassword}',
-        data: {"email": _email.controller.text});
-    Get.back();
-    return CommonResponse.fromJson(response.data);
-  }
+  Future<void> forgotPassword(String email, ) async {
+     AppDialogs.loading();
+    Map<String, dynamic> body = {
+      "email": email,
+    };
 
+    var uri = Uri.parse('https://cocoalabs.in/Filmy/public/api/forgot-password');
+    var response = await http.post(uri, headers: {
+      'Content-Type': 'application/json',
+    },body: json.encode(body) );
+    print("respon->${response.body}");
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+ print("r=>${jsonResponse["message"]}");
+mess = jsonResponse["message"];
+      AppDialogs.closeDialog();
+    //  toastMessage("${jsonResponse["message"]}");
+      // Handle success response
+    } else {
+
+      print('Failed to fetch gallery images');
+      // Handle error response
+    }
+  }
   void showAlert(BuildContext context, String message) {
     showDialog(
       context: context,

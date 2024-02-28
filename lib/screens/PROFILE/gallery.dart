@@ -84,7 +84,7 @@ class _GalleryState extends State<Gallery> {
     var response = await http.get(uri, headers: {
       'Authorization': 'Bearer ${User_Details.apiToken}',
       'Content-Type': 'application/json',
-    });
+    },);
 print("respon->${response.body}");
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
