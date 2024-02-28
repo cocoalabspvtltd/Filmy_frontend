@@ -5,6 +5,7 @@ import 'package:film/models/common.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/string_formatter_and_validator.dart';
+import 'package:film/widgets/app_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_core/get_core.dart';
@@ -283,6 +284,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
       String description,
       File? image,
       ) async {
+    AppDialogs.loading();
     var formData = FormData();
     if (image != null) {
       String fileName = image?.path?.split('/')?.last ?? "";
