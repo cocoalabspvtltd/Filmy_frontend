@@ -74,7 +74,7 @@ class AppDialogs {
                                 ),
                                 Center(
                                   child: Image.asset(
-                                    'assets/images/google.png',
+                                    'assets/image/google.png',
                                     height: 36,
                                     width: 36,
                                   ),
