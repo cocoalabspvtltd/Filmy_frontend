@@ -496,6 +496,14 @@ Future _signUp(
         await _authBloc!.userRegistration(json.encode(body));
     if (response.message == "User registered successfully" ||
         response.statusCode == 201) {
+      email_address.clear();
+      user.clear();
+      phno.clear();
+      agecon.clear();
+      dob.clear();
+      pass_word.clear();
+      confirpass.clear();
+      agecon.clear();
       toastMessage("Successfully registered please Login!");
       Get.to((LoginScreen()));
     } else {
