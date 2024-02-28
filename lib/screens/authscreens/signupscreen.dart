@@ -44,6 +44,7 @@ class _SignupscreenState extends State<Signupscreen> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -409,7 +410,9 @@ class _SignupscreenState extends State<Signupscreen> {
         ));
   }
 
-  _calenderDatePick() {
+
+
+_calenderDatePick() {
     return GestureDetector(
         child: new Icon(
           Icons.calendar_month_outlined,
@@ -496,6 +499,16 @@ Future _signUp(
         await _authBloc!.userRegistration(json.encode(body));
     if (response.message == "User registered successfully" ||
         response.statusCode == 201) {
+      email_address.clear();
+      user.clear();
+      phno.clear();
+      agecon.clear();
+      dob.clear();
+      pass_word.clear();
+      confirpass.clear();
+      agecon.clear();
+      dropdownValuegender = "Select Gender";
+      dropdownValuerole = "Select Role";
       toastMessage("Successfully registered please Login!");
       Get.to((LoginScreen()));
     } else {
@@ -506,6 +519,7 @@ Future _signUp(
     toastMessage("Email id already taken!");
     // toastMessage('Something went wrong. Please try again');
   }
+
 }
 
 _validationFailed(
