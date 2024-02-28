@@ -104,7 +104,9 @@ class _ApplicationListScreenState extends State<ApplicationListuser>
                         return CommonApiLoader();
                       case Status.COMPLETED:
                         List<ApplicationList> projectList = _bloc.applicationListuser;
-                        return _buildApplicationList(_bloc.applicationListuser);
+                        return  (projectList.isEmpty)
+                            ? Center(child: CommonApiResultsEmptyWidget("No applications found"))
+                            : _buildApplicationList(_bloc.applicationListuser);
                       case Status.ERROR:
                         return SizedBox(
                           height: MediaQuery.of(context).size.height - 180,
