@@ -10,12 +10,12 @@ import 'package:film/screens/professional/component/hiring_list_screen.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/user.dart';
+import 'package:film/widgets/app_dialogs.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 import '../models/application_list_user.dart';
 import '../models/hiring.dart';
-
 
 
 class ProfessionalRepository {
@@ -56,6 +56,7 @@ class ProfessionalRepository {
 
   Future<CommonResponse> addHiring( String title, List<int> skillsIds, description, experience, opening,
       salary,ProjectId) async {
+    AppDialogs.loading();
     FormData formData = FormData.fromMap({
       "title":title,
       "skills[]":skillsIds,
@@ -83,7 +84,8 @@ class ProfessionalRepository {
     );
 if(response.statusCode==200){
   toastMessage("${response.data['message']}");
-  Get.to(()=>PHomeScreen(selectedIndex: 3,));
+  AppDialogs.closeDialog();
+  Get.offAll(()=>PHomeScreen(selectedIndex: 0,));
 }
 else{
   toastMessage("Check Your enter details");
@@ -122,6 +124,7 @@ else{
   }
   Future<CommonResponse> editHiring(String id,title, List<int> skillsIds, description, experience, opening,
       salary,ProjectId) async {
+    AppDialogs.loading();
     FormData formData = FormData.fromMap({
       "title":title,
       "skills[]":skillsIds,
@@ -149,7 +152,8 @@ else{
         .post('${Apis.editHiring}$id/update', data: formData);
     if(response.statusCode==200){
       toastMessage("${response.data['message']}");
-      Get.to(()=>PHomeScreen(selectedIndex: 3,));
+      AppDialogs.closeDialog();
+      Get.offAll(()=>PHomeScreen(selectedIndex: 0,));
     }
     else{
       toastMessage("Check Your enter details");

@@ -423,6 +423,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
+
   _validate() async {
     var profesion=profControl.text;
     var address=addressControl.text;

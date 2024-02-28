@@ -57,7 +57,7 @@ class AuthRepository {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.data!);
-      Get.to(() => PHomeScreen(selectedIndex: 2,));
+      Get.offAll(()=>PHomeScreen(selectedIndex: 3,));
      toastMessage("Successfully completed your profile");
 
       return profile.fromJson(response.data);
@@ -121,12 +121,12 @@ class AuthRepository {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.data!);
       toastMessage("Successfully completed your profile");
-      Get.to(() => PHomeScreen(selectedIndex: 3,));
+      Get.offAll(()=>PHomeScreen(selectedIndex: 3,));
       return profile.fromJson(response.data);
     } else {
       toastMessage("${response.data['message']}");
       print(
-          "###########__________________ADD PROPERTY UNSUCESSFULLY________________##############");
+          "###########__________________PROFILE UPDATE UNSUCESSFULLY________________##############");
       throw "";
     }
   }

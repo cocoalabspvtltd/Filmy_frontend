@@ -7,6 +7,7 @@ import 'package:film/screens/professional/component/project_list_screen.dart';
 import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/utils/api_helper.dart';
 import 'package:film/utils/string_formatter_and_validator.dart';
+import 'package:film/widgets/app_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_core/get_core.dart';
@@ -317,6 +318,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       String description,
       File? image,
       ) async {
+    AppDialogs.loading();
     var formData = FormData();
     if (image != null) {
       String fileName = image?.path?.split('/')?.last ?? "";
@@ -337,7 +339,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       CommonResponse response = value;
       if (response.statusCode == 200) {
         toastMessage("${response.message}");
-        Get.to(() => PHomeScreen(selectedIndex: 3,));
+        Get.offAll(()=>PHomeScreen(selectedIndex: 3,));
       } else {
         toastMessage("${response.message}");
       }

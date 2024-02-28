@@ -69,7 +69,8 @@ class _ProfilePageState extends State<ProfilePage> {
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-              Navigator.pop(context);
+                  Navigator.pop(context);
+                // Get.offAll(PHomeScreen(selectedIndex: 3));
                 },
                 child: Text('Close'),
               ),
@@ -537,6 +538,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 //
+                User_Details.status == "active" ? SizedBox():
                 Padding(
                   padding: const EdgeInsets.only(
                       right: 76, left: 76, top: 5, bottom: 20),
