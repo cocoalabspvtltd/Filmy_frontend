@@ -173,7 +173,10 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: (){Get.to(()=>ForgotPasswordScreen());},
+                    onTap: (){
+                      email_address.clear();
+                      pass_word.clear();
+                      Get.to(()=>ForgotPasswordScreen());},
                     child: const Text(
                       "FORGOT PASSWORD?",
                       style: TextStyle(
@@ -239,6 +242,8 @@ class _LoginScreenState extends State<LoginScreen> {
         LoginResponse loginResponse = LoginResponse.fromJson(jsonDecode(response.body));
         print("-->${loginResponse.user!.status}");
         if (loginResponse.success == true) {
+          email_address.clear();
+          pass_word.clear();
           statuscheck = loginResponse.user!.status!;
           toastMessage("Login Successfully");
           await SharedPrefs.logIn(loginResponse);
