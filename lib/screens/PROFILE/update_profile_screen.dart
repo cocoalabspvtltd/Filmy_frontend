@@ -434,7 +434,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }  else if (selectedOptionsIdsskills.isEmpty) {
       return toastMessage("Please select skills");
     }
-    if (_filePath == null || _filePathname==null) { // Check if no file is selected
+    if (_filePath == 'No file selected' || _filePathname.isEmpty) {
       return toastMessage("Please upload resume");
     }
     if (experince ==null) {

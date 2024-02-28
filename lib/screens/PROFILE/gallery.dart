@@ -177,7 +177,8 @@ print('${Apis.url}'
               children:[ Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Center(
-                  child: Container(height: 200,width: 100,
+                  child: Container(height: MediaQuery.of(context).size.height * 0.27,
+                    width: MediaQuery.of(context).size.width * 0.27,
                     child: Image.network(
                       '${User_Details.userbaseur}/$image',
                       fit: BoxFit.cover,
