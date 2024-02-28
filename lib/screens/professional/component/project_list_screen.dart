@@ -271,7 +271,7 @@ class _ProjectListScreenState extends State<ProjectListScreen>
                                       Get.to(CreateHiringScreen(ProjectId:projectList[index].id.toString()));
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      primary: Colors.black,
+                                      primary: Colors.cyan,
                                     ),
                                     child: const Center(
                                       child: Text(

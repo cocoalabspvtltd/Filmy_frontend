@@ -241,8 +241,6 @@ class _LoginScreenState extends State<LoginScreen> {
         if (loginResponse.success == true) {
           statuscheck = loginResponse.user!.status!;
           toastMessage("Login Successfully");
-
-          print("sttsus->${loginResponse.user!.status}");
           await SharedPrefs.logIn(loginResponse);
           if (loginResponse.user!.role == "public-user"&& statuscheck=="active") {
             Get.offAll(() => PHomeScreen(selectedIndex:3));
@@ -265,7 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (error) {
       Get.back();
-      toastMessage('Failed to login. Please check your internet connection.');
+      toastMessage('Failed to login: $error');
     }
   }
 
