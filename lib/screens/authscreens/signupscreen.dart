@@ -42,8 +42,20 @@ class _SignupscreenState extends State<Signupscreen> {
   void initState() {
     _authBloc = AuthBloc();
     super.initState();
+    _clearFields();
   }
-
+  void _clearFields() {
+    email_address.clear();
+    user.clear();
+    phno.clear();
+    agecon.clear();
+    dob.clear();
+    pass_word.clear();
+    confirpass.clear();
+    agecon.clear();
+    dropdownValuegender = "Select Gender";
+    dropdownValuerole = "Select Role";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -480,9 +492,6 @@ Future _signUp(
   String repass,
   String age,
 ) async {
-  print(
-      "${name}${email}${phone}${pass}${repass}${age}${dropdownValuegender}${dropdownValuerole}");
-
   Map<String, dynamic> body = {};
   body["name"] = name;
   body["email"] = email;

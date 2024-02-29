@@ -120,8 +120,8 @@ class AuthRepository {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       print(response.data!);
-      toastMessage("Successfully completed your profile");
-      Get.offAll(()=>PHomeScreen(selectedIndex: 3,));
+      toastMessage("Your profile updated successfully");
+      Get.offAll(()=>PHomeScreen(selectedIndex: 2,));
       return profile.fromJson(response.data);
     } else {
       toastMessage("${response.data['message']}");
