@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:film/network/apis.dart';
 import 'package:film/screens/PROFILE/gallery.dart';
 import 'package:film/screens/professional/component/notification_list_screen.dart';
 import 'package:film/screens/professional/component/professionl_home.dart';
@@ -14,6 +17,8 @@ import 'package:get/get_core/src/get_main.dart';
 import '../../bloc/authBloc/auth.dart';
 import '../PROFILE/PROFILESCREEN.dart';
 import '../user/applications_list.dart';
+import 'package:http/http.dart' as http;
+import 'package:badges/badges.dart' as badges;
 
 class PHomeScreen extends StatefulWidget {
   final int selectedIndex;
@@ -32,10 +37,41 @@ class _PHomeScreenState extends State<PHomeScreen> {
     User_Details.userRole == "professional" ? "Projects" : "Gallery",
     "Profile",
    "Home"
-  ];  dynamic ? prepaidCardUserOrNot;
+  ];
+  dynamic ? prepaidCardUserOrNot;
   String ?Message ="";
   String? statuscheck ;
   AuthBloc _userprofilecheckBloc = AuthBloc();
+  int unreadNotifications =0;
+
+
+  Future<void> fetchNotifications() async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://cocoalabs.in/Filmy/public/api/users/notifications?page=1&per_page=10'),
+        headers: {
+          'Authorization': 'Bearer ${User_Details.apiToken}',
+          'Accept': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        final count = jsonResponse['unread'];
+        setState(() {
+          unreadNotifications = count;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to fetch notifications. Please try again later.'),
+        ));
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('An unexpected error occurred. Please try again later.'),
+      ));
+    }
+  }
+
 
   getProfileUserOrNot() async {
     prepaidCardUserOrNot = await _userprofilecheckBloc.userprofilecheck();
@@ -69,7 +105,7 @@ Get.back();
   @override
   void initState() {
     getProfileUserOrNot();
-
+    fetchNotifications();
     super.initState();
     _selectedIndex = widget.selectedIndex;
   }
@@ -100,14 +136,29 @@ Get.back();
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.notifications_none_rounded,
-              color: Colors.cyan,
+          badges.Badge(
+            position: badges.BadgePosition.topEnd( top:0,end:6),
+            badgeContent: unreadNotifications != null
+                ? Text(
+              '${unreadNotifications}',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.white,
+              ),
+            )
+                : CircularProgressIndicator( // Show loading indicator
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
-            onPressed: () {
-              Get.to(NotificationScreen());
-            },
+            showBadge: true,
+            child: IconButton(
+              icon: Icon(
+                Icons.notifications_none_rounded,color: Colors.cyan,
+              ),
+              onPressed: () {
+                Get.to(() => NotificationScreen());
+              },
+            ),
           ),
           IconButton(
             icon: Icon(

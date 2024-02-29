@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:film/screens/authscreens/loginscreen.dart';
+import 'package:film/widgets/app_dialogs.dart';
 import 'package:film/widgets/stringvalidator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ import '../../bloc/authBloc/auth.dart';
 import '../../models/common.dart';
 import '../../utils/api_helper.dart';
 import '../../utils/string_formatter_and_validator.dart';
+import 'package:http/http.dart' as http;
+
 
 class Signupscreen extends StatefulWidget {
   const Signupscreen({Key? key}) : super(key: key);
@@ -492,6 +495,7 @@ Future _signUp(
   String repass,
   String age,
 ) async {
+  AppDialogs.loading();
   Map<String, dynamic> body = {};
   body["name"] = name;
   body["email"] = email;
@@ -503,31 +507,75 @@ Future _signUp(
   body["password"] = pass;
   body["password_confirmation"] = repass;
   print("sesdr->${body}");
+
   try {
-    CommonResponse response =
-        await _authBloc!.userRegistration(json.encode(body));
-    if (response.message == "User registered successfully" ||
-        response.statusCode == 201) {
-      email_address.clear();
-      user.clear();
-      phno.clear();
-      agecon.clear();
-      dob.clear();
-      pass_word.clear();
-      confirpass.clear();
-      agecon.clear();
-      dropdownValuegender = "Select Gender";
-      dropdownValuerole = "Select Role";
-      toastMessage("Successfully registered please Login!");
-      Get.to((LoginScreen()));
+    final response = await http.post(
+      Uri.parse('https://cocoalabs.in/Filmy/public/api/register'),
+      body: body,
+    );
+
+    Get.back();
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      CommonResponse loginResponse = CommonResponse.fromJson(jsonDecode(response.body));
+      if (loginResponse.message == "User registered successfully") {
+            email_address.clear();
+            user.clear();
+            phno.clear();
+            agecon.clear();
+            dob.clear();
+            pass_word.clear();
+            confirpass.clear();
+            agecon.clear();
+            dropdownValuegender = "Select Gender";
+            dropdownValuerole = "Select Role";
+            toastMessage("Successfully registered please Login!");
+            Get.offAll((LoginScreen()));
+      }
+    } else if (response.statusCode == 422) {
+      final jsonResponse = json.decode(response.body);
+      if (jsonResponse.containsKey('errors')) {
+        final errors = jsonResponse['errors'];
+        if (errors.containsKey('email')) {
+          toastMessage(errors['email'][0]);
+        }
+        if (errors.containsKey('dob')) {
+          toastMessage(errors['dob'][0]);
+        }
+      } else {
+        toastMessage('Validation errors: ${jsonResponse['message']}');
+      }
     } else {
-      toastMessage("${response.message}");
+      toastMessage('${json.decode(response.body)['message']}');
     }
-  } catch (e, s) {
-    Completer().completeError(e, s);
-    toastMessage("Email id already taken!");
-    // toastMessage('Something went wrong. Please try again');
+  } catch (error) {
+    Get.back();
+    toastMessage('Failed to signUp: $error');
   }
+  // try {
+  //   CommonResponse response =
+  //       await _authBloc!.userRegistration(json.encode(body));
+  //   if (response.message == "User registered successfully" ||
+  //       response.statusCode == 201) {
+  //     email_address.clear();
+  //     user.clear();
+  //     phno.clear();
+  //     agecon.clear();
+  //     dob.clear();
+  //     pass_word.clear();
+  //     confirpass.clear();
+  //     agecon.clear();
+  //     dropdownValuegender = "Select Gender";
+  //     dropdownValuerole = "Select Role";
+  //     toastMessage("Successfully registered please Login!");
+  //     Get.to((LoginScreen()));
+  //   } else {
+  //     toastMessage("${response.message}");
+  //   }
+  // } catch (e, s) {
+  //   Completer().completeError(e, s);
+  //   toastMessage("Email id already taken!");
+  //   // toastMessage('Something went wrong. Please try again');
+  // }
 
 }
 
