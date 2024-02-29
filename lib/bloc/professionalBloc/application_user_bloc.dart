@@ -5,6 +5,7 @@ import 'package:film/models/application_list_response.dart';
 import 'package:film/models/application_list_user.dart';
 import 'package:film/models/common.dart';
 import 'package:film/models/hiring_list_response.dart';
+import 'package:film/models/notification_list_response.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/network/api_error_message.dart';
 import 'package:film/repository/professionalrepo.dart';
@@ -18,6 +19,10 @@ class ApplicationUserBloc {
       _repository = ProfessionalRepository();
     _applicationuserController =
     StreamController<ApiResponse<ApplicationList_User>>.broadcast();
+
+    _notificationController =
+    StreamController<ApiResponse<NotificationListResponse>>.broadcast();
+
 
   }
   bool hasNextPage = false;
@@ -36,6 +41,18 @@ class ApplicationUserBloc {
       _applicationuserController.stream;
 
   List<ApplicationList> applicationListuser = [];
+
+
+  late StreamController<ApiResponse<NotificationListResponse>>
+  _notificationController;
+
+  StreamSink<ApiResponse<NotificationListResponse>>?
+  get notificationListSink => _notificationController.sink;
+
+  Stream<ApiResponse<NotificationListResponse>>? get notificationListStream =>
+      _notificationController.stream;
+
+  List<Notifications> notificationList = [];
 
 
 
@@ -73,6 +90,46 @@ class ApplicationUserBloc {
         listener!.refresh(false);
       } else {
         applicationuserDetailsListSink!
+            .add(ApiResponse.error(ApiErrorMessage.getNetworkError(error)));
+      }
+    } finally {}
+  }
+
+
+  getnotificationList(bool isPagination, {int? perPage}) async {
+    if (isPagination) {
+      pageNumber = pageNumber + 1;
+      listener!.refresh(true);
+
+    } else {
+      notificationListSink!.add(ApiResponse.loading('Fetching Data'));
+      pageNumber = 1;
+    }
+    try {
+      NotificationListResponse response =
+      await _repository!.getnotificationList(10, pageNumber);
+      hasNextPage = response.lastPage! >= pageNumber.toInt()
+          ? true
+          : false;
+      if (isPagination) {
+        if (notificationList.length == 0) {
+          notificationList = response.notifications!;
+        } else {
+          notificationList.addAll(response.notifications!);
+        }
+      } else {
+        notificationList = response.notifications! ?? [];
+      }
+      notificationListSink!.add(ApiResponse.completed(response));
+      if (isPagination) {
+        listener!.refresh(false);
+      }
+    } catch (error, s) {
+      Completer().completeError(error, s);
+      if (isPagination) {
+        listener!.refresh(false);
+      } else {
+        notificationListSink!
             .add(ApiResponse.error(ApiErrorMessage.getNetworkError(error)));
       }
     } finally {}

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:film/models/application_list_response.dart';
 import 'package:film/models/common.dart';
 import 'package:film/models/hiring_list_response.dart';
+import 'package:film/models/notification_list_response.dart';
 import 'package:film/models/project_list_response.dart';
 import 'package:film/network/api_provider.dart';
 import 'package:film/network/apis.dart';
@@ -177,6 +178,14 @@ else{
       "status": status,
     });
     return CommonResponse.fromJson(response.data);
+  }
+
+  Future<NotificationListResponse> getnotificationList(int perPage,
+      int page) async {
+    final response = await apiClient!.getJsonInstance().get(
+        '${Apis.fetchNotificationList}?page=$page&per_page=$perPage');
+    print("respo-/.${response}");
+    return NotificationListResponse.fromJson(response.data);
   }
 
 }
