@@ -24,13 +24,21 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  AuthBloc _authBloc = AuthBloc();
+
 
   TextEditingController user = TextEditingController();
   TextEditingController pass = TextEditingController();
   FormatAndValidate formatAndValidate = FormatAndValidate();
   bool _obscureTextPassword = true;
+  void initState() {
+    super.initState();
+    _clearFields();
+  }
 
+  void _clearFields() {
+    user.clear();
+    pass.clear();
+  }
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -41,7 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-
               const Text(
                 "Welcome to",
                 style: TextStyle(
@@ -62,7 +69,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 1,
                 ),
               ),
-
               const SizedBox(
                 height: 16,
               ),
@@ -174,9 +180,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   GestureDetector(
                     onTap: (){
-                      email_address.clear();
-                      pass_word.clear();
-                      Get.to(()=>ForgotPasswordScreen());},
+                      Get.to(()=>ForgotPasswordScreen());
+                      _clearFields();
+                      },
                     child: const Text(
                       "FORGOT PASSWORD?",
                       style: TextStyle(
@@ -189,7 +195,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Spacer(),
                   GestureDetector(
-                    onTap: (){  Get.to(() => Signupscreen());},
+                    onTap: (){
+                      Get.to(() => Signupscreen());
+                      _clearFields();
+                      },
                     child: const Text(
                       "SIGN UP",
                       style: TextStyle(

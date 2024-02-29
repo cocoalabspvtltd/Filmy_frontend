@@ -414,14 +414,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         });
       } else {
         setState(() {
-          _filePath = 'No file selected';
-          _filePathname = '';
+          _filePathname = 'No file selected';
         });
       }
     } catch (e) {
       print("File picking failed: $e");
     }
   }
+
 
 
   _validate() async {
@@ -434,9 +434,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }  else if (selectedOptionsIdsskills.isEmpty) {
       return toastMessage("Please select skills");
     }
-    if (_filePath == 'No file selected' || _filePathname.isEmpty) {
-      return toastMessage("Please upload resume");
-    }
     if (experince ==null) {
       return toastMessage("Please enter your experince");
     }
@@ -446,7 +443,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     if (address ==null && formatAndValidate.validateAddress(address) != null) {
       return toastMessage("Please enter your address");
     }
-    return await _updateProfile(_filePath,selectedOptionsIdsinterest,address,experince,profesion,selectedOptionsIdsskills);
+    if (_filePath == 'No file selected' || _filePathname.isEmpty) {
+      return await _updateProfile("", selectedOptionsIdsinterest, address, experince, profesion, selectedOptionsIdsskills);
+    } else {
+      return await _updateProfile(_filePath, selectedOptionsIdsinterest, address, experince, profesion, selectedOptionsIdsskills);
+    }
   }
   _updateProfile(String image, List<int> interestsids,address, years, profesion,
       List<int> skillsids) async {
