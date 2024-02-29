@@ -13,6 +13,8 @@ import 'package:film/widgets/common_api_result_empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../bloc/authBloc/auth.dart';
+
 class HiringListScreen extends StatefulWidget {
   const HiringListScreen({Key? key}) : super(key: key);
 
@@ -26,9 +28,43 @@ class _HiringListScreenState extends State<HiringListScreen>
   late ScrollController _itemsScrollController;
   bool isLoadingMore = false;
   List<Hirings> filteredHiringList = [];
+  dynamic ? prepaidCardUserOrNot;
+  String ?Message ="";
+  String? statuscheck ;
+  AuthBloc _userprofilecheckBloc = AuthBloc();
 
+  getProfileUserOrNot() async {
+    prepaidCardUserOrNot = await _userprofilecheckBloc.userprofilecheck();
+    Message = prepaidCardUserOrNot["status"];
+    print("mes-?${Message}");
+    statuscheck= prepaidCardUserOrNot["success"];
+    if ( Message == "active") {
+      Get.back();
+
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Profile Inactive'),
+            content: Text('Your profile is inactive. Please contact support for assistance.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Get.offAll(()=>PHomeScreen(selectedIndex: 2));
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    setState(() {});
+  }
   @override
   void initState() {
+    getProfileUserOrNot();
     _bloc = HiringBloc(listener: this);
     _bloc.gethiringList(false);
     _itemsScrollController = ScrollController();

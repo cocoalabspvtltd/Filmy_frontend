@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:film/screens/professional/hiring/apply_hiring_screen.dart';
+import 'package:film/screens/professional/p_home_screen.dart';
 import 'package:film/screens/professional/projects/create_project_screen.dart';
 import 'package:film/screens/professional/hiring/create_hiring_screen.dart';
 import 'package:film/utils/user.dart';
@@ -15,6 +16,7 @@ import 'package:film/models/common.dart';
 import 'package:film/utils/custom_loader/linear_loader.dart';
 import 'package:film/widgets/common_api_loader.dart';
 import '../../../bloc/professionalBloc/homehiring.dart';
+import '../../PROFILE/PROFILESCREEN.dart';
 
 class ProfessionalHome extends StatefulWidget {
   const ProfessionalHome({Key? key}) : super(key: key);
@@ -35,9 +37,42 @@ class _ProfessionalHomeScreenState extends State<ProfessionalHome>
     'assets/image/iamge3.jpg',
   ];
 
+  dynamic ? prepaidCardUserOrNot;
+  String ?Message ="";
+  String? statuscheck ;
+  AuthBloc _userprofilecheckBloc = AuthBloc();
 
+  getProfileUserOrNot() async {
+    prepaidCardUserOrNot = await _userprofilecheckBloc.userprofilecheck();
+    Message = prepaidCardUserOrNot["status"];
+    print("mes-?${Message}");
+    statuscheck= prepaidCardUserOrNot["success"];
+    if ( Message == "active") {
+      Get.back();
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Profile Inactive'),
+            content: Text('Your profile is inactive. Please contact support for assistance.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Get.offAll(()=>PHomeScreen(selectedIndex: 2));
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    setState(() {});
+  }
   @override
   void initState() {
+    getProfileUserOrNot();
     _bloc = HiringHomeBloc(listener: this);
     _bloc.gethiringapplicList(false);
     _itemsScrollController = ScrollController();

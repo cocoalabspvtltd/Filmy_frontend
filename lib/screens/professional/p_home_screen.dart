@@ -45,23 +45,23 @@ class _PHomeScreenState extends State<PHomeScreen> {
 Get.back();
     } else {
       // Show an error message
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Profile Inactive'),
-            content: Text('Your profile is inactive. Please contact support for assistance.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Close'),
-              ),
-            ],
-          );
-        },
-      );
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return AlertDialog(
+      //       title: Text('Profile Inactive'),
+      //       content: Text('Your profile is inactive. Please contact support for assistance.'),
+      //       actions: <Widget>[
+      //         TextButton(
+      //           onPressed: () {
+      //             Navigator.of(context).pop();
+      //           },
+      //           child: Text('Close'),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     }
     setState(() {});
   }

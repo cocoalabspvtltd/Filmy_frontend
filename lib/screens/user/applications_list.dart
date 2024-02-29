@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:film/bloc/authBloc/auth.dart';
 import 'package:film/bloc/professionalBloc/application_bloc.dart';
 import 'package:film/bloc/professionalBloc/application_user_bloc.dart';
 import 'package:film/bloc/professionalBloc/project_bloc.dart';
@@ -13,6 +14,8 @@ import 'package:film/widgets/common_api_loader.dart';
 import 'package:film/widgets/common_api_result_empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../professional/p_home_screen.dart';
 
 class ApplicationListuser extends StatefulWidget {
 
@@ -31,8 +34,43 @@ class _ApplicationListScreenState extends State<ApplicationListuser>
   bool isLoadingMore = false;
   List<ApplicationList> filteredProjectList = [];
 
+  dynamic ? prepaidCardUserOrNot;
+  String ?Message ="";
+  String? statuscheck ;
+  AuthBloc _userprofilecheckBloc = AuthBloc();
+
+  getProfileUserOrNot() async {
+    prepaidCardUserOrNot = await _userprofilecheckBloc.userprofilecheck();
+    Message = prepaidCardUserOrNot["status"];
+    print("mes-?${Message}");
+    statuscheck= prepaidCardUserOrNot["success"];
+    if ( Message == "active") {
+     Get.back();
+
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Profile Inactive'),
+            content: Text('Your profile is inactive. Please contact support for assistance.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Get.offAll(()=>PHomeScreen(selectedIndex: 2));
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    setState(() {});
+  }
   @override
   void initState() {
+    getProfileUserOrNot();
     _bloc = ApplicationUserBloc(listener: this);
     _bloc.getapplicationuserList( false);
     _itemsScrollController = ScrollController();
