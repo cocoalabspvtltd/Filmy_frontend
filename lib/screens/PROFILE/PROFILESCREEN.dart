@@ -81,7 +81,23 @@ class _ProfilePageState extends State<ProfilePage> {
 
 
     } else {
-      Get.back();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Profile Inactive'),
+            content: Text('Your profile is inactive. Please contact support for assistance.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                 Get.back();
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
     }
     setState(() {});
   }
@@ -395,6 +411,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         border: OutlineInputBorder(),
                         labelText: 'Enter your profession',
                       ),
+                      style: TextStyle(fontSize: 10),
                       onChanged: (value) {
                         print('The entered text is: $value');
                       },
@@ -416,6 +433,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         border: OutlineInputBorder(),
                         labelText: 'Enter your address',
                       ),
+                      style: TextStyle(fontSize: 10),
                       onChanged: (value) {
                         print('The entered text is: $value');
                       },
@@ -432,8 +450,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       controller: experControl,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Enter your experience',
+                          labelText: 'Enter your experience (eg:2)',
                           fillColor: Colors.white),
+                      style: TextStyle(fontSize: 10),
                       onChanged: (value) {
                         print('The entered text is: $value');
                       },
@@ -497,11 +516,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(height: 20),
                       Container(
                         height: 40,
-                        width: 270,
+                        width: 200,
                         child: ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(Colors
-                                .blue), // Set the background color of the ElevatedButton
+                                .cyan), // Set the background color of the ElevatedButton
                           ),
                           onPressed: _openFilePicker,
                           child: Text('upload resume'),
@@ -538,7 +557,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 //
-                User_Details.status == "active" ? SizedBox():
+                Message == "active" ? SizedBox():
                 Padding(
                   padding: const EdgeInsets.only(
                       right: 76, left: 76, top: 5, bottom: 20),

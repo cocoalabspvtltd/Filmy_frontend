@@ -1,4 +1,5 @@
 import 'package:film/screens/PROFILE/gallery.dart';
+import 'package:film/screens/professional/component/notification_list_screen.dart';
 import 'package:film/screens/professional/component/professionl_home.dart';
 import 'package:film/screens/professional/component/project_list_screen.dart';
 import 'package:film/screens/professional/component/hiring_list_screen.dart';
@@ -99,6 +100,15 @@ Get.back();
           ),
         ),
         actions: [
+          IconButton(
+            icon: Icon(
+              Icons.notifications_none_rounded,
+              color: Colors.cyan,
+            ),
+            onPressed: () {
+              Get.to(NotificationScreen());
+            },
+          ),
           IconButton(
             icon: Icon(
               Icons.logout,

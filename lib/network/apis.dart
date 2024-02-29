@@ -29,6 +29,7 @@ class Apis {
   static String rejectOrAccept="api/professionals/hiring/requests/applications/";
   static String profileUpdate = "api/update/user-details";
   static String fetchUserdetails = "api/user-details";
+  static String fetchNotificationList ="api/users/notifications";
  // static String applicationapplypro = "api/professionals/hiring/requests/list";
   //college
   static String addComplaint="api/colleges/profiles/store";
